@@ -1,0 +1,106 @@
+"use client";
+
+import { useState, useCallback, useMemo, memo } from "react";
+import { useApp } from "@/lib/context";
+import { useAuth } from "@/components/AuthProvider";
+import { getCurrentWeekNumber } from "@/lib/week";
+import { SettingsButton } from "@/components/SettingsMenu";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { NotificationCenter } from "@/components/NotificationCenter";
+import { VoiceAssistant } from "@/components/VoiceAssistant";
+import { Button } from "@/components/ui/button";
+import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
+import { AuthModal } from "@/components/AuthModal";
+
+export const Header = memo(function Header() {
+  const { data } = useApp();
+  const { user, signOutUser } = useAuth();
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  const handleAuthModalClose = () => {
+    setShowAuthModal(false);
+  };
+
+  // Calculate overall progress
+  const headerStats = useMemo(() => {
+    const monthsComplete = data.months.filter((m) => m.status === "complete").length;
+    const portfolioComplete = data.portfolio.filter((p) => p.status === "complete").length;
+    const competenciesComplete = data.competencyChecklist.filter((c) => c.done).length;
+    const overallProgress = Math.round(
+      ((monthsComplete + portfolioComplete + competenciesComplete) / (12 + 5 + 17)) * 100
+    );
+    const weekNumber = getCurrentWeekNumber(data.startDate);
+    return { overallProgress, weekNumber };
+  }, [data.months, data.portfolio, data.competencyChecklist, data.startDate]);
+
+  const handleSignOut = useCallback(async () => {
+    await signOutUser();
+  }, [signOutUser]);
+
+  return (
+    <header className="border-b bg-card sticky top-0 z-50">
+      <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
+        <h1 className="text-lg sm:text-xl font-bold font-serif truncate">Progress Tracker</h1>
+        <nav className="flex items-center gap-1 sm:gap-3" aria-label="Progress overview">
+          <div className="text-xs sm:text-sm font-medium bg-primary text-primary-foreground px-2 sm:px-3 py-1 rounded-full tabular-nums whitespace-nowrap">
+            {headerStats.overallProgress}%
+          </div>
+          <div className="text-xs sm:text-sm text-muted-foreground tabular-nums hidden md:block whitespace-nowrap">
+            Week {headerStats.weekNumber} of 52
+          </div>
+          <ThemeToggle />
+          <NotificationCenter />
+          <VoiceAssistant />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowShortcuts(true)}
+            aria-label="Show keyboard shortcuts"
+            className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px] hidden sm:flex"
+            title="Keyboard shortcuts (Ctrl+/)"
+          >
+            <Keyboard className="h-4 w-4" />
+          </Button>
+          <a href="/stats" className="inline-flex">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="View statistics"
+              className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px]"
+            >
+              <BarChart3 className="h-4 w-4" />
+            </Button>
+          </a>
+ {user ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSignOut}
+              aria-label="Sign out"
+              className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px]"
+              title="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowAuthModal(true)}
+              aria-label="Sign in"
+              className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px]"
+              title="Sign in to sync data"
+            >
+              <LogIn className="h-4 w-4" />
+            </Button>
+          )}
+          <SettingsButton />
+        </nav>
+      </div>
+      <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
+      <AuthModal open={showAuthModal} onClose={handleAuthModalClose} />
+    </header>
+  );
+});
