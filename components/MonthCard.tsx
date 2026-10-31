@@ -41,8 +41,8 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
   return (
     <a href={`/month/${month.id}`} className="block cursor-pointer">
       <Card
-        className={`hover:border-primary hover:shadow-lg cursor-pointer relative transition-all duration-300 ease-in-out ${
-          cardData.isCurrentMonth ? "ring-2 ring-accent shadow-md" : ""
+        className={`hover:border-primary hover:shadow-premium-lg hover:-translate-y-1 cursor-pointer relative transition-all duration-300 ease-in-out ${
+          cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium" : ""
         } ${cardData.isNotStarted ? "opacity-85" : ""}`}
       >
         {cardData.isCurrentMonth && (

@@ -10,7 +10,7 @@ export const StreakTracker = memo(function StreakTracker() {
   const offset = circumference - (streakPercentage / 100) * circumference;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden hover-lift">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <Flame className={`h-5 w-5 ${data.currentStreak > 0 ? "text-orange-500" : "text-muted-foreground"}`} />
@@ -34,17 +34,23 @@ export const StreakTracker = memo(function StreakTracker() {
                 cx="48"
                 cy="48"
                 r="40"
-                stroke="currentColor"
+                stroke="url(#streakGradient)"
                 strokeWidth="8"
                 fill="none"
                 strokeDasharray={circumference}
                 strokeDashoffset={offset}
-                className={`transition-all duration-500 ease-out ${data.currentStreak > 0 ? "text-orange-500" : "text-muted"}`}
+                className={`transition-all duration-500 ease-out ${data.currentStreak > 0 ? "" : "text-muted"}`}
                 strokeLinecap="round"
               />
+              <defs>
+                <linearGradient id="streakGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#f97316" />
+                  <stop offset="100%" stopColor="#ef4444" />
+                </linearGradient>
+              </defs>
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-2xl font-bold tabular-nums">
+              <span className="text-2xl font-bold tabular-nums gradient-text-gold">
                 {data.currentStreak}
               </span>
             </div>

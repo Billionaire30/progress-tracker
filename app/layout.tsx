@@ -6,6 +6,19 @@ import { Toaster } from "@/components/ui/toaster";
 import { SkipToMain } from "@/components/SkipToMain";
 import { BodyWrapper } from "@/components/BodyWrapper";
 import { ThemeProvider } from "next-themes";
+import { Inter, Playfair_Display } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Progress Tracker",
@@ -32,8 +45,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="pointer-events-auto">
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
+      <body className="pointer-events-auto font-sans">
         <SkipToMain />
         <ThemeProvider
           attribute="class"

@@ -53,8 +53,8 @@ const config: Config = {
         soft: "0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1)",
       },
       fontFamily: {
-        sans: ["system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
-        serif: ["Georgia", "Cambria", "Times New Roman", "Times", "serif"],
+        sans: ["var(--font-inter)", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+        serif: ["var(--font-playfair)", "Georgia", "Cambria", "Times New Roman", "Times", "serif"],
       },
       fontVariantNumeric: {
         tabular: ["tabular-nums"],

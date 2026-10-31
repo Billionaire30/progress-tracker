@@ -5,6 +5,7 @@ import { generateInsights, ProductivityInsight } from "@/lib/insights";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, Lightbulb, Trophy, Target } from "lucide-react";
 import { useMemo, memo } from "react";
+import { motion } from "framer-motion";
 
 export const ProductivityInsights = memo(function ProductivityInsights() {
   const { data } = useApp();
@@ -39,7 +40,7 @@ export const ProductivityInsights = memo(function ProductivityInsights() {
   };
 
   return (
-    <Card>
+    <Card className="hover-lift">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Lightbulb className="h-5 w-5" />
@@ -48,9 +49,12 @@ export const ProductivityInsights = memo(function ProductivityInsights() {
       </CardHeader>
       <CardContent className="space-y-3">
         {insights.map((insight, index) => (
-          <div
+          <motion.div
             key={index}
-            className={`p-4 rounded-lg bg-muted/50 ${getPriorityColor(insight.priority)}`}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.1, duration: 0.3 }}
+            className={`p-4 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors ${getPriorityColor(insight.priority)}`}
           >
             <div className="flex items-start gap-3">
               {getIcon(insight.type)}
@@ -59,7 +63,7 @@ export const ProductivityInsights = memo(function ProductivityInsights() {
                 <p className="text-sm text-muted-foreground mt-1">{insight.description}</p>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
       </CardContent>
     </Card>

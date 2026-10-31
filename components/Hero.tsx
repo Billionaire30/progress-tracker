@@ -16,7 +16,7 @@ export const Hero = memo(function Hero() {
   }, []);
 
   return (
-    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
+    <Card className="overflow-hidden shadow-premium-xl hover:shadow-premium-xl transition-all duration-300 gradient-border">
       <CardContent className="p-0">
         <div className="relative h-40 sm:h-48 md:h-64">
           <Image

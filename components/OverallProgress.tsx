@@ -24,9 +24,9 @@ export const OverallProgress = memo(function OverallProgress() {
   }, [data.months, data.portfolio, data.competencyChecklist]);
 
   return (
-    <Card className="transition-all duration-300">
+    <Card className="transition-all duration-300 hover-lift">
       <CardContent className="pt-6">
-        <div className="text-6xl font-bold tabular-nums mb-4 font-serif transition-all duration-300">
+        <div className="text-6xl font-bold tabular-nums mb-4 font-serif transition-all duration-300 gradient-text counter-animate">
           {progress.overallProgress}%
         </div>
         <div>

@@ -47,7 +47,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
   }, [data.weeklyLog]);
 
   return (
-    <Card>
+    <Card className="hover-lift">
       <CardHeader>
         <CardTitle className="flex items-center justify-between text-base sm:text-lg">
           <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all duration-500 ease-out ${isGoalMet ? "bg-green-600 dark:bg-green-400" : "bg-primary"}`}
+                className={`h-full transition-all duration-500 ease-out ${isGoalMet ? "bg-gradient-to-r from-green-500 to-emerald-400" : "bg-gradient-to-r from-primary to-purple-500"}`}
                 style={{ width: `${goalProgress}%` }}
               />
             </div>
@@ -105,11 +105,28 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
           <div style={{ height: 120 }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={weekData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="day" tick={{ fontSize: 10 }} />
-                <YAxis tick={{ fontSize: 10 }} />
-                <Tooltip />
-                <Bar dataKey="hours" fill="hsl(var(--primary))" />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+                <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                  }}
+                />
+                <Bar 
+                  dataKey="hours" 
+                  fill="url(#barGradient)"
+                  radius={[4, 4, 0, 0]}
+                  animationDuration={500}
+                />
+                <defs>
+                  <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={1} />
+                    <stop offset="100%" stopColor="hsl(var(--primary))" stopOpacity={0.6} />
+                  </linearGradient>
+                </defs>
               </BarChart>
             </ResponsiveContainer>
           </div>

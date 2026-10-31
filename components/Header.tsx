@@ -40,11 +40,11 @@ export const Header = memo(function Header() {
   }, [signOutUser]);
 
   return (
-    <header className="border-b bg-card sticky top-0 z-50">
+    <header className="border-b bg-card/80 backdrop-blur-xl sticky top-0 z-50 shadow-premium">
       <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
-        <h1 className="text-lg sm:text-xl font-bold font-serif truncate">Progress Tracker</h1>
+        <h1 className="text-lg sm:text-xl font-bold font-serif truncate gradient-text">Progress Tracker</h1>
         <nav className="flex items-center gap-1 sm:gap-3" aria-label="Progress overview">
-          <div className="text-xs sm:text-sm font-medium bg-primary text-primary-foreground px-2 sm:px-3 py-1 rounded-full tabular-nums whitespace-nowrap">
+          <div className="text-xs sm:text-sm font-medium bg-gradient-to-r from-primary to-purple-500 text-white px-2 sm:px-3 py-1 rounded-full tabular-nums whitespace-nowrap shadow-glow">
             {headerStats.overallProgress}%
           </div>
           <div className="text-xs sm:text-sm text-muted-foreground tabular-nums hidden md:block whitespace-nowrap">

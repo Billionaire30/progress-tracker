@@ -38,6 +38,7 @@ export const SortOptions = memo(function SortOptions({ sortBy, onSortChange }: S
         variant={sortBy === "id" ? "default" : "outline"}
         size="sm"
         onClick={handleSortId}
+        className={sortBy === "id" ? "shadow-glow" : ""}
       >
         ID
       </Button>
@@ -45,6 +46,7 @@ export const SortOptions = memo(function SortOptions({ sortBy, onSortChange }: S
         variant={sortBy === "status" ? "default" : "outline"}
         size="sm"
         onClick={handleSortStatus}
+        className={sortBy === "status" ? "shadow-glow" : ""}
       >
         Status
       </Button>
@@ -52,6 +54,7 @@ export const SortOptions = memo(function SortOptions({ sortBy, onSortChange }: S
         variant={sortBy === "progress" ? "default" : "outline"}
         size="sm"
         onClick={handleSortProgress}
+        className={sortBy === "progress" ? "shadow-glow" : ""}
       >
         Progress
       </Button>

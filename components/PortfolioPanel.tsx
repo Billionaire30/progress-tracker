@@ -68,7 +68,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
   }, []);
 
   return (
-    <Card>
+    <Card className="hover-lift">
       <CardHeader>
         <CardTitle className="text-lg sm:text-xl">Portfolio Progress</CardTitle>
         <div className="mt-2">
@@ -79,16 +79,16 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 stagger-children">
           {filteredPortfolio.map((item) => (
-            <Card key={item.id} className="transition-all duration-300 hover:shadow-lg hover:-translate-y-1 overflow-hidden">
+            <Card key={item.id} className="transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 overflow-hidden hover:border-primary/50">
               {item.image && (
                 <div className="h-20 sm:h-24 overflow-hidden relative">
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-300 hover:scale-110"
                     loading="lazy"
                   />
                 </div>

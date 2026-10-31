@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { Clock, ChevronDown, ChevronRight } from "lucide-react";
 import { useClickSound } from "@/lib/hooks/use-click-sound";
+import { triggerMiniConfetti } from "@/lib/confetti";
 import { memo, useMemo, useCallback, useState } from "react";
 
 const categories = {
@@ -25,8 +26,15 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
   );
 
   const handleToggle = useCallback((id: string) => {
+    const competency = data.competencyChecklist.find((c) => c.id === id);
+    const wasNotDone = competency && !competency.done;
     toggleCompetency(id);
-  }, [toggleCompetency]);
+    
+    // Trigger confetti on completion
+    if (wasNotDone) {
+      triggerMiniConfetti();
+    }
+  }, [toggleCompetency, data.competencyChecklist]);
 
   const toggleCategory = useCallback((category: string) => {
     playClickSound();
@@ -34,7 +42,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
   }, [expandedCategory, playClickSound]);
 
   return (
-    <Card>
+    <Card className="hover-lift">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
           <Clock className="h-5 w-5" />
@@ -54,7 +62,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
           const isExpanded = expandedCategory === category;
 
           return (
-            <div key={category} className="border rounded-lg overflow-hidden">
+            <div key={category} className="border rounded-lg overflow-hidden hover:border-primary/50 transition-colors">
               <button
                 onClick={() => toggleCategory(category)}
                 className="w-full flex items-center justify-between p-2 sm:p-3 hover:bg-muted/50 transition-colors"
@@ -69,9 +77,9 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                   <Progress value={categoryProgress} className="h-1.5" />
                 </div>
                 {isExpanded ? (
-                  <ChevronDown className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0" />
+                  <ChevronDown className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0 transition-transform duration-200" />
                 ) : (
-                  <ChevronRight className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0" />
+                  <ChevronRight className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0 transition-transform duration-200" />
                 )}
               </button>
               {isExpanded && (
@@ -79,7 +87,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                   {categoryCompetencies.map((competency) => (
                     <div
                       key={competency.id}
-                      className="flex items-start gap-2 sm:gap-3 p-2 rounded hover:bg-muted/50"
+                      className="flex items-start gap-2 sm:gap-3 p-2 rounded hover:bg-muted/50 transition-colors"
                     >
                       <Checkbox
                         checked={competency.done}
@@ -87,7 +95,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                         className="mt-0.5 flex-shrink-0"
                       />
                       <p
-                        className={`text-xs sm:text-sm flex-1 ${
+                        className={`text-xs sm:text-sm flex-1 transition-all ${
                           competency.done ? "line-through text-muted-foreground" : ""
                         }`}
                       >

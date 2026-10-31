@@ -14,22 +14,22 @@ export const StatusPill = memo(function StatusPill({ status, className, onClick,
     const getStatusColor = (status: string) => {
       switch (status) {
         case "complete":
-          return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300";
+          return "bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 dark:from-green-900/30 dark:to-emerald-900/30 dark:text-green-300 shadow-sm";
         case "in-progress":
-          return "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300";
+          return "bg-gradient-to-r from-amber-100 to-orange-100 text-amber-800 dark:from-amber-900/30 dark:to-orange-900/30 dark:text-amber-300 shadow-sm";
         default:
-          return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300";
+          return "bg-gradient-to-r from-gray-100 to-slate-100 text-gray-800 dark:from-gray-800 dark:to-slate-800 dark:text-gray-300 shadow-sm";
       }
     };
 
     const getStatusDot = (status: string) => {
       switch (status) {
         case "complete":
-          return "bg-green-600";
+          return "bg-gradient-to-r from-green-500 to-emerald-500";
         case "in-progress":
-          return "bg-amber-600";
+          return "bg-gradient-to-r from-amber-500 to-orange-500";
         default:
-          return "bg-gray-600";
+          return "bg-gradient-to-r from-gray-500 to-slate-500";
       }
     };
 
