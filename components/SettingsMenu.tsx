@@ -100,7 +100,15 @@ export function SettingsButton() {
 
   return (
     <>
-      <Button variant="outline" size="icon" aria-label="Settings" onClick={() => setIsSettingsOpen(true)}>
+      <Button
+        variant="outline"
+        size="icon"
+        aria-label="Settings"
+        onClick={() => {
+          console.log("Settings button clicked");
+          setIsSettingsOpen(true);
+        }}
+      >
         <Settings className="h-4 w-4" />
       </Button>
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>

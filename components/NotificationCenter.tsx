@@ -74,7 +74,10 @@ export function NotificationCenter() {
         variant="ghost"
         size="icon"
         className="relative"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          console.log("Notifications button clicked");
+          setIsOpen(true);
+        }}
         aria-label="Notifications"
       >
         <Bell className="h-4 w-4" />

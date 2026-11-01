@@ -147,7 +147,10 @@ export function VoiceAssistant() {
       <Button
         variant="ghost"
         size="icon"
-        onClick={() => setIsOpen(true)}
+        onClick={() => {
+          console.log("Voice Assistant button clicked");
+          setIsOpen(true);
+        }}
         title="Voice Assistant"
         aria-label="Voice Assistant"
       >
