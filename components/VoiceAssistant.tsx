@@ -15,9 +15,13 @@ import {
   getVoiceCommandsList,
 } from "@/lib/voice";
 
-export const VoiceAssistant = memo(function VoiceAssistant() {
+interface VoiceAssistantContentProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const VoiceAssistantContent = memo(function VoiceAssistantContent({ open, onOpenChange }: VoiceAssistantContentProps) {
   const { data, setData } = useApp();
-  const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [response, setResponse] = useState("");
@@ -143,24 +147,11 @@ export const VoiceAssistant = memo(function VoiceAssistant() {
   }, [response]);
 
   return (
-    <>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => {
-          console.log("Voice Assistant button clicked");
-          setIsOpen(true);
-        }}
-        title="Voice Assistant"
-        aria-label="Voice Assistant"
-      >
-        <Mic className="h-4 w-4" />
-      </Button>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-md">
-        <DialogHeader>
-          <DialogTitle>Voice Assistant</DialogTitle>
-        </DialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+      <DialogHeader>
+        <DialogTitle>Voice Assistant</DialogTitle>
+      </DialogHeader>
         <div className="space-y-4">
           <div className="flex items-center justify-center gap-4">
             <Button
@@ -211,6 +202,19 @@ export const VoiceAssistant = memo(function VoiceAssistant() {
         </div>
       </DialogContent>
     </Dialog>
-    </>
   );
 });
+
+export function VoiceAssistant({ onClick }: { onClick: () => void }) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={onClick}
+      title="Voice Assistant"
+      aria-label="Voice Assistant"
+    >
+      <Mic className="h-4 w-4" />
+    </Button>
+  );
+}

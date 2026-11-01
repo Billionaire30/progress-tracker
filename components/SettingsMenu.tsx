@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import { useApp } from "@/lib/context";
 import { useToast } from "@/lib/hooks/use-toast";
 import { useNotifications } from "@/lib/hooks/use-notifications";
@@ -18,12 +18,16 @@ import { Settings, Bell, Download, Table, FileText, Upload } from "lucide-react"
 import { exportToCSV, exportToText } from "@/lib/export";
 import { downloadReport } from "@/lib/report";
 
-export function SettingsButton() {
+interface SettingsMenuContentProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export function SettingsMenuContent({ open, onOpenChange }: SettingsMenuContentProps) {
   const { data, setData, resetData, exportData, importData, updatePreferences, preferences } = useApp();
   const { toast } = useToast();
   const { permission, enabled, toggleNotifications } = useNotifications();
   const { playClickSound } = useClickSound();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [startDate, setStartDate] = useState(data.startDate || "");
   const [showChartAsTable, setShowChartAsTable] = useState(preferences.showChartAsTable || false);
@@ -98,26 +102,14 @@ export function SettingsButton() {
   }, [data, setData]);
 
   return (
-    <>
-      <Button
-        variant="outline"
-        size="icon"
-        aria-label="Settings"
-        onClick={() => {
-          setIsSettingsOpen(true);
-        }}
-        title="Settings"
-      >
-        <Settings className="h-4 w-4" />
-      </Button>
-      <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Settings</DialogTitle>
-            <DialogDescription>
-              Manage your data and settings
-            </DialogDescription>
-          </DialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Settings</DialogTitle>
+          <DialogDescription>
+            Manage your data and settings
+          </DialogDescription>
+        </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="flex items-center justify-between">
               <div>
@@ -284,6 +276,23 @@ export function SettingsButton() {
           </div>
         </DialogContent>
       </Dialog>
-    </>
+  );
+}
+
+export function SettingsButton({ onClick }: { onClick: () => void }) {
+  const { playClickSound } = useClickSound();
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      aria-label="Settings"
+      onClick={() => {
+        playClickSound();
+        onClick();
+      }}
+      title="Settings"
+    >
+      <Settings className="h-4 w-4" />
+    </Button>
   );
 }

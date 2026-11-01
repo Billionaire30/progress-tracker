@@ -11,6 +11,11 @@ import { PortfolioPanel } from "@/components/PortfolioPanel";
 import { StreakTracker } from "@/components/StreakTracker";
 import { ProductivityInsights } from "@/components/ProductivityInsights";
 import { LogHoursModal } from "@/components/LogHoursModal";
+import { SettingsMenuContent } from "@/components/SettingsMenu";
+import { NotificationCenterContent } from "@/components/NotificationCenter";
+import { VoiceAssistantContent } from "@/components/VoiceAssistant";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { AuthModal } from "@/components/AuthModal";
 import SoftAurora from "@/components/SoftAurora";
 import ClickSpark from "@/components/ClickSpark";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
@@ -18,6 +23,11 @@ import { useReminder } from "@/lib/hooks/use-reminder";
 
 export default function Home() {
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useReminder();
 
@@ -46,7 +56,13 @@ export default function Home() {
             opacity={0.3}
           />
         </div>
-        <Header />
+        <Header
+          onSettingsClick={() => setIsSettingsOpen(true)}
+          onNotificationsClick={() => setIsNotificationsOpen(true)}
+          onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
+          onShortcutsClick={() => setShowShortcuts(true)}
+          onAuthClick={() => setShowAuthModal(true)}
+        />
 
         <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">
           <Hero />
@@ -67,6 +83,11 @@ export default function Home() {
         </main>
 
         <LogHoursModal open={isLogModalOpen} onOpenChange={setIsLogModalOpen} />
+        <SettingsMenuContent open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
+        <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
+        <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
+        <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
+        <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </div>
     </ClickSpark>
   );

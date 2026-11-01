@@ -9,11 +9,15 @@ import { Bell, X, Check, Clock, AlertTriangle, Trophy, Target } from "lucide-rea
 import { generateNotifications, shouldShowNotification, Notification } from "@/lib/notifications";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-export const NotificationCenter = memo(function NotificationCenter() {
+interface NotificationCenterContentProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+export const NotificationCenterContent = memo(function NotificationCenterContent({ open, onOpenChange }: NotificationCenterContentProps) {
   const { data, setData } = useApp();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const notifs = generateNotifications(data);
@@ -69,30 +73,9 @@ export const NotificationCenter = memo(function NotificationCenter() {
   }, []);
 
   return (
-    <>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="relative"
-        onClick={() => {
-          console.log("Notifications button clicked");
-          setIsOpen(true);
-        }}
-        aria-label="Notifications"
-      >
-        <Bell className="h-4 w-4" />
-        {unreadCount > 0 && (
-          <Badge
-            variant="destructive"
-            className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs pointer-events-none"
-          >
-            {unreadCount}
-          </Badge>
-        )}
-      </Button>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Notifications</DialogTitle>
             {unreadCount > 0 && (
@@ -152,6 +135,27 @@ export const NotificationCenter = memo(function NotificationCenter() {
         </div>
       </DialogContent>
     </Dialog>
-    </>
   );
 });
+
+export function NotificationCenter({ onClick, unreadCount }: { onClick: () => void; unreadCount: number }) {
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      className="relative"
+      onClick={onClick}
+      aria-label="Notifications"
+    >
+      <Bell className="h-4 w-4" />
+      {unreadCount > 0 && (
+        <Badge
+          variant="destructive"
+          className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs pointer-events-none"
+        >
+          {unreadCount}
+        </Badge>
+      )}
+    </Button>
+  );
+}
