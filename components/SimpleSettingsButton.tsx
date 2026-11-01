@@ -1,19 +1,24 @@
 "use client";
 
 import { useState } from "react";
+import { useApp } from "@/lib/context";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Settings } from "lucide-react";
 
 export function SimpleSettingsButton() {
+  const { data, setData } = useApp();
   const [isOpen, setIsOpen] = useState(false);
 
-  const openDialog = () => {
-    setIsOpen(true);
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
+
+  const handleStartDateChange = (value: string) => {
+    setData({ ...data, startDate: value });
   };
 
-  const closeDialog = () => {
-    setIsOpen(false);
+  const handleWeeklyGoalChange = (value: number) => {
+    setData({ ...data, weeklyGoal: value });
   };
 
   return (
@@ -21,8 +26,9 @@ export function SimpleSettingsButton() {
       <Button
         variant="outline"
         size="icon"
-        onClick={openDialog}
+        onClick={handleOpen}
         aria-label="Settings"
+        title="Settings"
       >
         <Settings className="h-4 w-4" />
       </Button>
@@ -32,9 +38,39 @@ export function SimpleSettingsButton() {
             <DialogTitle>Settings</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <p className="text-sm text-muted-foreground">
-              Settings panel is not currently available in this simplified version.
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Start Date</p>
+                <p className="text-sm text-muted-foreground">
+                  When you began Month 1
+                </p>
+              </div>
+              <input
+                type="date"
+                value={data.startDate || ""}
+                onChange={(e) => handleStartDateChange(e.target.value)}
+                className="px-3 py-2 border rounded-md text-sm"
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Weekly Hour Goal</p>
+                <p className="text-sm text-muted-foreground">
+                  Target hours per week
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={data.weeklyGoal || 20}
+                  onChange={(e) => handleWeeklyGoalChange(parseInt(e.target.value) || 20)}
+                  className="px-3 py-2 border rounded-md text-sm w-20"
+                />
+                <span className="text-sm text-muted-foreground">hrs</span>
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>

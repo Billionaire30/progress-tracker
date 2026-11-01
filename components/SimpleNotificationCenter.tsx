@@ -8,21 +8,17 @@ import { Bell } from "lucide-react";
 export function SimpleNotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openDialog = () => {
-    setIsOpen(true);
-  };
-
-  const closeDialog = () => {
-    setIsOpen(false);
-  };
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
 
   return (
     <>
       <Button
         variant="ghost"
         size="icon"
-        onClick={openDialog}
+        onClick={handleOpen}
         aria-label="Notifications"
+        title="Notifications"
       >
         <Bell className="h-4 w-4" />
       </Button>

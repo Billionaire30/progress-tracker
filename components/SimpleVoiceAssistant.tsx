@@ -8,21 +8,17 @@ import { Mic } from "lucide-react";
 export function SimpleVoiceAssistant() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openDialog = () => {
-    setIsOpen(true);
-  };
-
-  const closeDialog = () => {
-    setIsOpen(false);
-  };
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
 
   return (
     <>
       <Button
         variant="ghost"
         size="icon"
-        onClick={openDialog}
+        onClick={handleOpen}
         aria-label="Voice Assistant"
+        title="Voice Assistant"
       >
         <Mic className="h-4 w-4" />
       </Button>
