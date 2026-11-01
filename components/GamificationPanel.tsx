@@ -5,9 +5,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Award, Trophy, Star, Zap, Flame, Target } from "lucide-react";
-import { useMemo, memo } from "react";
+import { useMemo } from "react";
 
-export const GamificationPanel = memo(function GamificationPanel() {
+export function GamificationPanel() {
   const { data } = useApp();
 
   const gamification = useMemo(() => data.gamification || {
@@ -154,4 +154,4 @@ export const GamificationPanel = memo(function GamificationPanel() {
       </Card>
     </div>
   );
-});
+}

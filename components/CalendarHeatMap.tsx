@@ -3,13 +3,13 @@
 import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { WeeklyLogEntry } from "@/lib/data";
-import { useMemo, memo } from "react";
+import { useMemo } from "react";
 
 interface CalendarHeatMapProps {
   year?: number;
 }
 
-export const CalendarHeatMap = memo(function CalendarHeatMap({ year = new Date().getFullYear() }: CalendarHeatMapProps) {
+export function CalendarHeatMap({ year = new Date().getFullYear() }: CalendarHeatMapProps) {
   const { data } = useApp();
 
   const calendarData = useMemo(() => {
@@ -152,4 +152,4 @@ export const CalendarHeatMap = memo(function CalendarHeatMap({ year = new Date()
       </CardContent>
     </Card>
   );
-});
+}

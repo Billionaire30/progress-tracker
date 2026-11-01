@@ -2,9 +2,9 @@ import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { TrendingUp, Clock, Target, Award } from "lucide-react";
-import { useMemo, memo } from "react";
+import { useMemo } from "react";
 
-export const StatsDashboard = memo(function StatsDashboard() {
+export function StatsDashboard() {
   const { data } = useApp();
 
   const stats = useMemo(() => {
@@ -136,4 +136,4 @@ export const StatsDashboard = memo(function StatsDashboard() {
       </div>
     </div>
   );
-});
+}

@@ -4,9 +4,9 @@ import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { Clock, Target, TrendingUp, Calendar, Award, Flame } from "lucide-react";
-import { useMemo, memo } from "react";
+import { useMemo } from "react";
 
-export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
+export function AdvancedAnalytics() {
   const { data } = useApp();
 
   const analytics = useMemo(() => {
@@ -233,4 +233,4 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
       </div>
     </div>
   );
-});
+}

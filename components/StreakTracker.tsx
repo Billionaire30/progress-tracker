@@ -1,9 +1,8 @@
 import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Flame, TrendingUp } from "lucide-react";
-import { memo } from "react";
 
-export const StreakTracker = memo(function StreakTracker() {
+export function StreakTracker() {
   const { data } = useApp();
   const streakPercentage = data.longestStreak > 0 ? (data.currentStreak / data.longestStreak) * 100 : 0;
   const circumference = 2 * Math.PI * 40;
@@ -75,4 +74,4 @@ export const StreakTracker = memo(function StreakTracker() {
       </CardContent>
     </Card>
   );
-});
+}
