@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Bell, X, Check, Clock, AlertTriangle, Trophy, Target } from "lucide-rea
 import { generateNotifications, shouldShowNotification, Notification } from "@/lib/notifications";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-export function NotificationCenter() {
+export const NotificationCenter = memo(function NotificationCenter() {
   const { data, setData } = useApp();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -154,4 +154,4 @@ export function NotificationCenter() {
     </Dialog>
     </>
   );
-}
+});

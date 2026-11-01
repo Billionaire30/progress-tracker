@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useMemo, memo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useApp } from "@/lib/context";
 import { useAuth } from "@/components/AuthProvider";
 import { getCurrentWeekNumber } from "@/lib/week";
@@ -14,7 +14,7 @@ import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
 import { AuthModal } from "@/components/AuthModal";
 import { useToast } from "@/lib/hooks/use-toast";
 
-export const Header = memo(function Header() {
+export function Header() {
   const { data } = useApp();
   const { user, signOutUser } = useAuth();
   const { toast } = useToast();

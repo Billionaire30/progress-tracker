@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, memo } from "react";
 import { useApp } from "@/lib/context";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -15,7 +15,7 @@ import {
   getVoiceCommandsList,
 } from "@/lib/voice";
 
-export function VoiceAssistant() {
+export const VoiceAssistant = memo(function VoiceAssistant() {
   const { data, setData } = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -213,4 +213,4 @@ export function VoiceAssistant() {
     </Dialog>
     </>
   );
-}
+});
