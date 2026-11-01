@@ -209,14 +209,14 @@
 
   /* Multi-layered shadows */
   .shadow-premium {
-    box-shadow: 
+    box-shadow:
       0 1px 3px 0 rgb(0 0 0 / 0.1),
       0 1px 2px -1px rgb(0 0 0 / 0.1),
       0 0 0 1px rgb(0 0 0 / 0.05);
   }
 
   .shadow-premium-lg {
-    box-shadow: 
+    box-shadow:
       0 4px 6px -1px rgb(0 0 0 / 0.1),
       0 2px 4px -2px rgb(0 0 0 / 0.1),
       0 10px 15px -3px rgb(0 0 0 / 0.1),
@@ -224,7 +224,7 @@
   }
 
   .shadow-premium-xl {
-    box-shadow: 
+    box-shadow:
       0 10px 15px -3px rgb(0 0 0 / 0.1),
       0 4px 6px -4px rgb(0 0 0 / 0.1),
       0 20px 25px -5px rgb(0 0 0 / 0.1),
@@ -259,11 +259,14 @@
   .glass-card {
     @apply bg-white/95 dark:bg-card/95 border border-white/30 dark:border-white/15 backdrop-blur-sm;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    z-index: 1;
   }
 
   .glass-card:hover {
     @apply bg-white dark:bg-card;
     border-color: hsl(var(--primary) / 0.3);
+    z-index: 10;
   }
 
   /* Gradient border */

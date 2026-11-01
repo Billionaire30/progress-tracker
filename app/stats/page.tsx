@@ -78,7 +78,7 @@ export default function StatsPage() {
           <Header />
         </HeaderErrorBoundary>
 
-      <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" role="main">
+      <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8" role="main">
         <div className="flex items-center gap-2 sm:gap-4">
           <a href="/">
             <Button variant="ghost" size="sm" aria-label="Back to Dashboard" className="text-xs sm:text-sm">
@@ -90,7 +90,7 @@ export default function StatsPage() {
           <h1 className="text-2xl sm:text-3xl font-bold font-serif">Statistics</h1>
         </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
             <StreakTracker />
             <CalendarHeatMap />
           </div>
@@ -99,7 +99,7 @@ export default function StatsPage() {
 
           <AdvancedAnalytics />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             <GamificationPanel />
             <WorkspaceManager />
           </div>

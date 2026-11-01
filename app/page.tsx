@@ -58,15 +58,15 @@ export default function Home() {
           <Header />
         </HeaderErrorBoundary>
 
-        <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">
+        <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8 relative" role="main">
           <PageTransition>
             <Hero />
             <OverallProgress />
             <MonthGrid />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
               <WeeklyHoursChart onLogHoursClick={openLogModal} />
-              <div className="space-y-4 sm:space-y-6">
+              <div className="space-y-6 sm:space-y-8">
                 <CompetencyPanel />
                 <StreakTracker />
               </div>

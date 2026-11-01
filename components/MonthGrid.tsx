@@ -36,9 +36,9 @@ export const MonthGrid = memo(function MonthGrid() {
   }, [data.months, sortBy]);
 
   return (
-    <div className="space-y-3 sm:space-y-4">
+    <div className="space-y-4 sm:space-y-6">
       <SortOptions sortBy={sortBy} onSortChange={handleSortChange} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 stagger-children">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 stagger-children">
         {sortedMonths.map((month) => (
           <MonthCard key={month.id} month={month} />
         ))}
