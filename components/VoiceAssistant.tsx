@@ -24,13 +24,13 @@ export function VoiceAssistant() {
 
   useEffect(() => {
     if (!isSpeechRecognitionSupported()) {
-      setResponse("Voice recognition is not supported in your browser.");
+      setResponse("Voice recognition is not supported in your browser. Please use Chrome or Edge for voice commands.");
     }
   }, []);
 
   const handleStartListening = () => {
     if (!isSpeechRecognitionSupported()) {
-      setResponse("Voice recognition is not supported in your browser.");
+      setResponse("Voice recognition is not supported in your browser. Please use Chrome or Edge for voice commands.");
       return;
     }
 
@@ -125,7 +125,9 @@ export function VoiceAssistant() {
         const commands = getVoiceCommandsList();
         const commandList = commands.map((c) => c.phrase).join(", ");
         setResponse(`Available commands: ${commandList}`);
-        speak(`Available commands: ${commandList}`);
+        if (isSpeechRecognitionSupported()) {
+          speak(`Available commands: ${commandList}`);
+        }
         break;
 
       default:
