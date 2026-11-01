@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { StatsDashboard } from "@/components/StatsDashboard";
 import { StreakTracker } from "@/components/StreakTracker";
 import { AchievementsPanel } from "@/components/AchievementsPanel";
@@ -11,12 +12,22 @@ import { IntegrationsManager } from "@/components/IntegrationsManager";
 import { Header } from "@/components/Header";
 import { AuthRequired } from "@/components/AuthRequired";
 import { LoadingState } from "@/components/LoadingSpinner";
+import { SettingsMenuContent } from "@/components/SettingsMenu";
+import { NotificationCenterContent } from "@/components/NotificationCenter";
+import { VoiceAssistantContent } from "@/components/VoiceAssistant";
+import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
+import { AuthModal } from "@/components/AuthModal";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/context";
 
 export default function StatsPage() {
   const { isLoading } = useApp();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   if (isLoading) {
     return (
@@ -29,7 +40,13 @@ export default function StatsPage() {
   return (
     <AuthRequired>
       <div className="min-h-screen">
-        <Header />
+        <Header
+          onSettingsClick={() => setIsSettingsOpen(true)}
+          onNotificationsClick={() => setIsNotificationsOpen(true)}
+          onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
+          onShortcutsClick={() => setShowShortcuts(true)}
+          onAuthClick={() => setShowAuthModal(true)}
+        />
 
       <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" role="main">
         <div className="flex items-center gap-2 sm:gap-4">
@@ -61,6 +78,12 @@ export default function StatsPage() {
 
           <AchievementsPanel />
       </main>
+
+      <SettingsMenuContent open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
+      <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
+      <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
+      <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
+      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </div>
     </AuthRequired>
   );
