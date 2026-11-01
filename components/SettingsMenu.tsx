@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState } from "react";
+import { useRef, useCallback, useState, forwardRef } from "react";
 import { useApp } from "@/lib/context";
 import { useToast } from "@/lib/hooks/use-toast";
 import { useNotifications } from "@/lib/hooks/use-notifications";
@@ -279,20 +279,25 @@ export function SettingsMenuContent({ open, onOpenChange }: SettingsMenuContentP
   );
 }
 
-export function SettingsButton({ onClick }: { onClick: () => void }) {
-  const { playClickSound } = useClickSound();
-  return (
-    <Button
-      variant="outline"
-      size="icon"
-      aria-label="Settings"
-      onClick={() => {
-        playClickSound();
-        onClick();
-      }}
-      title="Settings"
-    >
-      <Settings className="h-4 w-4" />
-    </Button>
-  );
-}
+export const SettingsButton = forwardRef<HTMLButtonElement, { onClick: () => void }>(
+  ({ onClick }, ref) => {
+    const { playClickSound } = useClickSound();
+    return (
+      <Button
+        ref={ref}
+        variant="outline"
+        size="icon"
+        aria-label="Settings"
+        onClick={() => {
+          playClickSound();
+          onClick();
+        }}
+        title="Settings"
+      >
+        <Settings className="h-4 w-4" />
+      </Button>
+    );
+  }
+);
+
+SettingsButton.displayName = "SettingsButton";

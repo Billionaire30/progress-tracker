@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useEffect, useRef } from "react";
 import { useApp } from "@/lib/context";
 import { useAuth } from "@/components/AuthProvider";
 import { getCurrentWeekNumber } from "@/lib/week";
@@ -28,6 +28,124 @@ export function Header({
   const { data } = useApp();
   const { user, signOutUser } = useAuth();
   const { toast } = useToast();
+  const notificationsButtonRef = useRef<HTMLButtonElement>(null);
+  const voiceAssistantButtonRef = useRef<HTMLButtonElement>(null);
+  const shortcutsButtonRef = useRef<HTMLButtonElement>(null);
+  const authButtonRef = useRef<HTMLButtonElement>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Debug: Log when Header mounts and props received
+  useEffect(() => {
+    console.log('Header mounted with props:', {
+      hasOnSettingsClick: typeof onSettingsClick === 'function',
+      hasOnNotificationsClick: typeof onNotificationsClick === 'function',
+      hasOnVoiceAssistantClick: typeof onVoiceAssistantClick === 'function',
+      hasOnShortcutsClick: typeof onShortcutsClick === 'function',
+      hasOnAuthClick: typeof onAuthClick === 'function',
+    });
+  }, [onSettingsClick, onNotificationsClick, onVoiceAssistantClick, onShortcutsClick, onAuthClick]);
+
+  // Ensure event handlers are properly attached after mount
+  useEffect(() => {
+    const notificationsBtn = document.querySelector('button[aria-label="Notifications"]');
+    if (notificationsBtn) {
+      console.log('Notifications button found in DOM');
+    } else {
+      console.warn('Notifications button not found in DOM');
+    }
+  }, []);
+
+  // Fallback: Attach direct event listeners as backup for hydration issues
+  useEffect(() => {
+    const btn = notificationsButtonRef.current;
+    if (!btn) return;
+
+    const handleClick = (e: Event) => {
+      console.log('Fallback click handler triggered for notifications');
+      onNotificationsClick();
+    };
+
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [onNotificationsClick]);
+
+  useEffect(() => {
+    const btn = voiceAssistantButtonRef.current;
+    if (!btn) return;
+
+    const handleClick = (e: Event) => {
+      console.log('Fallback click handler triggered for voice assistant');
+      onVoiceAssistantClick();
+    };
+
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [onVoiceAssistantClick]);
+
+  useEffect(() => {
+    const btn = shortcutsButtonRef.current;
+    if (!btn) return;
+
+    const handleClick = (e: Event) => {
+      console.log('Fallback click handler triggered for shortcuts');
+      onShortcutsClick();
+    };
+
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [onShortcutsClick]);
+
+  useEffect(() => {
+    const btn = authButtonRef.current;
+    if (!btn) return;
+
+    const handleClick = (e: Event) => {
+      console.log('Fallback click handler triggered for auth');
+      onAuthClick();
+    };
+
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [onAuthClick]);
+
+  useEffect(() => {
+    const btn = settingsButtonRef.current;
+    if (!btn) return;
+
+    const handleClick = (e: Event) => {
+      console.log('Fallback click handler triggered for settings');
+      onSettingsClick();
+    };
+
+    btn.addEventListener('click', handleClick);
+    return () => btn.removeEventListener('click', handleClick);
+  }, [onSettingsClick]);
+
+  // Wrapper functions with console logging
+  const handleNotificationsClick = useCallback(() => {
+    console.log('Notifications button clicked');
+    onNotificationsClick();
+  }, [onNotificationsClick]);
+
+  const handleVoiceAssistantClick = useCallback(() => {
+    console.log('Voice assistant button clicked');
+    onVoiceAssistantClick();
+  }, [onVoiceAssistantClick]);
+
+  const handleShortcutsClick = useCallback(() => {
+    console.log('Shortcuts button clicked');
+    onShortcutsClick();
+  }, [onShortcutsClick]);
+
+  const handleAuthClick = useCallback(() => {
+    console.log('Auth button clicked');
+    onAuthClick();
+  }, [onAuthClick]);
+
+  const handleSettingsClick = useCallback(() => {
+    console.log('Settings button clicked');
+    onSettingsClick();
+  }, [onSettingsClick]);
 
   // Calculate overall progress
   const headerStats = useMemo(() => {
@@ -77,8 +195,9 @@ export function Header({
           </div>
           <ThemeToggle />
           <button
+            ref={notificationsButtonRef}
             type="button"
-            onClick={onNotificationsClick}
+            onClick={handleNotificationsClick}
             aria-label="Notifications"
             className="relative inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground transition-colors pointer-events-auto"
             style={{ pointerEvents: 'auto' }}
@@ -91,8 +210,9 @@ export function Header({
             )}
           </button>
           <button
+            ref={voiceAssistantButtonRef}
             type="button"
-            onClick={onVoiceAssistantClick}
+            onClick={handleVoiceAssistantClick}
             aria-label="Voice Assistant"
             title="Voice Assistant"
             className="inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground transition-colors pointer-events-auto"
@@ -101,9 +221,10 @@ export function Header({
             <Mic className="h-4 w-4" />
           </button>
           <Button
+            ref={shortcutsButtonRef}
             variant="ghost"
             size="icon"
-            onClick={onShortcutsClick}
+            onClick={handleShortcutsClick}
             aria-label="Show keyboard shortcuts"
             className="hidden sm:flex pointer-events-auto"
             title="Keyboard shortcuts (Ctrl+/)"
@@ -123,6 +244,7 @@ export function Header({
           </a>
    {user ? (
             <Button
+              ref={authButtonRef}
               variant="ghost"
               size="icon"
               onClick={handleSignOut}
@@ -135,9 +257,10 @@ export function Header({
             </Button>
           ) : (
             <Button
+              ref={authButtonRef}
               variant="ghost"
               size="icon"
-              onClick={onAuthClick}
+              onClick={handleAuthClick}
               aria-label="Sign in"
               title="Sign in to sync data"
               className="pointer-events-auto"
@@ -146,7 +269,7 @@ export function Header({
               <LogIn className="h-4 w-4" />
             </Button>
           )}
-          <SettingsButton onClick={onSettingsClick} />
+          <SettingsButton ref={settingsButtonRef} onClick={handleSettingsClick} />
         </nav>
       </div>
     </header>
