@@ -1,4 +1,4 @@
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 
 let audioContext: AudioContext | null = null;
 
@@ -10,6 +10,13 @@ export function useClickSound() {
       }
 
       const ctx = audioContext;
+      // Resume context if suspended (browser requires user gesture)
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(() => {
+          // Ignore resume errors
+        });
+      }
+
       const oscillator = ctx.createOscillator();
       const gainNode = ctx.createGain();
 
