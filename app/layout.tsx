@@ -47,8 +47,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
-      <body className="pointer-events-auto font-sans">
-        <SlideshowBackdrop />
+      <body className="pointer-events-auto font-sans relative">
+        <div className="pointer-events-none fixed inset-0 z-[-1]">
+          <SlideshowBackdrop />
+        </div>
         <SkipToMain />
         <ThemeProvider
           attribute="class"

@@ -78,7 +78,7 @@
     @apply outline-2 outline-offset-2 outline-ring;
   }
   button, a, input, select, textarea {
-    pointer-events: auto;
+    pointer-events: auto !important;
   }
   /* Dialog system - clean z-index management */
   [data-radix-portal] {
@@ -93,18 +93,18 @@
     display: none;
   }
   [data-radix-dialog-content] {
-    pointer-events: auto;
+    pointer-events: auto !important;
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
   }
   [data-radix-dialog-overlay] {
-    pointer-events: auto;
+    pointer-events: auto !important;
     cursor: pointer;
     will-change: opacity;
   }
   [data-radix-dialog-overlay][data-state="closed"] {
-    pointer-events: none;
+    pointer-events: none !important;
   }
   /* Smooth dialog animations */
   [data-radix-dialog-content][data-state="open"] {
