@@ -68,11 +68,6 @@
   button, a, input, select, textarea {
     pointer-events: auto !important;
   }
-  /* Ensure minimum touch target size of 44px for better mobile experience */
-  button, a, input[type="checkbox"], input[type="radio"] {
-    min-height: 44px;
-    min-width: 44px;
-  }
   /* Prevent text selection on mobile for better app-like feel */
   .no-select {
     -webkit-user-select: none;
