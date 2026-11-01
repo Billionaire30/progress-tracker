@@ -21,18 +21,12 @@ export function VoiceAssistant() {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [response, setResponse] = useState("");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
     if (!isSpeechRecognitionSupported()) {
       setResponse("Voice recognition is not supported in your browser. Please use Chrome or Edge for voice commands.");
     }
-  }, [mounted]);
+  }, []);
 
   const handleStartListening = () => {
     if (!isSpeechRecognitionSupported()) {
@@ -147,14 +141,6 @@ export function VoiceAssistant() {
       speak(response);
     }
   };
-
-  if (!mounted) {
-    return (
-      <Button variant="ghost" size="icon" title="Voice Assistant">
-        <Mic className="h-4 w-4" />
-      </Button>
-    );
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

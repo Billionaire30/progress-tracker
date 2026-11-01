@@ -14,19 +14,13 @@ export function NotificationCenter() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
     const notifs = generateNotifications(data);
     const filtered = notifs.filter((n) => shouldShowNotification(n, data.preferences));
     setNotifications(filtered);
     setUnreadCount(filtered.filter((n) => !n.read).length);
-  }, [data, mounted]);
+  }, [data]);
 
   const markAsRead = (notificationId: string) => {
     setNotifications((prev) =>
@@ -73,14 +67,6 @@ export function NotificationCenter() {
         return "border-l-4 border-l-blue-500";
     }
   };
-
-  if (!mounted) {
-    return (
-      <Button variant="ghost" size="icon" className="relative">
-        <Bell className="h-4 w-4" />
-      </Button>
-    );
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
