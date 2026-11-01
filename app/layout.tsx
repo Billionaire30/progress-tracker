@@ -8,6 +8,7 @@ import { BodyWrapper } from "@/components/BodyWrapper";
 import { ThemeProvider } from "next-themes";
 import { Inter, Playfair_Display } from "next/font/google";
 import { FallbackModals } from "@/components/FallbackModals";
+import { CustomThemeProvider } from "@/components/CustomThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -57,7 +58,9 @@ export default function RootLayout({
         >
           <BodyWrapper>
             <AuthProvider>
-              <AppProvider>{children}</AppProvider>
+              <AppProvider>
+                <CustomThemeProvider>{children}</CustomThemeProvider>
+              </AppProvider>
             </AuthProvider>
           </BodyWrapper>
         </ThemeProvider>
