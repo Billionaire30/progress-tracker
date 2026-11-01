@@ -68,6 +68,33 @@
   button, a, input, select, textarea {
     pointer-events: auto;
   }
+  /* Ensure dialogs can receive pointer events */
+  [data-radix-dialog-content] {
+    pointer-events: auto !important;
+  }
+  [data-radix-dialog-overlay] {
+    pointer-events: auto !important;
+  }
+  /* Ensure Radix portal containers are on top */
+  [data-radix-portal] {
+    z-index: 99999 !important;
+    position: fixed !important;
+  }
+  [data-radix-dialog-root] {
+    z-index: 99999 !important;
+  }
+  /* Ensure dialog overlay can be clicked to close */
+  [data-radix-dialog-overlay] {
+    cursor: pointer !important;
+  }
+  /* Prevent body scroll when dialog is open */
+  body[data-dialog-open] {
+    overflow: hidden !important;
+  }
+  /* Ensure dialog is always on top of everything */
+  [data-radix-dialog-content] {
+    z-index: 100000 !important;
+  }
   /* Prevent text selection on mobile for better app-like feel */
   .no-select {
     -webkit-user-select: none;
