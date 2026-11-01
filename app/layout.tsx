@@ -65,6 +65,65 @@ export default function RootLayout({
           </BodyWrapper>
         </ThemeProvider>
         <Toaster />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Fallback event handler for when React fails to hydrate
+                document.addEventListener('click', function(e) {
+                  const button = e.target.closest('button');
+                  if (!button) return;
+
+                  const ariaLabel = button.getAttribute('aria-label');
+                  const dialogs = document.querySelectorAll('[role="dialog"]');
+
+                  function openDialog() {
+                    dialogs.forEach(dialog => {
+                      dialog.style.display = 'flex';
+                      dialog.style.position = 'fixed';
+                      dialog.style.inset = '0';
+                      dialog.style.zIndex = '50';
+                      dialog.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                    });
+                  }
+
+                  function closeDialog() {
+                    dialogs.forEach(dialog => {
+                      dialog.style.display = 'none';
+                    });
+                  }
+
+                  switch(ariaLabel) {
+                    case 'Notifications':
+                      console.log('Fallback: Opening notifications dialog');
+                      openDialog();
+                      break;
+                    case 'Voice Assistant':
+                      console.log('Fallback: Opening voice assistant dialog');
+                      openDialog();
+                      break;
+                    case 'Show keyboard shortcuts':
+                      console.log('Fallback: Opening shortcuts dialog');
+                      openDialog();
+                      break;
+                    case 'Settings':
+                      console.log('Fallback: Opening settings dialog');
+                      openDialog();
+                      break;
+                  }
+                }, true);
+
+                // Close dialogs on backdrop click
+                document.addEventListener('click', function(e) {
+                  const dialog = e.target.closest('[role="dialog"]');
+                  if (dialog && e.target === dialog) {
+                    dialog.style.display = 'none';
+                  }
+                }, true);
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );
