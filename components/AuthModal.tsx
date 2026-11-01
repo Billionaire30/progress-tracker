@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 interface AuthModalProps {
@@ -68,9 +68,9 @@ export function AuthModal({ open = true, onClose }: AuthModalProps) {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="text-2xl">Sign In to Sync Your Data</DialogTitle>
-          <CardDescription className="pt-2">
+          <DialogDescription className="pt-2">
             Sign in to automatically sync your progress between devices. Your data will be stored securely in the cloud.
-          </CardDescription>
+          </DialogDescription>
         </DialogHeader>
         <CardContent className="space-y-4 pt-4">
           {error && (
