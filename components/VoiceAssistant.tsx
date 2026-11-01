@@ -145,7 +145,7 @@ export function VoiceAssistant() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="min-h-[44px] min-w-[44px]" title="Voice Assistant">
+        <Button variant="ghost" size="icon" title="Voice Assistant">
           <Mic className="h-4 w-4" />
         </Button>
       </DialogTrigger>

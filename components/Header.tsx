@@ -73,7 +73,7 @@ export const Header = memo(function Header() {
             size="icon"
             onClick={() => setShowShortcuts(true)}
             aria-label="Show keyboard shortcuts"
-            className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px] hidden sm:flex"
+            className="hidden sm:flex"
             title="Keyboard shortcuts (Ctrl+/)"
           >
             <Keyboard className="h-4 w-4" />
@@ -83,7 +83,6 @@ export const Header = memo(function Header() {
               variant="ghost"
               size="icon"
               aria-label="View statistics"
-              className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px]"
             >
               <BarChart3 className="h-4 w-4" />
             </Button>
@@ -98,7 +97,6 @@ export const Header = memo(function Header() {
                 handleSignOut();
               }}
               aria-label="Sign out"
-              className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px]"
               title="Sign out"
             >
               <LogOut className="h-4 w-4" />
@@ -109,7 +107,6 @@ export const Header = memo(function Header() {
               size="icon"
               onClick={() => setShowAuthModal(true)}
               aria-label="Sign in"
-              className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px]"
               title="Sign in to sync data"
             >
               <LogIn className="h-4 w-4" />

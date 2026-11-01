@@ -179,7 +179,6 @@ export function SettingsButton() {
                   toggleNotifications();
                 }}
                 disabled={permission === "denied"}
-                className="min-h-[44px]"
               >
                 <Bell className="h-4 w-4" />
               </Button>
