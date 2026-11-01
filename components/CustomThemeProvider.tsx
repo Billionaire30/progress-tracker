@@ -1,6 +1,7 @@
 "use client";
 
 import { useApp } from "@/lib/context";
+import { useTheme } from "next-themes";
 import { useEffect } from "react";
 
 // Helper to convert hex to HSL
@@ -70,9 +71,12 @@ function isLightColor(hex: string): boolean {
 
 export function CustomThemeProvider({ children }: { children: React.ReactNode }) {
   const { data } = useApp();
+  const { theme } = useTheme();
 
   useEffect(() => {
-    if (data.theme && data.theme.colors) {
+    // Only apply custom theme if it's not the default theme
+    // Let the built-in dark/light mode handle the default theme
+    if (data.theme && data.theme.id !== "default" && data.theme.colors) {
       const root = document.documentElement;
       const { colors } = data.theme;
 
@@ -94,8 +98,28 @@ export function CustomThemeProvider({ children }: { children: React.ReactNode })
       root.style.setProperty("--border", hexToHSL(colors.primary));
       root.style.setProperty("--input", hexToHSL(colors.primary));
       root.style.setProperty("--ring", hexToHSL(colors.primary));
+    } else {
+      // Clear custom styles when using default theme
+      const root = document.documentElement;
+      root.style.removeProperty("--background");
+      root.style.removeProperty("--foreground");
+      root.style.removeProperty("--primary");
+      root.style.removeProperty("--primary-foreground");
+      root.style.removeProperty("--secondary");
+      root.style.removeProperty("--secondary-foreground");
+      root.style.removeProperty("--accent");
+      root.style.removeProperty("--accent-foreground");
+      root.style.removeProperty("--card");
+      root.style.removeProperty("--card-foreground");
+      root.style.removeProperty("--popover");
+      root.style.removeProperty("--popover-foreground");
+      root.style.removeProperty("--muted");
+      root.style.removeProperty("--muted-foreground");
+      root.style.removeProperty("--border");
+      root.style.removeProperty("--input");
+      root.style.removeProperty("--ring");
     }
-  }, [data.theme]);
+  }, [data.theme, theme]);
 
   return <>{children}</>;
 }
