@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, memo } from "react";
+import { useState, useRef } from "react";
 import { useApp } from "@/lib/context";
 import { useToast } from "@/lib/hooks/use-toast";
 import { useNotifications } from "@/lib/hooks/use-notifications";
@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Download, Upload, Settings, FileText, Table, Bell } from "lucide-react";
 
-export const SettingsButton = memo(function SettingsButton() {
+export function SettingsButton() {
   const { data, setData, resetData, exportData, importData, updatePreferences, preferences } = useApp();
   const { toast } = useToast();
   const { permission, enabled, toggleNotifications } = useNotifications();

@@ -9,7 +9,7 @@ import { Bell, X, Check, Clock, AlertTriangle, Trophy, Target } from "lucide-rea
 import { generateNotifications, shouldShowNotification, Notification } from "@/lib/notifications";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-export const NotificationCenter = memo(function NotificationCenter() {
+export function NotificationCenter() {
   const { data, setData } = useApp();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);

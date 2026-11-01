@@ -15,7 +15,7 @@ import {
   getVoiceCommandsList,
 } from "@/lib/voice";
 
-export const VoiceAssistant = memo(function VoiceAssistant() {
+export function VoiceAssistant() {
   const { data, setData } = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
