@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo, useEffect, useRef } from "react";
+import { useCallback, useMemo, useEffect } from "react";
 import { useApp } from "@/lib/context";
 import { useAuth } from "@/components/AuthProvider";
 import { getCurrentWeekNumber } from "@/lib/week";
@@ -28,11 +28,6 @@ export function Header({
   const { data } = useApp();
   const { user, signOutUser } = useAuth();
   const { toast } = useToast();
-  const notificationsButtonRef = useRef<HTMLButtonElement>(null);
-  const voiceAssistantButtonRef = useRef<HTMLButtonElement>(null);
-  const shortcutsButtonRef = useRef<HTMLButtonElement>(null);
-  const authButtonRef = useRef<HTMLButtonElement>(null);
-  const settingsButtonRef = useRef<HTMLButtonElement>(null);
 
   // Debug: Log when Header mounts and props received
   useEffect(() => {
@@ -119,7 +114,6 @@ export function Header({
           </div>
           <ThemeToggle />
           <button
-            ref={notificationsButtonRef}
             type="button"
             onClick={handleNotificationsClick}
             aria-label="Notifications"
@@ -139,7 +133,6 @@ export function Header({
             )}
           </button>
           <button
-            ref={voiceAssistantButtonRef}
             type="button"
             onClick={handleVoiceAssistantClick}
             aria-label="Voice Assistant"
@@ -155,7 +148,6 @@ export function Header({
             <Mic className="h-4 w-4 pointer-events-none" />
           </button>
           <Button
-            ref={shortcutsButtonRef}
             variant="ghost"
             size="icon"
             onClick={handleShortcutsClick}
@@ -183,7 +175,6 @@ export function Header({
           </a>
    {user ? (
             <Button
-              ref={authButtonRef}
               variant="ghost"
               size="icon"
               onClick={handleSignOut}
@@ -196,7 +187,6 @@ export function Header({
             </Button>
           ) : (
             <Button
-              ref={authButtonRef}
               variant="ghost"
               size="icon"
               onClick={handleAuthClick}
@@ -209,7 +199,6 @@ export function Header({
             </Button>
           )}
           <SettingsButton
-            ref={settingsButtonRef}
             onClick={handleSettingsClick}
             onMouseDown={(e) => {
               console.log('Button mousedown: Settings');

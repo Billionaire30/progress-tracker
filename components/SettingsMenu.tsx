@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback, useState, forwardRef } from "react";
+import { useRef, useCallback, useState } from "react";
 import { useApp } from "@/lib/context";
 import { useToast } from "@/lib/hooks/use-toast";
 import { useNotifications } from "@/lib/hooks/use-notifications";
@@ -279,26 +279,21 @@ export function SettingsMenuContent({ open, onOpenChange }: SettingsMenuContentP
   );
 }
 
-export const SettingsButton = forwardRef<HTMLButtonElement, { onClick: () => void; onMouseDown?: (e: React.MouseEvent) => void }>(
-  ({ onClick, onMouseDown }, ref) => {
-    const { playClickSound } = useClickSound();
-    return (
-      <Button
-        ref={ref}
-        variant="outline"
-        size="icon"
-        aria-label="Settings"
-        onClick={() => {
-          playClickSound();
-          onClick();
-        }}
-        onMouseDown={onMouseDown}
-        title="Settings"
-      >
-        <Settings className="h-4 w-4 pointer-events-none" />
-      </Button>
-    );
-  }
-);
-
-SettingsButton.displayName = "SettingsButton";
+export function SettingsButton({ onClick, onMouseDown }: { onClick: () => void; onMouseDown?: (e: React.MouseEvent) => void }) {
+  const { playClickSound } = useClickSound();
+  return (
+    <Button
+      variant="outline"
+      size="icon"
+      aria-label="Settings"
+      onClick={() => {
+        playClickSound();
+        onClick();
+      }}
+      onMouseDown={onMouseDown}
+      title="Settings"
+    >
+      <Settings className="h-4 w-4 pointer-events-none" />
+    </Button>
+  );
+}
