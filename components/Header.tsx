@@ -67,7 +67,7 @@ export function Header({
   }, [data]);
 
   return (
-    <header className="border-b bg-card/80 backdrop-blur-xl sticky top-0 z-50 shadow-premium">
+    <header className="border-b bg-card/80 backdrop-blur-xl sticky top-0 z-[var(--z-sticky)] shadow-premium">
       <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4 flex items-center justify-between gap-2">
         <h1 className="text-lg sm:text-xl font-bold font-serif truncate gradient-text">Progress Tracker</h1>
         <nav className="flex items-center gap-1 sm:gap-3 pointer-events-auto" aria-label="Progress overview">

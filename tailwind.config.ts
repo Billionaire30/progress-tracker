@@ -72,6 +72,10 @@ const config: Config = {
         '88': '22rem',
         '128': '32rem',
       },
+      zIndex: {
+        'dialog-overlay': 'var(--z-dialog-overlay)',
+        'dialog-content': 'var(--z-dialog-content)',
+      },
     },
   },
   plugins: [],

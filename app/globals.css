@@ -24,6 +24,18 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.6rem;
+    /* Z-index layering system */
+    --z-base: 0;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-fixed: 300;
+    --z-modal-backdrop: 400;
+    --z-modal: 500;
+    --z-popover: 600;
+    --z-tooltip: 700;
+    --z-notification: 800;
+    --z-dialog-overlay: 999;
+    --z-dialog-content: 1000;
   }
 
   .dark {
@@ -68,32 +80,78 @@
   button, a, input, select, textarea {
     pointer-events: auto;
   }
-  /* Ensure dialogs can receive pointer events */
-  [data-radix-dialog-content] {
-    pointer-events: auto !important;
-  }
-  [data-radix-dialog-overlay] {
-    pointer-events: auto !important;
-  }
-  /* Ensure Radix portal containers are on top */
+  /* Dialog system - clean z-index management */
   [data-radix-portal] {
-    z-index: 99999 !important;
-    position: fixed !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: var(--z-dialog-overlay);
   }
-  [data-radix-dialog-root] {
-    z-index: 99999 !important;
+  [data-radix-dialog-content] {
+    pointer-events: auto;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
-  /* Ensure dialog overlay can be clicked to close */
   [data-radix-dialog-overlay] {
-    cursor: pointer !important;
+    pointer-events: auto;
+    cursor: pointer;
+    will-change: opacity;
+  }
+  /* Smooth dialog animations */
+  [data-radix-dialog-content][data-state="open"] {
+    animation: dialogContentIn 0.2s ease-out forwards;
+  }
+  [data-radix-dialog-content][data-state="closed"] {
+    animation: dialogContentOut 0.15s ease-in forwards;
+  }
+  [data-radix-dialog-overlay][data-state="open"] {
+    animation: dialogOverlayIn 0.2s ease-out forwards;
+  }
+  [data-radix-dialog-overlay][data-state="closed"] {
+    animation: dialogOverlayOut 0.15s ease-in forwards;
+  }
+  @keyframes dialogContentIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+  @keyframes dialogContentOut {
+    from {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translate(-50%, -52%) scale(0.95);
+    }
+  }
+  @keyframes dialogOverlayIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes dialogOverlayOut {
+    from {
+      opacity: 1;
+    }
+    to {
+      opacity: 0;
+    }
   }
   /* Prevent body scroll when dialog is open */
-  body[data-dialog-open] {
-    overflow: hidden !important;
-  }
-  /* Ensure dialog is always on top of everything */
-  [data-radix-dialog-content] {
-    z-index: 100000 !important;
+  body[data-radix-dialog-open] {
+    overflow: hidden;
   }
   /* Prevent text selection on mobile for better app-like feel */
   .no-select {
@@ -118,6 +176,14 @@
 }
 
 @layer utilities {
+  /* Z-index layering system */
+  .z-dialog-overlay {
+    z-index: var(--z-dialog-overlay);
+  }
+  .z-dialog-content {
+    z-index: var(--z-dialog-content);
+  }
+
   .glass-effect {
     @apply bg-white/10 backdrop-blur-md border border-white/20;
   }
