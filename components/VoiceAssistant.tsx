@@ -149,7 +149,7 @@ export function VoiceAssistant() {
           <Mic className="h-4 w-4" />
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Voice Assistant</DialogTitle>
         </DialogHeader>

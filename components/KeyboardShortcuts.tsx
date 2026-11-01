@@ -18,7 +18,7 @@ const shortcuts = [
 export function KeyboardShortcuts({ open, onOpenChange }: KeyboardShortcutsProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Keyboard className="h-5 w-5" />

@@ -104,7 +104,7 @@ export function SettingsButton() {
         <Settings className="h-4 w-4" />
       </Button>
       <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Settings</DialogTitle>
             <DialogDescription>
