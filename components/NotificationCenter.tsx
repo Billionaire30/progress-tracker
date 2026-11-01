@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Bell, X, Check, Clock, AlertTriangle, Trophy, Target } from "lucide-rea
 import { generateNotifications, shouldShowNotification, Notification } from "@/lib/notifications";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
-export function NotificationCenter() {
+export const NotificationCenter = memo(function NotificationCenter() {
   const { data, setData } = useApp();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -22,27 +22,27 @@ export function NotificationCenter() {
     setUnreadCount(filtered.filter((n) => !n.read).length);
   }, [data]);
 
-  const markAsRead = (notificationId: string) => {
+  const markAsRead = useCallback((notificationId: string) => {
     setNotifications((prev) =>
       prev.map((n) => (n.id === notificationId ? { ...n, read: true } : n))
     );
     setUnreadCount((prev) => Math.max(0, prev - 1));
-  };
+  }, []);
 
-  const markAllAsRead = () => {
+  const markAllAsRead = useCallback(() => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
     setUnreadCount(0);
-  };
+  }, []);
 
-  const dismissNotification = (notificationId: string) => {
+  const dismissNotification = useCallback((notificationId: string) => {
     setNotifications((prev) => prev.filter((n) => n.id !== notificationId));
     const notif = notifications.find((n) => n.id === notificationId);
     if (notif && !notif.read) {
       setUnreadCount((prev) => Math.max(0, prev - 1));
     }
-  };
+  }, [notifications]);
 
-  const getIcon = (type: Notification["type"]) => {
+  const getIcon = useCallback((type: Notification["type"]) => {
     switch (type) {
       case "reminder":
         return <Clock className="h-4 w-4 text-blue-500" />;
@@ -55,9 +55,9 @@ export function NotificationCenter() {
       case "insight":
         return <Bell className="h-4 w-4 text-purple-500" />;
     }
-  };
+  }, []);
 
-  const getPriorityColor = (priority: Notification["priority"]) => {
+  const getPriorityColor = useCallback((priority: Notification["priority"]) => {
     switch (priority) {
       case "high":
         return "border-l-4 border-l-red-500";
@@ -66,7 +66,7 @@ export function NotificationCenter() {
       case "low":
         return "border-l-4 border-l-blue-500";
     }
-  };
+  }, []);
 
   return (
     <>
@@ -154,4 +154,4 @@ export function NotificationCenter() {
     </Dialog>
     </>
   );
-}
+});

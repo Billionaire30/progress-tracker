@@ -9,7 +9,6 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
-import Magnet from "@/components/Magnet";
 import { Button } from "@/components/ui/button";
 import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
 import { AuthModal } from "@/components/AuthModal";
@@ -68,63 +67,47 @@ export function Header() {
             Week {headerStats.weekNumber} of 52
           </div>
           <ThemeToggle />
-          <Magnet padding={40} magnetStrength={2} scale={1.05}>
-            <NotificationCenter />
-          </Magnet>
-          <Magnet padding={40} magnetStrength={2} scale={1.05}>
-            <VoiceAssistant />
-          </Magnet>
-          <Magnet padding={40} magnetStrength={2} scale={1.05}>
+          <NotificationCenter />
+          <VoiceAssistant />
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setShowShortcuts(true)}
+            aria-label="Show keyboard shortcuts"
+            className="hidden sm:flex"
+            title="Keyboard shortcuts (Ctrl+/)"
+          >
+            <Keyboard className="h-4 w-4" />
+          </Button>
+          <a href="/stats" className="inline-flex">
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setShowShortcuts(true)}
-              aria-label="Show keyboard shortcuts"
-              className="hidden sm:flex"
-              title="Keyboard shortcuts (Ctrl+/)"
+              aria-label="View statistics"
             >
-              <Keyboard className="h-4 w-4" />
+              <BarChart3 className="h-4 w-4" />
             </Button>
-          </Magnet>
-          <a href="/stats" className="inline-flex">
-            <Magnet padding={40} magnetStrength={2} scale={1.05}>
-              <Button
-                variant="ghost"
-                size="icon"
-                aria-label="View statistics"
-              >
-                <BarChart3 className="h-4 w-4" />
-              </Button>
-            </Magnet>
           </a>
  {user ? (
-            <Magnet padding={40} magnetStrength={2} scale={1.05}>
-              <Button
-                variant="ghost"
-                size="icon"
-                style={{ cursor: 'pointer', zIndex: 100 }}
-                onClick={(e) => {
-                  console.log("Sign out button clicked", e);
-                  handleSignOut();
-                }}
-                aria-label="Sign out"
-                title="Sign out"
-              >
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </Magnet>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleSignOut}
+              aria-label="Sign out"
+              title="Sign out"
+            >
+              <LogOut className="h-4 w-4" />
+            </Button>
           ) : (
-            <Magnet padding={40} magnetStrength={2} scale={1.05}>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setShowAuthModal(true)}
-                aria-label="Sign in"
-                title="Sign in to sync data"
-              >
-                <LogIn className="h-4 w-4" />
-              </Button>
-            </Magnet>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowAuthModal(true)}
+              aria-label="Sign in"
+              title="Sign in to sync data"
+            >
+              <LogIn className="h-4 w-4" />
+            </Button>
           )}
           <SettingsButton />
         </nav>

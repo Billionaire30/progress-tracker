@@ -12,7 +12,8 @@ const heroImages = [
 
 export const Hero = memo(function Hero() {
   const randomImage = useMemo(() => {
-    return heroImages[Math.floor(Math.random() * heroImages.length)];
+    const index = Math.floor(Math.random() * heroImages.length);
+    return heroImages[index];
   }, []);
 
   return (
@@ -24,8 +25,9 @@ export const Hero = memo(function Hero() {
             alt="Civil Engineering"
             fill
             className="object-cover"
-            loading="lazy"
-            quality={70}
+            loading="eager"
+            priority
+            quality={75}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />

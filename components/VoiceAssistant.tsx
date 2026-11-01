@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, memo } from "react";
+import { useState, useEffect, memo, useCallback } from "react";
 import { useApp } from "@/lib/context";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -15,7 +15,7 @@ import {
   getVoiceCommandsList,
 } from "@/lib/voice";
 
-export function VoiceAssistant() {
+export const VoiceAssistant = memo(function VoiceAssistant() {
   const { data, setData } = useApp();
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -28,7 +28,7 @@ export function VoiceAssistant() {
     }
   }, []);
 
-  const handleStartListening = () => {
+  const handleStartListening = useCallback(() => {
     if (!isSpeechRecognitionSupported()) {
       setResponse("Voice recognition is not supported in your browser. Please use Chrome or Edge for voice commands.");
       return;
@@ -53,9 +53,9 @@ export function VoiceAssistant() {
     return () => {
       if (stopListening) stopListening();
     };
-  };
+  }, []);
 
-  const processCommand = (transcriptText: string) => {
+  const processCommand = useCallback((transcriptText: string) => {
     const command = parseVoiceCommand(transcriptText);
 
     if (!command) {
@@ -134,13 +134,13 @@ export function VoiceAssistant() {
         setResponse("Command not implemented yet.");
         speak("Command not implemented yet.");
     }
-  };
+  }, [data, setData]);
 
-  const handleSpeakResponse = () => {
+  const handleSpeakResponse = useCallback(() => {
     if (response) {
       speak(response);
     }
-  };
+  }, [response]);
 
   return (
     <>
@@ -213,4 +213,4 @@ export function VoiceAssistant() {
     </Dialog>
     </>
   );
-}
+});

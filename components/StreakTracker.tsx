@@ -1,10 +1,16 @@
 import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Flame, TrendingUp } from "lucide-react";
+import { memo, useMemo } from "react";
 
-export function StreakTracker() {
+export const StreakTracker = memo(function StreakTracker() {
   const { data } = useApp();
-  const streakPercentage = data.longestStreak > 0 ? (data.currentStreak / data.longestStreak) * 100 : 0;
+
+  const streakPercentage = useMemo(() =>
+    data.longestStreak > 0 ? (data.currentStreak / data.longestStreak) * 100 : 0,
+    [data.currentStreak, data.longestStreak]
+  );
+
   const circumference = 2 * Math.PI * 40;
   const offset = circumference - (streakPercentage / 100) * circumference;
 
@@ -74,4 +80,4 @@ export function StreakTracker() {
       </CardContent>
     </Card>
   );
-}
+});

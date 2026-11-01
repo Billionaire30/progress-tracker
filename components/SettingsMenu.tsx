@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useApp } from "@/lib/context";
 import { useToast } from "@/lib/hooks/use-toast";
 import { useNotifications } from "@/lib/hooks/use-notifications";
@@ -28,39 +28,39 @@ export function SettingsButton() {
   const [startDate, setStartDate] = useState(data.startDate || "");
   const [showChartAsTable, setShowChartAsTable] = useState(preferences.showChartAsTable || false);
 
-  const handleDownloadReport = () => {
+  const handleDownloadReport = useCallback(() => {
     downloadReport(data, "html");
     toast({
       title: "Report downloaded",
       description: "Your progress report has been downloaded",
     });
-  };
+  }, [data, toast]);
 
-  const handleExportCSV = () => {
+  const handleExportCSV = useCallback(() => {
     exportToCSV(data);
     toast({
       title: "CSV exported",
       description: "Your data has been exported to CSV",
     });
-  };
+  }, [data, toast]);
 
-  const handleExportText = () => {
+  const handleExportText = useCallback(() => {
     exportToText(data);
     toast({
       title: "Report exported",
       description: "Your text report has been downloaded",
     });
-  };
+  }, [data, toast]);
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     resetData();
     toast({
       title: "Data reset",
       description: "All progress has been cleared",
     });
-  };
+  }, [resetData, toast]);
 
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImport = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       importData(file)
@@ -81,21 +81,21 @@ export function SettingsButton() {
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
-  };
+  }, [importData, toast]);
 
-  const handleStartDateChange = (value: string) => {
+  const handleStartDateChange = useCallback((value: string) => {
     setStartDate(value);
     setData({ ...data, startDate: value });
-  };
+  }, [data, setData]);
 
-  const handleChartToggle = (checked: boolean) => {
+  const handleChartToggle = useCallback((checked: boolean) => {
     setShowChartAsTable(checked);
     updatePreferences({ showChartAsTable: checked });
-  };
+  }, [updatePreferences]);
 
-  const handleWeeklyGoalChange = (value: number) => {
+  const handleWeeklyGoalChange = useCallback((value: number) => {
     setData({ ...data, weeklyGoal: value });
-  };
+  }, [data, setData]);
 
   return (
     <>

@@ -5,7 +5,6 @@ import { useClickSound } from "@/lib/hooks/use-click-sound";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusPill } from "@/components/StatusPill";
 import { SearchBar } from "@/components/SearchBar";
-import SpotlightCard from "@/components/SpotlightCard";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Edit2 } from "lucide-react";
@@ -83,14 +82,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
           {filteredPortfolio.map((item) => (
-            <SpotlightCard
-              key={item.id}
-              className="overflow-hidden border p-0 rounded-2xl"
-              intensity={0.12}
-              spotlightSize={150}
-              softness={0.7}
-              theme="dark"
-            >
+            <div key={item.id} className="overflow-hidden border p-0 rounded-2xl glass-card">
               {item.image && (
                 <div className="h-20 sm:h-24 overflow-hidden relative">
                   <Image
@@ -99,6 +91,8 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
                     fill
                     className="object-cover"
                     loading="lazy"
+                    quality={70}
+                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
                 </div>
               )}
@@ -127,7 +121,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
                   </Button>
                 </div>
               </CardContent>
-            </SpotlightCard>
+            </div>
           ))}
         </div>
       </CardContent>

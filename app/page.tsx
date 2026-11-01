@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, Suspense, lazy } from "react";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { OverallProgress } from "@/components/OverallProgress";
@@ -13,7 +13,6 @@ import { ProductivityInsights } from "@/components/ProductivityInsights";
 import { LogHoursModal } from "@/components/LogHoursModal";
 import SoftAurora from "@/components/SoftAurora";
 import ClickSpark from "@/components/ClickSpark";
-import FadeContent from "@/components/FadeContent";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 import { useReminder } from "@/lib/hooks/use-reminder";
 
@@ -34,53 +33,37 @@ export default function Home() {
   ]);
 
   return (
-    <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={12} sparkCount={6} duration={400}>
+    <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300}>
       <div className="min-h-screen relative overflow-hidden">
-        <div className="fixed inset-0 -z-10 opacity-30 dark:opacity-50">
+        <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
           <SoftAurora
             color1="#8b5cf6"
             color2="#ec4899"
-            speed={0.5}
-            scale={1.2}
-            brightness={0.8}
-            enableMouseInteraction={true}
-            opacity={0.6}
+            speed={0.2}
+            scale={0.8}
+            brightness={0.5}
+            enableMouseInteraction={false}
+            opacity={0.3}
           />
         </div>
         <Header />
 
         <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">
-          <FadeContent effect="fade" duration={0.8} threshold={0.1}>
-            <Hero />
-          </FadeContent>
-          <FadeContent effect="fade" duration={0.8} delay={0.1} threshold={0.1}>
-            <OverallProgress />
-          </FadeContent>
-          <FadeContent effect="fade" duration={0.8} delay={0.2} threshold={0.1}>
-            <MonthGrid />
-          </FadeContent>
+          <Hero />
+          <OverallProgress />
+          <MonthGrid />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <FadeContent effect="fade" duration={0.8} delay={0.3} threshold={0.1}>
-              <WeeklyHoursChart onLogHoursClick={openLogModal} />
-            </FadeContent>
+            <WeeklyHoursChart onLogHoursClick={openLogModal} />
             <div className="space-y-4 sm:space-y-6">
-              <FadeContent effect="fade" duration={0.8} delay={0.4} threshold={0.1}>
-                <CompetencyPanel />
-              </FadeContent>
-              <FadeContent effect="fade" duration={0.8} delay={0.5} threshold={0.1}>
-                <StreakTracker />
-              </FadeContent>
+              <CompetencyPanel />
+              <StreakTracker />
             </div>
           </div>
 
-          <FadeContent effect="fade" duration={0.8} delay={0.6} threshold={0.1}>
-            <ProductivityInsights />
-          </FadeContent>
+          <ProductivityInsights />
 
-          <FadeContent effect="fade" duration={0.8} delay={0.7} threshold={0.1}>
-            <PortfolioPanel />
-          </FadeContent>
+          <PortfolioPanel />
         </main>
 
         <LogHoursModal open={isLogModalOpen} onOpenChange={setIsLogModalOpen} />

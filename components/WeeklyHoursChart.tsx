@@ -119,7 +119,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
                   dataKey="hours"
                   fill="url(#barGradient)"
                   radius={[4, 4, 0, 0]}
-                  animationDuration={150}
+                  animationDuration={300}
                 />
                 <defs>
                   <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">

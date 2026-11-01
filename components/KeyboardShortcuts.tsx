@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Keyboard } from "lucide-react";
+import { memo } from "react";
 
 interface KeyboardShortcutsProps {
   open: boolean;
@@ -15,7 +16,7 @@ const shortcuts = [
   { key: "Ctrl + /", description: "Show keyboard shortcuts" },
 ];
 
-export function KeyboardShortcuts({ open, onOpenChange }: KeyboardShortcutsProps) {
+export const KeyboardShortcuts = memo(function KeyboardShortcuts({ open, onOpenChange }: KeyboardShortcutsProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -41,4 +42,4 @@ export function KeyboardShortcuts({ open, onOpenChange }: KeyboardShortcutsProps
       </DialogContent>
     </Dialog>
   );
-}
+});
