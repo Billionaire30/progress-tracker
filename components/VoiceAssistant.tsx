@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/lib/context";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Mic, MicOff, Volume2 } from "lucide-react";
 import {
   startSpeechRecognition,
@@ -143,13 +143,18 @@ export function VoiceAssistant() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" title="Voice Assistant">
-          <Mic className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+    <>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsOpen(true)}
+        title="Voice Assistant"
+        aria-label="Voice Assistant"
+      >
+        <Mic className="h-4 w-4" />
+      </Button>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Voice Assistant</DialogTitle>
         </DialogHeader>
@@ -203,5 +208,6 @@ export function VoiceAssistant() {
         </div>
       </DialogContent>
     </Dialog>
+    </>
   );
 }

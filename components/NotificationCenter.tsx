@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Bell, X, Check, Clock, AlertTriangle, Trophy, Target } from "lucide-react";
 import { generateNotifications, shouldShowNotification, Notification } from "@/lib/notifications";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
 export function NotificationCenter() {
   const { data, setData } = useApp();
@@ -69,21 +69,26 @@ export function NotificationCenter() {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="h-4 w-4" />
-          {unreadCount > 0 && (
-            <Badge
-              variant="destructive"
-              className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs pointer-events-none"
-            >
-              {unreadCount}
-            </Badge>
-          )}
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
+    <>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="relative"
+        onClick={() => setIsOpen(true)}
+        aria-label="Notifications"
+      >
+        <Bell className="h-4 w-4" />
+        {unreadCount > 0 && (
+          <Badge
+            variant="destructive"
+            className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs pointer-events-none"
+          >
+            {unreadCount}
+          </Badge>
+        )}
+      </Button>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center justify-between">
             <DialogTitle>Notifications</DialogTitle>
@@ -144,5 +149,6 @@ export function NotificationCenter() {
         </div>
       </DialogContent>
     </Dialog>
+    </>
   );
 }
