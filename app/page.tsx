@@ -99,12 +99,13 @@ export default function Home() {
 
         <LogHoursModal open={isLogModalOpen} onOpenChange={setIsLogModalOpen} />
         <SettingsMenuContent open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
-        <ErrorBoundary>
+        {/* Temporarily disabled to fix React loading issues */}
+        {/* <ErrorBoundary>
           <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
         </ErrorBoundary>
         <ErrorBoundary>
           <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
-        </ErrorBoundary>
+        </ErrorBoundary> */}
         <ErrorBoundary>
           <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
         </ErrorBoundary>
