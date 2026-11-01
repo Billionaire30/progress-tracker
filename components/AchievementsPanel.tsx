@@ -1,3 +1,5 @@
+"use client";
+
 import { useApp } from "@/lib/context";
 import { ACHIEVEMENTS } from "@/lib/achievements";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

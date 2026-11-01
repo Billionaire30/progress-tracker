@@ -1,3 +1,5 @@
+"use client";
+
 import { useApp } from "@/lib/context";
 import { getWeekData } from "@/lib/week";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

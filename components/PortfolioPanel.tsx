@@ -1,3 +1,5 @@
+"use client";
+
 import { useAppData } from "@/lib/useAppData";
 import { useToast } from "@/lib/hooks/use-toast";
 import { triggerConfetti } from "@/lib/confetti";

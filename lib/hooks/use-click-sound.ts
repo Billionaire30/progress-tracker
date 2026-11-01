@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback } from "react";
 
 // Temporarily disabled to prevent blocking UI interactions

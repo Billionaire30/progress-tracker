@@ -1,3 +1,5 @@
+"use client";
+
 import { useApp } from "@/lib/context";
 import { MonthCard } from "@/components/MonthCard";
 import { MonthGridSkeleton } from "@/components/MonthGridSkeleton";

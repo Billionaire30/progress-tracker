@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState, useMemo } from "react";
 import { useApp } from "@/lib/context";
 import { useNotifications } from "./use-notifications";

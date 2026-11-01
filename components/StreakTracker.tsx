@@ -1,3 +1,5 @@
+"use client";
+
 import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Flame, TrendingUp } from "lucide-react";
