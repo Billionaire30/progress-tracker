@@ -45,81 +45,46 @@ export function Header({
     });
   }, [onSettingsClick, onNotificationsClick, onVoiceAssistantClick, onShortcutsClick, onAuthClick]);
 
-  // Ensure event handlers are properly attached after mount
+  // Global event delegation as ultimate fallback for hydration issues
   useEffect(() => {
-    const notificationsBtn = document.querySelector('button[aria-label="Notifications"]');
-    if (notificationsBtn) {
-      console.log('Notifications button found in DOM');
-    } else {
-      console.warn('Notifications button not found in DOM');
-    }
-  }, []);
+    const handleGlobalClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const button = target.closest('button') as HTMLButtonElement;
 
-  // Fallback: Attach direct event listeners as backup for hydration issues
-  useEffect(() => {
-    const btn = notificationsButtonRef.current;
-    if (!btn) return;
+      if (!button) return;
 
-    const handleClick = (e: Event) => {
-      console.log('Fallback click handler triggered for notifications');
-      onNotificationsClick();
+      const ariaLabel = button.getAttribute('aria-label');
+
+      switch (ariaLabel) {
+        case 'Notifications':
+          console.log('Global handler: Notifications button clicked');
+          onNotificationsClick();
+          break;
+        case 'Voice Assistant':
+          console.log('Global handler: Voice Assistant button clicked');
+          onVoiceAssistantClick();
+          break;
+        case 'Show keyboard shortcuts':
+          console.log('Global handler: Shortcuts button clicked');
+          onShortcutsClick();
+          break;
+        case 'Sign in':
+          console.log('Global handler: Sign in button clicked');
+          onAuthClick();
+          break;
+        case 'Sign out':
+          // Sign out is handled separately by handleSignOut
+          break;
+        case 'Settings':
+          console.log('Global handler: Settings button clicked');
+          onSettingsClick();
+          break;
+      }
     };
 
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [onNotificationsClick]);
-
-  useEffect(() => {
-    const btn = voiceAssistantButtonRef.current;
-    if (!btn) return;
-
-    const handleClick = (e: Event) => {
-      console.log('Fallback click handler triggered for voice assistant');
-      onVoiceAssistantClick();
-    };
-
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [onVoiceAssistantClick]);
-
-  useEffect(() => {
-    const btn = shortcutsButtonRef.current;
-    if (!btn) return;
-
-    const handleClick = (e: Event) => {
-      console.log('Fallback click handler triggered for shortcuts');
-      onShortcutsClick();
-    };
-
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [onShortcutsClick]);
-
-  useEffect(() => {
-    const btn = authButtonRef.current;
-    if (!btn) return;
-
-    const handleClick = (e: Event) => {
-      console.log('Fallback click handler triggered for auth');
-      onAuthClick();
-    };
-
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [onAuthClick]);
-
-  useEffect(() => {
-    const btn = settingsButtonRef.current;
-    if (!btn) return;
-
-    const handleClick = (e: Event) => {
-      console.log('Fallback click handler triggered for settings');
-      onSettingsClick();
-    };
-
-    btn.addEventListener('click', handleClick);
-    return () => btn.removeEventListener('click', handleClick);
-  }, [onSettingsClick]);
+    document.addEventListener('click', handleGlobalClick, true);
+    return () => document.removeEventListener('click', handleGlobalClick, true);
+  }, [onNotificationsClick, onVoiceAssistantClick, onShortcutsClick, onAuthClick, onSettingsClick]);
 
   // Wrapper functions with console logging
   const handleNotificationsClick = useCallback(() => {
@@ -202,7 +167,7 @@ export function Header({
             className="relative inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground transition-colors pointer-events-auto"
             style={{ pointerEvents: 'auto' }}
           >
-            <Bell className="h-4 w-4" />
+            <Bell className="h-4 w-4 pointer-events-none" />
             {notificationsUnreadCount > 0 && (
               <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs bg-destructive text-destructive-foreground rounded-full pointer-events-none">
                 {notificationsUnreadCount}
@@ -218,7 +183,7 @@ export function Header({
             className="inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground transition-colors pointer-events-auto"
             style={{ pointerEvents: 'auto' }}
           >
-            <Mic className="h-4 w-4" />
+            <Mic className="h-4 w-4 pointer-events-none" />
           </button>
           <Button
             ref={shortcutsButtonRef}
@@ -230,7 +195,7 @@ export function Header({
             title="Keyboard shortcuts (Ctrl+/)"
             style={{ pointerEvents: 'auto' }}
           >
-            <Keyboard className="h-4 w-4" />
+            <Keyboard className="h-4 w-4 pointer-events-none" />
           </Button>
           <a href="/stats" className="inline-flex pointer-events-auto" style={{ pointerEvents: 'auto' }}>
             <Button
@@ -239,7 +204,7 @@ export function Header({
               aria-label="View statistics"
               style={{ pointerEvents: 'auto' }}
             >
-              <BarChart3 className="h-4 w-4" />
+              <BarChart3 className="h-4 w-4 pointer-events-none" />
             </Button>
           </a>
    {user ? (
@@ -253,7 +218,7 @@ export function Header({
               className="pointer-events-auto"
               style={{ pointerEvents: 'auto' }}
             >
-              <LogOut className="h-4 w-4" />
+              <LogOut className="h-4 w-4 pointer-events-none" />
             </Button>
           ) : (
             <Button
@@ -266,7 +231,7 @@ export function Header({
               className="pointer-events-auto"
               style={{ pointerEvents: 'auto' }}
             >
-              <LogIn className="h-4 w-4" />
+              <LogIn className="h-4 w-4 pointer-events-none" />
             </Button>
           )}
           <SettingsButton ref={settingsButtonRef} onClick={handleSettingsClick} />

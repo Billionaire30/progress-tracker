@@ -294,7 +294,7 @@ export const SettingsButton = forwardRef<HTMLButtonElement, { onClick: () => voi
         }}
         title="Settings"
       >
-        <Settings className="h-4 w-4" />
+        <Settings className="h-4 w-4 pointer-events-none" />
       </Button>
     );
   }
