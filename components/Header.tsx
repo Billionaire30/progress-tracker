@@ -119,4 +119,4 @@ export function Header() {
       <AuthModal open={showAuthModal} onClose={handleAuthModalClose} />
     </header>
   );
-});
+}
