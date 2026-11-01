@@ -115,7 +115,7 @@ export function HabitTracker() {
       };
     });
 
-    setData({ ...data, habits: updatedHabits });
+    setData((prevData) => ({ ...prevData, habits: updatedHabits }));
   };
 
   const addHabit = () => {
@@ -134,7 +134,7 @@ export function HabitTracker() {
 
     // Use the current habits (including defaults if data.habits is empty)
     const currentHabits = habits;
-    setData({ ...data, habits: [...currentHabits, newHabit] });
+    setData((prevData) => ({ ...prevData, habits: [...currentHabits, newHabit] }));
     setNewHabitName("");
     setNewHabitDesc("");
     setNewHabitTarget(5);
@@ -144,7 +144,7 @@ export function HabitTracker() {
   const deleteHabit = (habitId: string) => {
     if (confirm("Are you sure you want to delete this habit?")) {
       const currentHabits = habits;
-      setData({ ...data, habits: currentHabits.filter((h) => h.id !== habitId) });
+      setData((prevData) => ({ ...prevData, habits: currentHabits.filter((h) => h.id !== habitId) }));
     }
   };
 

@@ -11,7 +11,7 @@ export function createWorkspace(
   color?: string,
   icon?: string
 ): AppData {
-  if (!data.workspaces) data.workspaces = [];
+  const workspaces = data.workspaces || [];
 
   const newWorkspace: Workspace = {
     id: generateId(),
@@ -38,10 +38,8 @@ export function createWorkspace(
     isTemplate: false,
   };
 
-  data.workspaces.push(newWorkspace);
-
-  if (!data.auditLog) data.auditLog = [];
-  data.auditLog.push({
+  const auditLog = data.auditLog || [];
+  auditLog.push({
     id: `workspace-create-${Date.now()}`,
     timestamp: new Date().toISOString(),
     action: "workspace_created",
@@ -50,7 +48,11 @@ export function createWorkspace(
     changes: { name, description },
   });
 
-  return data;
+  return {
+    ...data,
+    workspaces: [...workspaces, newWorkspace],
+    auditLog,
+  };
 }
 
 export function deleteWorkspace(data: AppData, workspaceId: string): AppData {
@@ -65,15 +67,15 @@ export function deleteWorkspace(data: AppData, workspaceId: string): AppData {
     return data;
   }
 
-  data.workspaces.splice(workspaceIndex, 1);
+  const newWorkspaces = data.workspaces.filter((w) => w.id !== workspaceId);
 
   // Switch to another workspace if we deleted the active one
-  if (data.activeWorkspaceId === workspaceId) {
-    data.activeWorkspaceId = data.workspaces[0].id;
-  }
+  const newActiveWorkspaceId = data.activeWorkspaceId === workspaceId
+    ? newWorkspaces[0].id
+    : data.activeWorkspaceId;
 
-  if (!data.auditLog) data.auditLog = [];
-  data.auditLog.push({
+  const auditLog = data.auditLog || [];
+  auditLog.push({
     id: `workspace-delete-${Date.now()}`,
     timestamp: new Date().toISOString(),
     action: "workspace_deleted",
@@ -81,7 +83,12 @@ export function deleteWorkspace(data: AppData, workspaceId: string): AppData {
     entityId: workspaceId,
   });
 
-  return data;
+  return {
+    ...data,
+    workspaces: newWorkspaces,
+    activeWorkspaceId: newActiveWorkspaceId,
+    auditLog,
+  };
 }
 
 export function switchWorkspace(data: AppData, workspaceId: string): AppData {
@@ -90,11 +97,14 @@ export function switchWorkspace(data: AppData, workspaceId: string): AppData {
   const workspace = data.workspaces.find((w) => w.id === workspaceId);
   if (!workspace) return data;
 
-  data.activeWorkspaceId = workspaceId;
-  workspace.lastAccessed = new Date().toISOString();
+  const newWorkspaces = data.workspaces.map((w) =>
+    w.id === workspaceId
+      ? { ...w, lastAccessed: new Date().toISOString() }
+      : w
+  );
 
-  if (!data.auditLog) data.auditLog = [];
-  data.auditLog.push({
+  const auditLog = data.auditLog || [];
+  auditLog.push({
     id: `workspace-switch-${Date.now()}`,
     timestamp: new Date().toISOString(),
     action: "workspace_switched",
@@ -102,7 +112,12 @@ export function switchWorkspace(data: AppData, workspaceId: string): AppData {
     entityId: workspaceId,
   });
 
-  return data;
+  return {
+    ...data,
+    workspaces: newWorkspaces,
+    activeWorkspaceId: workspaceId,
+    auditLog,
+  };
 }
 
 export function updateWorkspace(
@@ -112,13 +127,12 @@ export function updateWorkspace(
 ): AppData {
   if (!data.workspaces) return data;
 
-  const workspace = data.workspaces.find((w) => w.id === workspaceId);
-  if (!workspace) return data;
+  const newWorkspaces = data.workspaces.map((w) =>
+    w.id === workspaceId ? { ...w, ...updates } : w
+  );
 
-  Object.assign(workspace, updates);
-
-  if (!data.auditLog) data.auditLog = [];
-  data.auditLog.push({
+  const auditLog = data.auditLog || [];
+  auditLog.push({
     id: `workspace-update-${Date.now()}`,
     timestamp: new Date().toISOString(),
     action: "workspace_updated",
@@ -127,7 +141,11 @@ export function updateWorkspace(
     changes: updates,
   });
 
-  return data;
+  return {
+    ...data,
+    workspaces: newWorkspaces,
+    auditLog,
+  };
 }
 
 export function duplicateWorkspace(data: AppData, workspaceId: string): AppData {
@@ -145,10 +163,8 @@ export function duplicateWorkspace(data: AppData, workspaceId: string): AppData 
     data: JSON.parse(JSON.stringify(workspace.data)) as WorkspaceData,
   };
 
-  data.workspaces.push(duplicatedWorkspace);
-
-  if (!data.auditLog) data.auditLog = [];
-  data.auditLog.push({
+  const auditLog = data.auditLog || [];
+  auditLog.push({
     id: `workspace-duplicate-${Date.now()}`,
     timestamp: new Date().toISOString(),
     action: "workspace_duplicated",
@@ -157,7 +173,11 @@ export function duplicateWorkspace(data: AppData, workspaceId: string): AppData 
     changes: { originalId: workspaceId },
   });
 
-  return data;
+  return {
+    ...data,
+    workspaces: [...data.workspaces, duplicatedWorkspace],
+    auditLog,
+  };
 }
 
 export function getActiveWorkspace(data: AppData): Workspace | null {

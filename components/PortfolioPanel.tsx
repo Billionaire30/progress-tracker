@@ -29,12 +29,14 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
   );
 
   const savePortfolioNotes = useCallback((id: number, notes: string) => {
-    const updatedPortfolio = data.portfolio.map((item) =>
-      item.id === id ? { ...item, notes } : item
-    );
-    setData({ ...data, portfolio: updatedPortfolio });
+    setData((prevData) => {
+      const updatedPortfolio = prevData.portfolio.map((item) =>
+        item.id === id ? { ...item, notes } : item
+      );
+      return { ...prevData, portfolio: updatedPortfolio };
+    });
     setEditingNotesId(null);
-  }, [data, setData]);
+  }, [setData]);
 
   const handleCycle = useCallback((id: number) => {
     const item = data.portfolio.find((p) => p.id === id);

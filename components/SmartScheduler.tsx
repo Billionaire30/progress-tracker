@@ -95,19 +95,17 @@ export function SmartScheduler() {
       }
     }
 
-    const updatedData = {
-      ...data,
+    setData((prevData) => ({
+      ...prevData,
       schedule: [
-        ...events,
+        ...(prevData.schedule || []),
         ...suggestions.map((s) => ({
           ...s,
           id: `event-${Date.now()}-${Math.random()}`,
           synced: false,
         })),
       ],
-    };
-
-    setData(updatedData);
+    }));
     alert("Generated optimal schedule for the next 7 days!");
   };
 
@@ -125,7 +123,10 @@ export function SmartScheduler() {
       synced: false,
     };
 
-    setData({ ...data, schedule: [...events, newEvent] });
+    setData((prevData) => ({
+      ...prevData,
+      schedule: [...(prevData.schedule || []), newEvent],
+    }));
     setNewEventTitle("");
     setNewEventDate(new Date().toISOString().split("T")[0]);
     setNewEventStartTime("09:00");
@@ -134,24 +135,31 @@ export function SmartScheduler() {
   };
 
   const toggleEventCompletion = (eventId: string) => {
-    const updatedEvents = events.map((event) =>
-      event.id === eventId ? { ...event, completed: !event.completed } : event
-    );
-    setData({ ...data, schedule: updatedEvents });
+    setData((prevData) => {
+      const updatedEvents = (prevData.schedule || []).map((event) =>
+        event.id === eventId ? { ...event, completed: !event.completed } : event
+      );
+      return { ...prevData, schedule: updatedEvents };
+    });
   };
 
   const deleteEvent = (eventId: string) => {
     if (confirm("Are you sure you want to delete this event?")) {
-      setData({ ...data, schedule: events.filter((e) => e.id !== eventId) });
+      setData((prevData) => ({
+        ...prevData,
+        schedule: (prevData.schedule || []).filter((e) => e.id !== eventId),
+      }));
     }
   };
 
   const syncToCalendar = (eventId: string) => {
     // Mock calendar sync - in production, this would integrate with Google/Outlook APIs
-    const updatedEvents = events.map((event) =>
-      event.id === eventId ? { ...event, synced: true } : event
-    );
-    setData({ ...data, schedule: updatedEvents });
+    setData((prevData) => {
+      const updatedEvents = (prevData.schedule || []).map((event) =>
+        event.id === eventId ? { ...event, synced: true } : event
+      );
+      return { ...prevData, schedule: updatedEvents };
+    });
     alert("Event synced to calendar (mock)");
   };
 

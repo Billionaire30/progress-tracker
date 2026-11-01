@@ -22,16 +22,20 @@ export function WorkspaceManager() {
   const handleCreateWorkspace = () => {
     if (!newWorkspaceName.trim()) return;
 
-    const updatedData = createWorkspace(data, newWorkspaceName, newWorkspaceDesc);
-    setData(updatedData);
+    setData((prevData) => {
+      const updatedData = createWorkspace(prevData, newWorkspaceName, newWorkspaceDesc);
+      return updatedData;
+    });
     setNewWorkspaceName("");
     setNewWorkspaceDesc("");
     setIsCreateOpen(false);
   };
 
   const handleSwitchWorkspace = (workspaceId: string) => {
-    const updatedData = switchWorkspace(data, workspaceId);
-    setData(updatedData);
+    setData((prevData) => {
+      const updatedData = switchWorkspace(prevData, workspaceId);
+      return updatedData;
+    });
   };
 
   const handleDeleteWorkspace = (workspaceId: string) => {
@@ -41,14 +45,18 @@ export function WorkspaceManager() {
     }
 
     if (confirm("Are you sure you want to delete this workspace? This action cannot be undone.")) {
-      const updatedData = deleteWorkspace(data, workspaceId);
-      setData(updatedData);
+      setData((prevData) => {
+        const updatedData = deleteWorkspace(prevData, workspaceId);
+        return updatedData;
+      });
     }
   };
 
   const handleDuplicateWorkspace = (workspaceId: string) => {
-    const updatedData = duplicateWorkspace(data, workspaceId);
-    setData(updatedData);
+    setData((prevData) => {
+      const updatedData = duplicateWorkspace(prevData, workspaceId);
+      return updatedData;
+    });
   };
 
   return (
