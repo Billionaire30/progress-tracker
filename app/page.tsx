@@ -32,7 +32,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      <Header key="home-page" />
+      <Header />
 
       <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">
         <Hero />

@@ -4,11 +4,11 @@ import { useState, useCallback, useMemo } from "react";
 import { useApp } from "@/lib/context";
 import { useAuth } from "@/components/AuthProvider";
 import { getCurrentWeekNumber } from "@/lib/week";
-import { SettingsButton } from "@/components/SettingsMenu";
-import { ThemeToggle } from "@/components/ThemeToggle";
+import { SimpleSettingsButton } from "@/components/SimpleSettingsButton";
+import { SimpleThemeToggle } from "@/components/SimpleThemeToggle";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
-import { NotificationCenter } from "@/components/NotificationCenter";
-import { VoiceAssistant } from "@/components/VoiceAssistant";
+import { SimpleNotificationCenter } from "@/components/SimpleNotificationCenter";
+import { SimpleVoiceAssistant } from "@/components/SimpleVoiceAssistant";
 import { Button } from "@/components/ui/button";
 import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
 import { AuthModal } from "@/components/AuthModal";
@@ -66,9 +66,9 @@ export function Header() {
           <div className="text-xs sm:text-sm text-muted-foreground tabular-nums hidden md:block whitespace-nowrap">
             Week {headerStats.weekNumber} of 52
           </div>
-          <ThemeToggle key="theme-toggle" />
-          <NotificationCenter key="notification-center" />
-          <VoiceAssistant key="voice-assistant" />
+          <SimpleThemeToggle />
+          <SimpleNotificationCenter />
+          <SimpleVoiceAssistant />
           <Button
             variant="ghost"
             size="icon"
@@ -113,7 +113,7 @@ export function Header() {
               <LogIn className="h-4 w-4" />
             </Button>
           )}
-          <SettingsButton key="settings-button" />
+          <SimpleSettingsButton />
         </nav>
       </div>
       <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
