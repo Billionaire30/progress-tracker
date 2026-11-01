@@ -29,7 +29,7 @@ export default function StatsPage() {
   return (
     <AuthRequired>
       <div className="min-h-screen">
-        <Header />
+        <Header key="stats-page" />
 
       <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" role="main">
         <div className="flex items-center gap-2 sm:gap-4">

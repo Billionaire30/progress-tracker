@@ -66,9 +66,9 @@ export function Header() {
           <div className="text-xs sm:text-sm text-muted-foreground tabular-nums hidden md:block whitespace-nowrap">
             Week {headerStats.weekNumber} of 52
           </div>
-          <ThemeToggle />
-          <NotificationCenter />
-          <VoiceAssistant />
+          <ThemeToggle key="theme-toggle" />
+          <NotificationCenter key="notification-center" />
+          <VoiceAssistant key="voice-assistant" />
           <Button
             variant="ghost"
             size="icon"
@@ -113,7 +113,7 @@ export function Header() {
               <LogIn className="h-4 w-4" />
             </Button>
           )}
-          <SettingsButton />
+          <SettingsButton key="settings-button" />
         </nav>
       </div>
       <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
