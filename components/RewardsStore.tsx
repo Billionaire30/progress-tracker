@@ -129,8 +129,8 @@ export function RewardsStore() {
   const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
   const [showPurchaseSuccess, setShowPurchaseSuccess] = useState(false);
 
-  const currency = data.gamification?.currency || 0;
-  const purchasedRewards = data.gamification?.purchasedRewards || [];
+  const currency = data.gamification?.currency ?? 0;
+  const purchasedRewards = data.gamification?.purchasedRewards ?? [];
 
   const rewards: Reward[] = REWARDS.map((reward) => ({
     ...reward,

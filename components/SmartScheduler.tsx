@@ -31,7 +31,7 @@ export function SmartScheduler() {
   const [newEventType, setNewEventType] = useState<ScheduleEvent["type"]>("study");
 
   const events: ScheduleEvent[] = useMemo(() => {
-    return data.schedule || [];
+    return data.schedule ?? [];
   }, [data.schedule]);
 
   const generateOptimalSchedule = () => {

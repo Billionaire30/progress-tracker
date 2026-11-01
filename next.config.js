@@ -36,7 +36,7 @@ const nextConfig = {
   ],
 
   // Enable Turbopack for Next.js 16
-  turbopack: {},
+  // turbopack: {},
 
   webpack: (config, { isServer }) => {
     if (!isServer) {

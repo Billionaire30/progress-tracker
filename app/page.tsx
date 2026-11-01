@@ -12,6 +12,7 @@ import { StreakTracker } from "@/components/StreakTracker";
 import { ProductivityInsights } from "@/components/ProductivityInsights";
 import { HabitTracker } from "@/components/HabitTracker";
 import { LogHoursModal } from "@/components/LogHoursModal";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { SettingsMenuContent } from "@/components/SettingsMenu";
 import { NotificationCenterContent } from "@/components/NotificationCenter";
 import { VoiceAssistantContent } from "@/components/VoiceAssistant";
@@ -86,7 +87,9 @@ export default function Home() {
 
           <ProductivityInsights />
 
-          <HabitTracker />
+          <ErrorBoundary>
+            <HabitTracker />
+          </ErrorBoundary>
 
           <PortfolioPanel />
         </main>

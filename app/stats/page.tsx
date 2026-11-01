@@ -13,6 +13,7 @@ import { RewardsStore } from "@/components/RewardsStore";
 import { SmartScheduler } from "@/components/SmartScheduler";
 import { AdvancedTheming } from "@/components/AdvancedTheming";
 import { PortfolioGenerator } from "@/components/PortfolioGenerator";
+import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { Header } from "@/components/Header";
 import { AuthRequired } from "@/components/AuthRequired";
 import { LoadingState } from "@/components/LoadingSpinner";
@@ -102,13 +103,21 @@ export default function StatsPage() {
             <WorkspaceManager />
           </div>
 
-          <RewardsStore />
+          <ErrorBoundary>
+            <RewardsStore />
+          </ErrorBoundary>
 
-          <SmartScheduler />
+          <ErrorBoundary>
+            <SmartScheduler />
+          </ErrorBoundary>
 
-          <AdvancedTheming />
+          <ErrorBoundary>
+            <AdvancedTheming />
+          </ErrorBoundary>
 
-          <PortfolioGenerator />
+          <ErrorBoundary>
+            <PortfolioGenerator />
+          </ErrorBoundary>
 
           <IntegrationsManager />
 
