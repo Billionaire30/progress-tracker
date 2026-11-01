@@ -154,4 +154,4 @@ export function NotificationCenter() {
     </Dialog>
     </>
   );
-});
+}
