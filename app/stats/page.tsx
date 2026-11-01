@@ -14,6 +14,7 @@ import { SmartScheduler } from "@/components/SmartScheduler";
 import { AdvancedTheming } from "@/components/AdvancedTheming";
 import { PortfolioGenerator } from "@/components/PortfolioGenerator";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ErrorBoundary as HeaderErrorBoundary } from "@/components/ErrorBoundary";
 import { Header } from "@/components/Header";
 import { AuthRequired } from "@/components/AuthRequired";
 import { LoadingState } from "@/components/LoadingSpinner";
@@ -69,13 +70,15 @@ export default function StatsPage() {
             opacity={0.3}
           />
         </div>
-        <Header
-          onSettingsClick={() => setIsSettingsOpen(true)}
-          onNotificationsClick={() => setIsNotificationsOpen(true)}
-          onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
-          onShortcutsClick={() => setShowShortcuts(true)}
-          onAuthClick={() => setShowAuthModal(true)}
-        />
+        <HeaderErrorBoundary>
+          <Header
+            onSettingsClick={() => setIsSettingsOpen(true)}
+            onNotificationsClick={() => setIsNotificationsOpen(true)}
+            onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
+            onShortcutsClick={() => setShowShortcuts(true)}
+            onAuthClick={() => setShowAuthModal(true)}
+          />
+        </HeaderErrorBoundary>
 
       <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" role="main">
         <div className="flex items-center gap-2 sm:gap-4">

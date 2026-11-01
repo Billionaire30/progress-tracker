@@ -13,6 +13,7 @@ import { ProductivityInsights } from "@/components/ProductivityInsights";
 import { HabitTracker } from "@/components/HabitTracker";
 import { LogHoursModal } from "@/components/LogHoursModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { ErrorBoundary as HeaderErrorBoundary } from "@/components/ErrorBoundary";
 import { SettingsMenuContent } from "@/components/SettingsMenu";
 import { NotificationCenterContent } from "@/components/NotificationCenter";
 import { VoiceAssistantContent } from "@/components/VoiceAssistant";
@@ -64,13 +65,15 @@ export default function Home() {
             opacity={0.3}
           />
         </div>
-        <Header
-          onSettingsClick={() => setIsSettingsOpen(true)}
-          onNotificationsClick={() => setIsNotificationsOpen(true)}
-          onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
-          onShortcutsClick={() => setShowShortcuts(true)}
-          onAuthClick={() => setShowAuthModal(true)}
-        />
+        <HeaderErrorBoundary>
+          <Header
+            onSettingsClick={() => setIsSettingsOpen(true)}
+            onNotificationsClick={() => setIsNotificationsOpen(true)}
+            onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
+            onShortcutsClick={() => setShowShortcuts(true)}
+            onAuthClick={() => setShowAuthModal(true)}
+          />
+        </HeaderErrorBoundary>
 
         <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">
           <Hero />
@@ -96,10 +99,18 @@ export default function Home() {
 
         <LogHoursModal open={isLogModalOpen} onOpenChange={setIsLogModalOpen} />
         <SettingsMenuContent open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
-        <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
-        <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
-        <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
-        <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
+        <ErrorBoundary>
+          <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
+        </ErrorBoundary>
       </ClickSpark>
     </div>
   );
