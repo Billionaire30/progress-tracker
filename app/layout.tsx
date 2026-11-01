@@ -69,28 +69,28 @@ export default function RootLayout({
           <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Notifications</h2>
             <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
-            <button onClick={() => document.getElementById('fallback-notifications-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+            <button onClick={() => { const el = document.getElementById('fallback-notifications-modal'); if (el) el.style.display = 'none'; }} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
           </div>
         </div>
         <div id="fallback-settings-modal" style={{ display: 'none', position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Settings</h2>
             <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
-            <button onClick={() => document.getElementById('fallback-settings-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+            <button onClick={() => { const el = document.getElementById('fallback-settings-modal'); if (el) el.style.display = 'none'; }} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
           </div>
         </div>
         <div id="fallback-shortcuts-modal" style={{ display: 'none', position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Keyboard Shortcuts</h2>
             <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
-            <button onClick={() => document.getElementById('fallback-shortcuts-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+            <button onClick={() => { const el = document.getElementById('fallback-shortcuts-modal'); if (el) el.style.display = 'none'; }} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
           </div>
         </div>
         <div id="fallback-voice-modal" style={{ display: 'none', position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' }}>
           <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
             <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Voice Assistant</h2>
             <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
-            <button onClick={() => document.getElementById('fallback-voice-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+            <button onClick={() => { const el = document.getElementById('fallback-voice-modal'); if (el) el.style.display = 'none'; }} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
           </div>
         </div>
       </body>
