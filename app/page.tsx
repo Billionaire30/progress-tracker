@@ -10,6 +10,7 @@ import { CompetencyPanel } from "@/components/CompetencyPanel";
 import { PortfolioPanel } from "@/components/PortfolioPanel";
 import { StreakTracker } from "@/components/StreakTracker";
 import { ProductivityInsights } from "@/components/ProductivityInsights";
+import { HabitTracker } from "@/components/HabitTracker";
 import { LogHoursModal } from "@/components/LogHoursModal";
 import { SettingsMenuContent } from "@/components/SettingsMenu";
 import { NotificationCenterContent } from "@/components/NotificationCenter";
@@ -84,6 +85,8 @@ export default function Home() {
           </div>
 
           <ProductivityInsights />
+
+          <HabitTracker />
 
           <PortfolioPanel />
         </main>

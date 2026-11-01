@@ -121,6 +121,44 @@ export interface Gamification {
   currentStreakBonus: number;
   dailyChallenges: DailyChallenge[];
   weeklyChallengesCompleted: number;
+  currency?: number;
+  purchasedRewards?: string[];
+}
+
+export interface Habit {
+  id: string;
+  name: string;
+  description: string;
+  category: "productivity" | "health" | "learning" | "mindfulness";
+  target: number;
+  currentStreak: number;
+  completedDates: string[];
+  color: string;
+}
+
+export interface ScheduleEvent {
+  id: string;
+  title: string;
+  date: string;
+  startTime: string;
+  endTime: string;
+  type: "study" | "break" | "review" | "deadline";
+  completed: boolean;
+  synced: boolean;
+}
+
+export interface ThemePreset {
+  id: string;
+  name: string;
+  description: string;
+  colors: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+    foreground: string;
+  };
+  icon: string;
 }
 
 export interface AuditLog {
@@ -176,6 +214,9 @@ export interface AppData {
     mentorId?: string;
     menteeIds?: string[];
   };
+  habits?: Habit[];
+  schedule?: ScheduleEvent[];
+  theme?: ThemePreset;
 }
 
 const createInitialWorkspace = (months: Month[], weeklyLog: WeeklyLogEntry[], competencyChecklist: CompetencyItem[], portfolio: PortfolioItem[]): Workspace => ({
@@ -481,7 +522,9 @@ export const initialData: AppData = {
     badges: [],
     currentStreakBonus: 1,
     dailyChallenges: [],
-    weeklyChallengesCompleted: 0
+    weeklyChallengesCompleted: 0,
+    currency: 0,
+    purchasedRewards: []
   },
   auditLog: [],
   calendarEvents: [],
@@ -491,7 +534,9 @@ export const initialData: AppData = {
     toggl: { connected: false },
     dropbox: { connected: false }
   },
-  collaboration: {}
+  collaboration: {},
+  habits: [],
+  schedule: []
 };
 
 // Helper to initialize workspace with data

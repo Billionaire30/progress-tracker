@@ -9,6 +9,10 @@ import { AdvancedAnalytics } from "@/components/AdvancedAnalytics";
 import { GamificationPanel } from "@/components/GamificationPanel";
 import { WorkspaceManager } from "@/components/WorkspaceManager";
 import { IntegrationsManager } from "@/components/IntegrationsManager";
+import { RewardsStore } from "@/components/RewardsStore";
+import { SmartScheduler } from "@/components/SmartScheduler";
+import { AdvancedTheming } from "@/components/AdvancedTheming";
+import { PortfolioGenerator } from "@/components/PortfolioGenerator";
 import { Header } from "@/components/Header";
 import { AuthRequired } from "@/components/AuthRequired";
 import { LoadingState } from "@/components/LoadingSpinner";
@@ -97,6 +101,14 @@ export default function StatsPage() {
             <GamificationPanel />
             <WorkspaceManager />
           </div>
+
+          <RewardsStore />
+
+          <SmartScheduler />
+
+          <AdvancedTheming />
+
+          <PortfolioGenerator />
 
           <IntegrationsManager />
 
