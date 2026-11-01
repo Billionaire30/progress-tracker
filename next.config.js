@@ -76,7 +76,6 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', 'recharts'],
-    optimizeCss: true,
   },
   compiler: {
     removeConsole: false,
