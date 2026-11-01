@@ -66,7 +66,7 @@
     @apply outline-2 outline-offset-2 outline-ring;
   }
   button, a, input, select, textarea {
-    pointer-events: auto !important;
+    pointer-events: auto;
   }
   /* Prevent text selection on mobile for better app-like feel */
   .no-select {
