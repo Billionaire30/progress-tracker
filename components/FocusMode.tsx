@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Volume2, VolumeX, Clock, Target, Zap } from "lucide-react";
-import { Slider } from "@/components/ui/slider";
 
 const AMBIENT_SOUNDS = [
   { id: "rain", name: "Rain", icon: "🌧️", url: "https://www.soundjay.com/nature/sounds/rain-01.mp3" },
@@ -290,12 +289,14 @@ export function FocusMode() {
             <span className="font-medium">Volume</span>
             <span className="text-muted-foreground">{volume}%</span>
           </div>
-          <Slider
-            value={[volume]}
-            onValueChange={updateVolume}
-            max={100}
-            step={1}
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={volume}
+            onChange={(e) => updateVolume([parseInt(e.target.value)])}
             disabled={isActive}
+            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
           />
         </div>
 
