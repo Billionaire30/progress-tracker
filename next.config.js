@@ -37,7 +37,6 @@ const nextConfig = {
 
 
 
-  turbopack: process.env.NODE_ENV === 'development' ? {} : false,
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
