@@ -9,7 +9,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { NotificationCenter } from "@/components/NotificationCenter";
 import { VoiceAssistant } from "@/components/VoiceAssistant";
-import { Magnet } from "@/components/Magnet";
+import Magnet from "@/components/Magnet";
 import { Button } from "@/components/ui/button";
 import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
 import { AuthModal } from "@/components/AuthModal";

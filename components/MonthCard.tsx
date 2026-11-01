@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { StatusPill } from "@/components/StatusPill";
-import { SpotlightCard } from "@/components/SpotlightCard";
+import SpotlightCard from "@/components/SpotlightCard";
 import { Month } from "@/lib/data";
 import { getCurrentWeekNumber, getCurrentMonthNumber } from "@/lib/week";
 import { useApp } from "@/lib/context";

@@ -2,7 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Magnet } from "@/components/Magnet";
+import Magnet from "@/components/Magnet";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 

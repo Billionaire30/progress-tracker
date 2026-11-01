@@ -11,9 +11,9 @@ import { PortfolioPanel } from "@/components/PortfolioPanel";
 import { StreakTracker } from "@/components/StreakTracker";
 import { ProductivityInsights } from "@/components/ProductivityInsights";
 import { LogHoursModal } from "@/components/LogHoursModal";
-import { SoftAurora } from "@/components/SoftAurora";
-import { ClickSpark } from "@/components/ClickSpark";
-import { FadeContent } from "@/components/FadeContent";
+import SoftAurora from "@/components/SoftAurora";
+import ClickSpark from "@/components/ClickSpark";
+import FadeContent from "@/components/FadeContent";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 import { useReminder } from "@/lib/hooks/use-reminder";
 

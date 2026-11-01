@@ -5,7 +5,7 @@ import { useClickSound } from "@/lib/hooks/use-click-sound";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusPill } from "@/components/StatusPill";
 import { SearchBar } from "@/components/SearchBar";
-import { SpotlightCard } from "@/components/SpotlightCard";
+import SpotlightCard from "@/components/SpotlightCard";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Edit2 } from "lucide-react";
