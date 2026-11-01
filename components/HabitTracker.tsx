@@ -132,7 +132,9 @@ export function HabitTracker() {
       color: getCategoryColor(newHabitCategory),
     };
 
-    setData({ ...data, habits: [...habits, newHabit] });
+    // Use the actual data.habits instead of the memoized habits
+    const currentHabits = data.habits || [];
+    setData({ ...data, habits: [...currentHabits, newHabit] });
     setNewHabitName("");
     setNewHabitDesc("");
     setNewHabitTarget(5);
@@ -141,7 +143,8 @@ export function HabitTracker() {
 
   const deleteHabit = (habitId: string) => {
     if (confirm("Are you sure you want to delete this habit?")) {
-      setData({ ...data, habits: habits.filter((h) => h.id !== habitId) });
+      const currentHabits = data.habits || [];
+      setData({ ...data, habits: currentHabits.filter((h) => h.id !== habitId) });
     }
   };
 
