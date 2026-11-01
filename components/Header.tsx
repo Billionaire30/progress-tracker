@@ -4,8 +4,8 @@ import { useState, useCallback, useMemo } from "react";
 import { useApp } from "@/lib/context";
 import { useAuth } from "@/components/AuthProvider";
 import { getCurrentWeekNumber } from "@/lib/week";
-import { SimpleSettingsButton } from "@/components/SimpleSettingsButton";
-import { SimpleThemeToggle } from "@/components/SimpleThemeToggle";
+import { SettingsButton } from "@/components/SettingsMenu";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { SimpleNotificationCenter } from "@/components/SimpleNotificationCenter";
 import { SimpleVoiceAssistant } from "@/components/SimpleVoiceAssistant";
@@ -66,7 +66,7 @@ export function Header() {
           <div className="text-xs sm:text-sm text-muted-foreground tabular-nums hidden md:block whitespace-nowrap">
             Week {headerStats.weekNumber} of 52
           </div>
-          <SimpleThemeToggle />
+          <ThemeToggle />
           <SimpleNotificationCenter />
           <SimpleVoiceAssistant />
           <Button
@@ -113,7 +113,7 @@ export function Header() {
               <LogIn className="h-4 w-4" />
             </Button>
           )}
-          <SimpleSettingsButton />
+          <SettingsButton />
         </nav>
       </div>
       <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
