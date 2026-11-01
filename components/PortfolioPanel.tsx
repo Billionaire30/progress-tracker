@@ -71,7 +71,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
   }, []);
 
   return (
-    <Card className="glass-card">
+    <Card className="glass-card card-premium">
       <CardHeader>
         <CardTitle className="text-lg sm:text-xl">Portfolio Progress</CardTitle>
         <div className="mt-2">
@@ -82,24 +82,25 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
-          {filteredPortfolio.map((item) => (
-            <div key={item.id} className="overflow-hidden border p-0 rounded-2xl glass-card">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 stagger-children">
+          {filteredPortfolio.map((item, index) => (
+            <div key={item.id} className="overflow-hidden border p-0 rounded-2xl glass-card hover:shadow-premium transition-all duration-300 hover:-translate-y-1 group">
               {item.image && (
                 <div className="h-20 sm:h-24 overflow-hidden relative">
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-cover"
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
                     loading="lazy"
-                    quality={70}
+                    quality={75}
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </div>
               )}
               <CardHeader className="pb-2 px-3 sm:px-6">
-                <CardTitle className="text-xs sm:text-sm">{item.name}</CardTitle>
+                <CardTitle className="text-xs sm:text-sm group-hover:text-primary transition-colors">{item.name}</CardTitle>
               </CardHeader>
               <CardContent className="px-3 sm:px-6">
                 <div className="flex items-center justify-between">
@@ -117,7 +118,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
                       setNotesValue(item.notes || "");
                     }}
                     aria-label={`Edit notes for ${item.name}`}
-                    className="h-8 w-8 sm:h-9 sm:w-9"
+                    className="h-8 w-8 sm:h-9 sm:w-9 hover:bg-primary/10 hover:scale-110 transition-all"
                   >
                     <Edit2 className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
@@ -129,7 +130,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
       </CardContent>
 
       <Dialog open={editingNotesId !== null} onOpenChange={() => setEditingNotesId(null)}>
-        <DialogContent className="max-w-[95vw] sm:max-w-lg">
+        <DialogContent className="max-w-[95vw] sm:max-w-lg glass-card">
           <DialogHeader>
             <DialogTitle>Edit Notes</DialogTitle>
           </DialogHeader>
@@ -138,13 +139,13 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
               <textarea
                 value={notesValue}
                 onChange={(e) => setNotesValue(e.target.value)}
-                className="w-full min-h-[150px] p-3 border rounded-md text-sm resize-y"
+                className="w-full min-h-[150px] p-3 border rounded-md text-sm resize-y transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                 placeholder="Add your notes here..."
               />
               <div className="flex gap-2">
                 <Button onClick={() => {
                   savePortfolioNotes(editingNotesId, notesValue);
-                }} className="flex-1 sm:w-auto">Save</Button>
+                }} className="flex-1 sm:w-auto button-premium">Save</Button>
                 <Button onClick={() => setEditingNotesId(null)} variant="outline" className="flex-1 sm:w-auto">Cancel</Button>
               </div>
             </div>

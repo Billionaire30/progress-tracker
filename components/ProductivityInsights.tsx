@@ -39,10 +39,10 @@ export const ProductivityInsights = memo(function ProductivityInsights() {
   };
 
   return (
-    <Card className="glass-card">
+    <Card className="glass-card card-premium">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Lightbulb className="h-5 w-5" />
+          <Lightbulb className="h-5 w-5 text-primary animate-pulse-glow" />
           Productivity Insights
         </CardTitle>
       </CardHeader>
@@ -50,7 +50,8 @@ export const ProductivityInsights = memo(function ProductivityInsights() {
         {insights.map((insight, index) => (
           <div
             key={index}
-            className={`p-4 rounded-lg bg-muted/50 ${getPriorityColor(insight.priority)}`}
+            className={`p-4 rounded-lg bg-muted/50 ${getPriorityColor(insight.priority)} hover:bg-muted transition-colors duration-300 animate-slide-in`}
+            style={{ animationDelay: `${index * 100}ms` }}
           >
             <div className="flex items-start gap-3">
               {getIcon(insight.type)}

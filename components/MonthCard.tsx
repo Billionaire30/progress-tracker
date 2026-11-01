@@ -8,6 +8,7 @@ import { getCurrentWeekNumber, getCurrentMonthNumber } from "@/lib/week";
 import { useApp } from "@/lib/context";
 import Image from "next/image";
 import { memo, useMemo } from "react";
+import { Sparkles, Clock, TrendingUp, ArrowRight } from "lucide-react";
 
 interface MonthCardProps {
   month: Month;
@@ -40,35 +41,50 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
     return { tasksComplete, taskProgress, isCurrentMonth, isNotStarted, deadlineStatus };
   }, [month, data.startDate]);
 
+  const getProgressGradient = () => {
+    if (cardData.taskProgress >= 75) return "from-green-500 to-emerald-400";
+    if (cardData.taskProgress >= 50) return "from-blue-500 to-cyan-400";
+    if (cardData.taskProgress >= 25) return "from-purple-500 to-pink-400";
+    return "from-primary to-purple-500";
+  };
+
   return (
     <a href={`/month/${month.id}`} className="block cursor-pointer group">
       <Card
-        className={`hover:border-primary cursor-pointer relative glass-card transition-all duration-200 hover:shadow-lg hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white ${
-          cardData.isCurrentMonth ? "ring-2 ring-accent" : ""
+        className={`hover:border-primary cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden ${
+          cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium-lg gradient-border-animated" : ""
         } ${cardData.isNotStarted ? "opacity-85" : ""}`}
       >
         {cardData.isCurrentMonth && (
-          <div className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs px-3 py-1.5 rounded-full font-medium z-10">
+          <div className="absolute -top-2 -right-2 bg-gradient-to-r from-accent to-purple-500 text-white text-xs px-3 py-1.5 rounded-full font-medium z-10 shadow-glow animate-pulse-glow flex items-center gap-1">
+            <Sparkles className="h-3 w-3" />
             Current
           </div>
         )}
         {month.image && (
-          <div className="h-32 overflow-hidden relative">
+          <div className="h-36 overflow-hidden relative">
             <Image
               src={month.image}
               alt={month.title}
               fill
-              className="object-cover"
+              className="object-cover transition-transform duration-500 group-hover:scale-110"
               loading="lazy"
-              quality={70}
+              quality={80}
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 33vw"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </div>
         )}
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
-            <div>
-              <CardTitle className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">Month {month.id}</CardTitle>
+            <div className="flex-1 min-w-0">
+              <CardTitle className="text-base font-semibold text-foreground group-hover:text-primary transition-colors flex items-center gap-2">
+                Month {month.id}
+                {cardData.isCurrentMonth && (
+                  <TrendingUp className="h-4 w-4 text-accent animate-icon-bounce" />
+                )}
+              </CardTitle>
               <CardDescription className="text-xs mt-1 line-clamp-2 text-foreground/70 group-hover:text-foreground/90 transition-colors">
                 {month.title}
               </CardDescription>
@@ -76,18 +92,34 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
             <StatusPill status={month.status} />
           </div>
         </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground mb-3">{month.focus}</p>
-          <Progress value={cardData.taskProgress} className="h-2" />
-          <div className="flex items-center justify-between mt-1">
-            <p className="text-xs text-muted-foreground tabular-nums">
-              {cardData.tasksComplete}/{month.tasks.length} tasks
-            </p>
-            {cardData.deadlineStatus && (
-              <p className={`text-xs font-medium ${cardData.deadlineStatus.color}`}>
-                {cardData.deadlineStatus.text}
-              </p>
-            )}
+        <CardContent className="space-y-3">
+          <p className="text-sm text-muted-foreground line-clamp-2">{month.focus}</p>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <div className="flex items-center gap-1 text-muted-foreground">
+                <Clock className="h-3 w-3" />
+                <span className="tabular-nums">{cardData.tasksComplete}/{month.tasks.length} tasks</span>
+              </div>
+              <span className="font-medium tabular-nums text-primary">{Math.round(cardData.taskProgress)}%</span>
+            </div>
+            <div className="relative h-2.5 bg-muted rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full bg-gradient-to-r ${getProgressGradient()} transition-all duration-500 relative`}
+                style={{ width: `${cardData.taskProgress}%` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              </div>
+            </div>
+          </div>
+          {cardData.deadlineStatus && (
+            <div className={`text-xs font-medium flex items-center gap-1 ${cardData.deadlineStatus.color}`}>
+              <Clock className="h-3 w-3" />
+              {cardData.deadlineStatus.text}
+            </div>
+          )}
+          <div className="flex items-center justify-between pt-2 border-t border-border/50">
+            <span className="text-xs text-muted-foreground">View details</span>
+            <ArrowRight className="h-4 w-4 text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1" />
           </div>
         </CardContent>
       </Card>

@@ -17,10 +17,10 @@ export const StreakTracker = memo(function StreakTracker() {
   const offset = circumference - (streakPercentage / 100) * circumference;
 
   return (
-    <Card className="overflow-hidden hover-lift glass-card">
+    <Card className="overflow-hidden hover-lift glass-card card-premium">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
-          <Flame className={`h-5 w-5 ${data.currentStreak > 0 ? "text-orange-500" : "text-muted-foreground"}`} />
+          <Flame className={`h-5 w-5 ${data.currentStreak > 0 ? "text-orange-500 animate-pulse-glow" : "text-muted-foreground"}`} />
           Current Streak
         </CardTitle>
       </CardHeader>
@@ -48,6 +48,7 @@ export const StreakTracker = memo(function StreakTracker() {
                 strokeDashoffset={offset}
                 className={`${data.currentStreak > 0 ? "" : "text-muted"}`}
                 strokeLinecap="round"
+                style={{ transition: 'stroke-dashoffset 0.5s ease-out' }}
               />
               <defs>
                 <linearGradient id="streakGradient" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -57,7 +58,7 @@ export const StreakTracker = memo(function StreakTracker() {
               </defs>
             </svg>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="text-2xl font-bold tabular-nums gradient-text-gold">
+              <span className="text-2xl font-bold tabular-nums gradient-text-gold counter-animate">
                 {data.currentStreak}
               </span>
             </div>
@@ -68,7 +69,7 @@ export const StreakTracker = memo(function StreakTracker() {
               <span className="text-muted-foreground">Best: {data.longestStreak} days</span>
             </div>
             {data.currentStreak >= 7 && (
-              <div className="text-xs text-orange-600 dark:text-orange-400 font-medium">
+              <div className="text-xs text-orange-600 dark:text-orange-400 font-medium animate-text-reveal">
                 🔥 Great job! Keep it up!
               </div>
             )}

@@ -32,17 +32,12 @@ import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 
 export default function StatsPage() {
   const { isLoading } = useApp();
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
-  const [showShortcuts, setShowShortcuts] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useKeyboardShortcuts([
     {
       key: "/",
       ctrlKey: true,
-      action: () => setShowShortcuts(true),
+      action: () => console.log("Shortcuts"),
       description: "Show keyboard shortcuts",
     },
   ]);
@@ -71,13 +66,7 @@ export default function StatsPage() {
           />
         </div>
         <HeaderErrorBoundary>
-          <Header
-            onSettingsClick={() => setIsSettingsOpen(true)}
-            onNotificationsClick={() => setIsNotificationsOpen(true)}
-            onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
-            onShortcutsClick={() => setShowShortcuts(true)}
-            onAuthClick={() => setShowAuthModal(true)}
-          />
+          <Header />
         </HeaderErrorBoundary>
 
       <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" role="main">
@@ -127,11 +116,6 @@ export default function StatsPage() {
           <AchievementsPanel />
       </main>
 
-      <SettingsMenuContent open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
-      <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
-      <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
-      <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
-      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </ClickSpark>
     </div>
     </AuthRequired>

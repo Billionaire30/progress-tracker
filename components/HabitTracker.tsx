@@ -192,21 +192,21 @@ export function HabitTracker() {
   const completedToday = habits.filter((h) => h.completedDates.includes(today)).length;
 
   return (
-    <Card className="glass-card">
+    <Card className="glass-card card-premium">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <Flame className="h-5 w-5 text-orange-500" />
+            <Flame className="h-5 w-5 text-orange-500 animate-pulse-glow" />
             Habit Tracker
           </CardTitle>
           <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
             <DialogTrigger asChild>
-              <Button size="sm">
+              <Button size="sm" className="button-premium">
                 <Plus className="h-4 w-4 mr-2" />
                 Add Habit
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="glass-card">
               <DialogHeader>
                 <DialogTitle>Add New Habit</DialogTitle>
               </DialogHeader>
@@ -218,6 +218,7 @@ export function HabitTracker() {
                     value={newHabitName}
                     onChange={(e) => setNewHabitName(e.target.value)}
                     placeholder="e.g., Morning meditation"
+                    className="transition-colors focus:border-primary"
                   />
                 </div>
                 <div>
@@ -227,6 +228,7 @@ export function HabitTracker() {
                     value={newHabitDesc}
                     onChange={(e) => setNewHabitDesc(e.target.value)}
                     placeholder="e.g., 10 minutes of meditation"
+                    className="transition-colors focus:border-primary"
                   />
                 </div>
                 <div>
@@ -238,6 +240,7 @@ export function HabitTracker() {
                     max="7"
                     value={newHabitTarget}
                     onChange={(e) => setNewHabitTarget(parseInt(e.target.value))}
+                    className="transition-colors focus:border-primary"
                   />
                 </div>
                 <div>
@@ -246,7 +249,7 @@ export function HabitTracker() {
                     id="habit-category"
                     value={newHabitCategory}
                     onChange={(e) => setNewHabitCategory(e.target.value as Habit["category"])}
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
                   >
                     <option value="productivity">Productivity</option>
                     <option value="health">Health</option>
@@ -254,7 +257,7 @@ export function HabitTracker() {
                     <option value="mindfulness">Mindfulness</option>
                   </select>
                 </div>
-                <Button onClick={addHabit} className="w-full">
+                <Button onClick={addHabit} className="w-full button-premium">
                   Add Habit
                 </Button>
               </div>
@@ -265,34 +268,35 @@ export function HabitTracker() {
       <CardContent className="space-y-4">
         {/* Summary Stats */}
         <div className="grid grid-cols-3 gap-4">
-          <div className="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg">
-            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400">{totalStreak}</div>
+          <div className="text-center p-3 bg-orange-50 dark:bg-orange-950/20 rounded-lg hover:shadow-premium transition-shadow duration-300">
+            <div className="text-2xl font-bold text-orange-600 dark:text-orange-400 counter-animate">{totalStreak}</div>
             <div className="text-xs text-muted-foreground">Total Streak Days</div>
           </div>
-          <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{completedToday}</div>
+          <div className="text-center p-3 bg-green-50 dark:bg-green-950/20 rounded-lg hover:shadow-premium transition-shadow duration-300">
+            <div className="text-2xl font-bold text-green-600 dark:text-green-400 counter-animate">{completedToday}</div>
             <div className="text-xs text-muted-foreground">Completed Today</div>
           </div>
-          <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
-            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">{habits.length}</div>
+          <div className="text-center p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg hover:shadow-premium transition-shadow duration-300">
+            <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 counter-animate">{habits.length}</div>
             <div className="text-xs text-muted-foreground">Active Habits</div>
           </div>
         </div>
 
         {/* Habits List */}
         <div className="space-y-3">
-          {habits.map((habit) => {
+          {habits.map((habit, index) => {
             const isCompletedToday = habit.completedDates.includes(today);
             const weeklyProgress = getWeeklyProgress(habit);
 
             return (
               <div
                 key={habit.id}
-                className={`p-4 rounded-lg border-2 transition-all ${
+                className={`p-4 rounded-lg border-2 transition-all duration-300 hover:shadow-premium animate-slide-in ${
                   isCompletedToday
-                    ? "border-green-400 bg-green-50 dark:bg-green-950/20"
-                    : "border-border bg-muted/50"
+                    ? "border-green-400 bg-green-50 dark:bg-green-950/20 shadow-glow"
+                    : "border-border bg-muted/50 hover:border-primary/50"
                 }`}
+                style={{ animationDelay: `${index * 50}ms` }}
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
@@ -309,7 +313,7 @@ export function HabitTracker() {
                     variant={isCompletedToday ? "default" : "outline"}
                     size="sm"
                     onClick={() => toggleHabitCompletion(habit.id)}
-                    className="gap-1"
+                    className="gap-1 button-premium"
                   >
                     <Check className="h-4 w-4" />
                     {isCompletedToday ? "Done" : "Mark Done"}
@@ -323,7 +327,10 @@ export function HabitTracker() {
                       {Math.round(weeklyProgress)}% of {habit.target} days
                     </span>
                   </div>
-                  <Progress value={weeklyProgress} className="h-2" />
+                  <div className="relative h-2 bg-muted rounded-full overflow-hidden">
+                    <Progress value={weeklyProgress} className="h-2" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                  </div>
 
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1 text-orange-600 dark:text-orange-400">
@@ -334,7 +341,7 @@ export function HabitTracker() {
                       variant="ghost"
                       size="sm"
                       onClick={() => deleteHabit(habit.id)}
-                      className="text-destructive hover:text-destructive"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
                     >
                       Delete
                     </Button>

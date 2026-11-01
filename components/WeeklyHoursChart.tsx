@@ -49,7 +49,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
   }, [data.weeklyLog]);
 
   return (
-    <Card className="hover-lift glass-card">
+    <Card className="hover-lift glass-card card-premium">
       <CardHeader>
         <CardTitle className="flex items-center justify-between text-base sm:text-lg">
           <div className="flex items-center gap-2">
@@ -62,14 +62,14 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
             onClick={toggleView}
             aria-label={showTable ? "View as chart" : "View as table"}
             aria-expanded={showTable}
-            className="min-h-[36px] sm:min-h-[44px] min-w-[36px] sm:min-w-[44px]"
+            className="min-h-[36px] sm:min-h-[44px] min-w-[36px] sm:min-w-[44px] hover:bg-primary/10 hover:scale-105 transition-transform"
           >
             <Table className="h-4 w-4" aria-hidden="true" />
           </Button>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3 sm:space-y-4">
-        <div className="flex items-center gap-2 p-2 sm:p-3 bg-muted/50 rounded-lg">
+        <div className="flex items-center gap-2 p-2 sm:p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors">
           <Target className={`h-4 w-4 sm:h-5 sm:w-5 ${isGoalMet ? "text-green-600 dark:text-green-400" : "text-muted-foreground"}`} />
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-1">
@@ -80,9 +80,11 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
-                className={`h-full ${isGoalMet ? "bg-gradient-to-r from-green-500 to-emerald-400" : "bg-gradient-to-r from-primary to-purple-500"}`}
+                className={`h-full ${isGoalMet ? "bg-gradient-to-r from-green-500 to-emerald-400" : "bg-gradient-to-r from-primary to-purple-500"} relative`}
                 style={{ width: `${goalProgress}%` }}
-              />
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+              </div>
             </div>
           </div>
         </div>
@@ -96,7 +98,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
             </thead>
             <tbody>
               {weekData.map((day) => (
-                <tr key={day.day} className="border-b last:border-0">
+                <tr key={day.day} className="border-b last:border-0 hover:bg-muted/30 transition-colors">
                   <td className="py-1 sm:py-2">{day.day}</td>
                   <td className="text-right py-1 sm:py-2 tabular-nums">{day.hours.toFixed(1)}</td>
                 </tr>
@@ -110,8 +112,8 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
                 <YAxis tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
-                <Tooltip 
-                  contentStyle={{ 
+                <Tooltip
+                  contentStyle={{
                     backgroundColor: 'hsl(var(--card))',
                     border: '1px solid hsl(var(--border))',
                     borderRadius: '8px',
@@ -137,7 +139,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
           <p className="text-xs sm:text-sm text-muted-foreground">
             {isGoalMet ? "🎉 Goal reached!" : "Keep going!"}
           </p>
-          <Button size="sm" onClick={onLogHoursClick} className="text-xs sm:text-sm">
+          <Button size="sm" onClick={onLogHoursClick} className="text-xs sm:text-sm button-premium">
             <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
             <span className="hidden sm:inline">Log hours</span>
             <span className="sm:hidden">Log</span>

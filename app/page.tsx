@@ -14,11 +14,7 @@ import { HabitTracker } from "@/components/HabitTracker";
 import { LogHoursModal } from "@/components/LogHoursModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorBoundary as HeaderErrorBoundary } from "@/components/ErrorBoundary";
-import { SettingsMenuContent } from "@/components/SettingsMenu";
-import { NotificationCenterContent } from "@/components/NotificationCenter";
-import { VoiceAssistantContent } from "@/components/VoiceAssistant";
-import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
-import { AuthModal } from "@/components/AuthModal";
+import { PageTransition } from "@/components/PageTransition";
 import SoftAurora from "@/components/SoftAurora";
 import ClickSpark from "@/components/ClickSpark";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
@@ -26,11 +22,6 @@ import { useReminder } from "@/lib/hooks/use-reminder";
 
 export default function Home() {
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
-  const [showShortcuts, setShowShortcuts] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useReminder();
 
@@ -42,12 +33,6 @@ export default function Home() {
       ctrlKey: true,
       action: openLogModal,
       description: "Open log hours modal",
-    },
-    {
-      key: "/",
-      ctrlKey: true,
-      action: () => setShowShortcuts(true),
-      description: "Show keyboard shortcuts",
     },
   ]);
 
@@ -66,52 +51,34 @@ export default function Home() {
           />
         </div>
         <HeaderErrorBoundary>
-          <Header
-            onSettingsClick={() => setIsSettingsOpen(true)}
-            onNotificationsClick={() => setIsNotificationsOpen(true)}
-            onVoiceAssistantClick={() => setIsVoiceAssistantOpen(true)}
-            onShortcutsClick={() => setShowShortcuts(true)}
-            onAuthClick={() => setShowAuthModal(true)}
-          />
+          <Header />
         </HeaderErrorBoundary>
 
         <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">
-          <Hero />
-          <OverallProgress />
-          <MonthGrid />
+          <PageTransition>
+            <Hero />
+            <OverallProgress />
+            <MonthGrid />
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <WeeklyHoursChart onLogHoursClick={openLogModal} />
-            <div className="space-y-4 sm:space-y-6">
-              <CompetencyPanel />
-              <StreakTracker />
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+              <WeeklyHoursChart onLogHoursClick={openLogModal} />
+              <div className="space-y-4 sm:space-y-6">
+                <CompetencyPanel />
+                <StreakTracker />
+              </div>
             </div>
-          </div>
 
-          <ProductivityInsights />
+            <ProductivityInsights />
 
-          <ErrorBoundary>
-            <HabitTracker />
-          </ErrorBoundary>
+            <ErrorBoundary>
+              <HabitTracker />
+            </ErrorBoundary>
 
-          <PortfolioPanel />
+            <PortfolioPanel />
+          </PageTransition>
         </main>
 
         <LogHoursModal open={isLogModalOpen} onOpenChange={setIsLogModalOpen} />
-        <SettingsMenuContent open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
-        {/* Temporarily disabled to fix React loading issues */}
-        {/* <ErrorBoundary>
-          <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
-        </ErrorBoundary>
-        <ErrorBoundary>
-          <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
-        </ErrorBoundary> */}
-        <ErrorBoundary>
-          <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
-        </ErrorBoundary>
-        <ErrorBoundary>
-          <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
-        </ErrorBoundary>
       </ClickSpark>
     </div>
   );

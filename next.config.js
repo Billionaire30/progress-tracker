@@ -35,8 +35,8 @@ const nextConfig = {
     '100.112.31.210' // Local network IP
   ],
 
-  // Enable Turbopack for Next.js 16
-  // turbopack: {},
+  // Empty turbopack config to enable build
+  turbopack: {},
 
   webpack: (config, { isServer }) => {
     if (!isServer) {
