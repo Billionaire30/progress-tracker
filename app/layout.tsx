@@ -93,54 +93,6 @@ export default function RootLayout({
             <button onClick={() => document.getElementById('fallback-voice-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
           </div>
         </div>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                console.log('Fallback script loaded');
-
-                function attachButtonHandlers() {
-                  const buttons = document.querySelectorAll('button[aria-label]');
-                  console.log('Found buttons:', buttons.length);
-
-                  buttons.forEach(button => {
-                    const ariaLabel = button.getAttribute('aria-label');
-
-                    button.addEventListener('click', function(e) {
-                      console.log('Button clicked:', ariaLabel);
-                      e.preventDefault();
-                      e.stopPropagation();
-
-                      switch(ariaLabel) {
-                        case 'Notifications':
-                          document.getElementById('fallback-notifications-modal').style.display = 'flex';
-                          break;
-                        case 'Settings':
-                          document.getElementById('fallback-settings-modal').style.display = 'flex';
-                          break;
-                        case 'Show keyboard shortcuts':
-                          document.getElementById('fallback-shortcuts-modal').style.display = 'flex';
-                          break;
-                        case 'Voice Assistant':
-                          document.getElementById('fallback-voice-modal').style.display = 'flex';
-                          break;
-                      }
-                    }, true);
-                  });
-                }
-
-                attachButtonHandlers();
-                setTimeout(attachButtonHandlers, 100);
-                setTimeout(attachButtonHandlers, 500);
-
-                const observer = new MutationObserver(function(mutations) {
-                  attachButtonHandlers();
-                });
-                observer.observe(document.body, { childList: true, subtree: true });
-              })();
-            `,
-          }}
-        />
       </body>
     </html>
   );
