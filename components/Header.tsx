@@ -45,47 +45,6 @@ export function Header({
     });
   }, [onSettingsClick, onNotificationsClick, onVoiceAssistantClick, onShortcutsClick, onAuthClick]);
 
-  // Global event delegation as ultimate fallback for hydration issues
-  useEffect(() => {
-    const handleGlobalClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const button = target.closest('button') as HTMLButtonElement;
-
-      if (!button) return;
-
-      const ariaLabel = button.getAttribute('aria-label');
-
-      switch (ariaLabel) {
-        case 'Notifications':
-          console.log('Global handler: Notifications button clicked');
-          onNotificationsClick();
-          break;
-        case 'Voice Assistant':
-          console.log('Global handler: Voice Assistant button clicked');
-          onVoiceAssistantClick();
-          break;
-        case 'Show keyboard shortcuts':
-          console.log('Global handler: Shortcuts button clicked');
-          onShortcutsClick();
-          break;
-        case 'Sign in':
-          console.log('Global handler: Sign in button clicked');
-          onAuthClick();
-          break;
-        case 'Sign out':
-          // Sign out is handled separately by handleSignOut
-          break;
-        case 'Settings':
-          console.log('Global handler: Settings button clicked');
-          onSettingsClick();
-          break;
-      }
-    };
-
-    document.addEventListener('click', handleGlobalClick, true);
-    return () => document.removeEventListener('click', handleGlobalClick, true);
-  }, [onNotificationsClick, onVoiceAssistantClick, onShortcutsClick, onAuthClick, onSettingsClick]);
-
   // Wrapper functions with console logging
   const handleNotificationsClick = useCallback(() => {
     console.log('Notifications button clicked');
