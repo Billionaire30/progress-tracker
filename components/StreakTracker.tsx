@@ -10,7 +10,7 @@ export const StreakTracker = memo(function StreakTracker() {
   const offset = circumference - (streakPercentage / 100) * circumference;
 
   return (
-    <Card className="overflow-hidden hover-lift">
+    <Card className="overflow-hidden hover-lift glass-card">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <Flame className={`h-5 w-5 ${data.currentStreak > 0 ? "text-orange-500" : "text-muted-foreground"}`} />
@@ -39,7 +39,7 @@ export const StreakTracker = memo(function StreakTracker() {
                 fill="none"
                 strokeDasharray={circumference}
                 strokeDashoffset={offset}
-                className={`transition-all duration-500 ease-out ${data.currentStreak > 0 ? "" : "text-muted"}`}
+                className={`${data.currentStreak > 0 ? "" : "text-muted"}`}
                 strokeLinecap="round"
               />
               <defs>

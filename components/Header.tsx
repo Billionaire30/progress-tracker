@@ -12,10 +12,12 @@ import { VoiceAssistant } from "@/components/VoiceAssistant";
 import { Button } from "@/components/ui/button";
 import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
 import { AuthModal } from "@/components/AuthModal";
+import { useToast } from "@/lib/hooks/use-toast";
 
 export const Header = memo(function Header() {
   const { data } = useApp();
   const { user, signOutUser } = useAuth();
+  const { toast } = useToast();
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
 
@@ -36,8 +38,21 @@ export const Header = memo(function Header() {
   }, [data.months, data.portfolio, data.competencyChecklist, data.startDate]);
 
   const handleSignOut = useCallback(async () => {
-    await signOutUser();
-  }, [signOutUser]);
+    try {
+      await signOutUser();
+      toast({
+        title: "Signed out",
+        description: "You have been signed out successfully",
+      });
+    } catch (error) {
+      console.error("Sign out error:", error);
+      toast({
+        title: "Sign out failed",
+        description: "Failed to sign out. Please try again.",
+        variant: "destructive",
+      });
+    }
+  }, [signOutUser, toast]);
 
   return (
     <header className="border-b bg-card/80 backdrop-blur-xl sticky top-0 z-50 shadow-premium">
@@ -77,7 +92,11 @@ export const Header = memo(function Header() {
             <Button
               variant="ghost"
               size="icon"
-              onClick={handleSignOut}
+              style={{ cursor: 'pointer', zIndex: 100 }}
+              onClick={(e) => {
+                console.log("Sign out button clicked", e);
+                handleSignOut();
+              }}
               aria-label="Sign out"
               className="min-h-[40px] sm:min-h-[44px] min-w-[40px] sm:min-w-[44px]"
               title="Sign out"

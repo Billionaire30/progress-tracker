@@ -2,9 +2,6 @@ const CACHE_NAME = 'ce-tracker-v1';
 const urlsToCache = [
   '/',
   '/manifest.json',
-  // Cloudflare tunnel
-  'https://surgeons-intellectual-transparent-roy.trycloudflare.com/',
-  'https://surgeons-intellectual-transparent-roy.trycloudflare.com/manifest.json',
 ];
 
 self.addEventListener('install', (event) => {

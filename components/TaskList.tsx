@@ -32,7 +32,7 @@ export const TaskList = memo(function TaskList({
   }, [tasks]);
 
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle>Tasks</CardTitle>
         <CardDescription>

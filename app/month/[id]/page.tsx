@@ -11,6 +11,7 @@ import { TaskList } from "@/components/TaskList";
 import { AddTaskInput } from "@/components/AddTaskInput";
 import { NotesEditor } from "@/components/NotesEditor";
 import { AuthRequired } from "@/components/AuthRequired";
+import { LoadingState } from "@/components/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useMemo, use } from "react";
@@ -26,12 +27,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
   if (isLoading) {
     return (
       <AuthRequired>
-        <div className="min-h-screen bg-background flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading month data...</p>
-          </div>
-        </div>
+        <LoadingState message="Loading month data..." />
       </AuthRequired>
     );
   }
@@ -142,7 +138,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
   if (!month) {
     return (
       <AuthRequired>
-        <div className="min-h-screen bg-background p-8">
+        <div className="min-h-screen p-8">
           <p>Month not found (ID: {monthId})</p>
           <p className="text-sm text-muted-foreground mt-2">
             Available months: {data.months.map(m => m.id).join(', ')}
@@ -160,7 +156,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
 
   return (
     <AuthRequired>
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen flex flex-col">
       <header className="border-b bg-card sticky top-0 z-40">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <a href="/">
@@ -197,7 +193,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          <Card>
+          <Card className="glass-card">
             <CardHeader>
               <CardTitle className="text-base sm:text-lg">Focus & Software</CardTitle>
             </CardHeader>
@@ -222,7 +218,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="glass-card">
             <CardHeader>
               <CardTitle className="text-base sm:text-lg">Project</CardTitle>
             </CardHeader>
@@ -239,7 +235,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
           </Card>
         </div>
 
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle className="text-base sm:text-lg">Learning Topics</CardTitle>
           </CardHeader>
@@ -255,7 +251,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle className="text-base sm:text-lg">Target Deadline</CardTitle>
           </CardHeader>

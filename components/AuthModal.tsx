@@ -5,7 +5,7 @@ import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Loader2 } from "lucide-react";
+import { LoadingSpinner } from "@/components/LoadingSpinner";
 
 interface AuthModalProps {
   open?: boolean;
@@ -87,7 +87,7 @@ export function AuthModal({ open = true, onClose }: AuthModalProps) {
           >
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner size="sm" />
                 Signing in...
               </>
             ) : (
@@ -112,7 +112,7 @@ export function AuthModal({ open = true, onClose }: AuthModalProps) {
           >
             {loading ? (
               <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                <LoadingSpinner size="sm" />
                 Signing in...
               </>
             ) : (

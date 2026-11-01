@@ -17,6 +17,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
   const { playClickSound } = useClickSound();
   const [searchQuery, setSearchQuery] = useState("");
   const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
+  const [notesValue, setNotesValue] = useState("");
 
   const filteredPortfolio = useMemo(() =>
     data.portfolio.filter((item) =>
@@ -68,7 +69,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
   }, []);
 
   return (
-    <Card className="hover-lift">
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle className="text-lg sm:text-xl">Portfolio Progress</CardTitle>
         <div className="mt-2">
@@ -79,16 +80,16 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 stagger-children">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4">
           {filteredPortfolio.map((item) => (
-            <Card key={item.id} className="transition-all duration-300 hover:shadow-premium-lg hover:-translate-y-1 overflow-hidden hover:border-primary/50">
+            <Card key={item.id} className="overflow-hidden border">
               {item.image && (
                 <div className="h-20 sm:h-24 overflow-hidden relative">
                   <Image
                     src={item.image}
                     alt={item.name}
                     fill
-                    className="object-cover transition-transform duration-300 hover:scale-110"
+                    className="object-cover"
                     loading="lazy"
                   />
                 </div>
@@ -109,6 +110,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
                     onClick={() => {
                       playClickSound();
                       setEditingNotesId(item.id);
+                      setNotesValue(item.notes || "");
                     }}
                     aria-label={`Edit notes for ${item.name}`}
                     className="h-8 w-8 sm:h-9 sm:w-9"
@@ -130,17 +132,17 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
           {editingNotesId !== null && (
             <div className="space-y-4">
               <textarea
-                value={data.portfolio.find(p => p.id === editingNotesId)?.notes || ""}
-                onChange={(e) => {
-                  const updatedPortfolio = data.portfolio.map((item) =>
-                    item.id === editingNotesId ? { ...item, notes: e.target.value } : item
-                  );
-                  setData({ ...data, portfolio: updatedPortfolio });
-                }}
+                value={notesValue}
+                onChange={(e) => setNotesValue(e.target.value)}
                 className="w-full min-h-[150px] p-3 border rounded-md text-sm resize-y"
                 placeholder="Add your notes here..."
               />
-              <Button onClick={() => setEditingNotesId(null)} className="w-full sm:w-auto">Close</Button>
+              <div className="flex gap-2">
+                <Button onClick={() => {
+                  savePortfolioNotes(editingNotesId, notesValue);
+                }} className="flex-1 sm:w-auto">Save</Button>
+                <Button onClick={() => setEditingNotesId(null)} variant="outline" className="flex-1 sm:w-auto">Cancel</Button>
+              </div>
             </div>
           )}
         </DialogContent>

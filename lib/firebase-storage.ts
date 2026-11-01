@@ -9,6 +9,7 @@ import {
   onSnapshot,
   Unsubscribe
 } from "firebase/firestore";
+import { debounce } from "./performance";
 
 const DATA_KEY = "civiltracker:data";
 const PREFERENCES_KEY = "civiltracker:preferences";
@@ -65,6 +66,18 @@ let currentUser: string | null = null;
 let dataListener: Unsubscribe | null = null;
 let onDataChange: ((data: AppData) => void) | null = null;
 
+// Debounced Firebase write to reduce write operations
+const debouncedFirebaseWrite = debounce((data: AppData) => {
+  if (!isConfigured || !currentUser) return;
+
+  const userDocRef = doc(db, USER_DATA_COLLECTION, currentUser);
+  setDoc(userDocRef, data)
+    .then(() => console.log("Data synced to Firebase"))
+    .catch((error) => {
+      console.error("Failed to sync to Firebase:", error);
+    });
+}, 500); // 500ms debounce for faster feedback
+
 // Initialize user on auth state change
 let authUnsubscribe: Unsubscribe | null = null;
 
@@ -101,18 +114,12 @@ export const firebaseStorage = {
       lastUpdated: new Date().toISOString(),
     };
 
-    // Always save to localStorage for offline support
+    // Always save to localStorage for offline support (immediate)
     localStorageHelper.setData(dataWithTimestamp);
 
-    // Sync to Firebase if authenticated and configured
+    // Sync to Firebase if authenticated and configured (debounced)
     if (isConfigured && currentUser) {
-      const userDocRef = doc(db, USER_DATA_COLLECTION, currentUser);
-      setDoc(userDocRef, dataWithTimestamp)
-        .then(() => console.log("Data synced to Firebase"))
-        .catch((error) => {
-          console.error("Failed to sync to Firebase:", error);
-          // Data is already in localStorage, so app continues to work
-        });
+      debouncedFirebaseWrite(dataWithTimestamp);
     }
   },
 
@@ -306,7 +313,7 @@ export const firebaseStorage = {
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return isConfigured && auth.currentUser !== null;
+    return !!isConfigured && auth.currentUser !== null;
   },
 
   // Get current user ID

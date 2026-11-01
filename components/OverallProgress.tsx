@@ -24,13 +24,13 @@ export const OverallProgress = memo(function OverallProgress() {
   }, [data.months, data.portfolio, data.competencyChecklist]);
 
   return (
-    <Card className="transition-all duration-300 hover-lift">
+    <Card className="border">
       <CardContent className="pt-6">
-        <div className="text-6xl font-bold tabular-nums mb-4 font-serif transition-all duration-300 gradient-text counter-animate">
+        <div className="text-6xl font-bold tabular-nums mb-4 font-serif">
           {progress.overallProgress}%
         </div>
         <div>
-          <Progress value={progress.overallProgress} className="h-3 transition-all duration-500" />
+          <Progress value={progress.overallProgress} className="h-3" />
         </div>
         <p className="text-sm text-muted-foreground mt-2 text-center tabular-nums">
           {progress.monthsComplete} of 12 months · {progress.portfolioComplete} of 5 portfolio · {progress.competenciesComplete} of 17 competencies

@@ -16,16 +16,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import { Download, Upload, RotateCcw, Settings, FileText, Table, Bell } from "lucide-react";
+import { Download, Upload, Settings, FileText, Table, Bell } from "lucide-react";
 
 export function SettingsButton() {
   const { data, setData, resetData, exportData, importData, updatePreferences, preferences } = useApp();
   const { toast } = useToast();
   const { permission, enabled, toggleNotifications } = useNotifications();
   const { playClickSound } = useClickSound();
-  const [isResetOpen, setIsResetOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [startDate, setStartDate] = useState(data.startDate || "");
   const [showChartAsTable, setShowChartAsTable] = useState(preferences.showChartAsTable || false);
@@ -56,7 +55,6 @@ export function SettingsButton() {
 
   const handleReset = () => {
     resetData();
-    setIsResetOpen(false);
     toast({
       title: "Data reset",
       description: "All progress has been cleared",
@@ -101,208 +99,185 @@ export function SettingsButton() {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="icon" aria-label="Settings">
-          <Settings className="h-4 w-4" />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
-          <DialogDescription>
-            Manage your data and settings
-          </DialogDescription>
-        </DialogHeader>
-        <div className="space-y-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Start Date</p>
-              <p className="text-sm text-muted-foreground">
-                When you began Month 1
-              </p>
-            </div>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => handleStartDateChange(e.target.value)}
-              className="px-3 py-2 border rounded-md text-sm"
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Weekly Hour Goal</p>
-              <p className="text-sm text-muted-foreground">
-                Target hours per week
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
+    <>
+      <Button variant="outline" size="icon" aria-label="Settings" onClick={() => setIsSettingsOpen(true)}>
+        <Settings className="h-4 w-4" />
+      </Button>
+      <Dialog open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Settings</DialogTitle>
+            <DialogDescription>
+              Manage your data and settings
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Start Date</p>
+                <p className="text-sm text-muted-foreground">
+                  When you began Month 1
+                </p>
+              </div>
               <input
-                type="number"
-                min="1"
-                max="100"
-                value={data.weeklyGoal || 20}
-                onChange={(e) => handleWeeklyGoalChange(parseInt(e.target.value) || 20)}
-                className="px-3 py-2 border rounded-md text-sm w-20"
+                type="date"
+                value={startDate}
+                onChange={(e) => handleStartDateChange(e.target.value)}
+                className="px-3 py-2 border rounded-md text-sm"
               />
-              <span className="text-sm text-muted-foreground">hrs</span>
             </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Show chart as table</p>
-              <p className="text-sm text-muted-foreground">
-                Display weekly hours as table by default
-              </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Weekly Hour Goal</p>
+                <p className="text-sm text-muted-foreground">
+                  Target hours per week
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min="1"
+                  max="100"
+                  value={data.weeklyGoal || 20}
+                  onChange={(e) => handleWeeklyGoalChange(parseInt(e.target.value) || 20)}
+                  className="px-3 py-2 border rounded-md text-sm w-20"
+                />
+                <span className="text-sm text-muted-foreground">hrs</span>
+              </div>
             </div>
-            <Checkbox
-              checked={showChartAsTable}
-              onCheckedChange={(checked) => {
-                playClickSound();
-                handleChartToggle(checked as boolean);
-              }}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Notifications</p>
-              <p className="text-sm text-muted-foreground">
-                {permission === "granted"
-                  ? "Receive reminders for logging hours"
-                  : permission === "denied"
-                  ? "Notifications blocked by browser"
-                  : "Enable browser notifications"}
-              </p>
-            </div>
-            <Button
-              variant={enabled ? "default" : "outline"}
-              size="sm"
-              onClick={() => {
-                playClickSound();
-                toggleNotifications();
-              }}
-              disabled={permission === "denied"}
-              className="min-h-[44px]"
-            >
-              <Bell className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Export JSON</p>
-              <p className="text-sm text-muted-foreground">
-                Download your progress as JSON
-              </p>
-            </div>
-            <Button onClick={() => {
-              playClickSound();
-              exportData();
-            }} variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Export CSV</p>
-              <p className="text-sm text-muted-foreground">
-                Download spreadsheet-compatible data
-              </p>
-            </div>
-            <Button onClick={() => {
-              playClickSound();
-              handleExportCSV();
-            }} variant="outline" size="sm">
-              <Table className="h-4 w-4 mr-2" />
-              CSV
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Text Report</p>
-              <p className="text-sm text-muted-foreground">
-                Generate a detailed text summary
-              </p>
-            </div>
-            <Button onClick={() => {
-              playClickSound();
-              handleExportText();
-            }} variant="outline" size="sm">
-              <FileText className="h-4 w-4 mr-2" />
-              Report
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Import Data</p>
-              <p className="text-sm text-muted-foreground">
-                Load progress from a JSON file
-              </p>
-            </div>
-            <div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".json"
-                onChange={handleImport}
-                className="hidden"
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Show chart as table</p>
+                <p className="text-sm text-muted-foreground">
+                  Display weekly hours as table by default
+                </p>
+              </div>
+              <Checkbox
+                checked={showChartAsTable}
+                onCheckedChange={(checked) => {
+                  playClickSound();
+                  handleChartToggle(checked as boolean);
+                }}
               />
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Notifications</p>
+                <p className="text-sm text-muted-foreground">
+                  {permission === "granted"
+                    ? "Receive reminders for logging hours"
+                    : permission === "denied"
+                    ? "Notifications blocked by browser"
+                    : "Enable browser notifications"}
+                </p>
+              </div>
               <Button
+                variant={enabled ? "default" : "outline"}
+                size="sm"
                 onClick={() => {
                   playClickSound();
-                  fileInputRef.current?.click();
+                  toggleNotifications();
                 }}
-                variant="outline"
-                size="sm"
+                disabled={permission === "denied"}
+                className="min-h-[44px]"
               >
-                <Upload className="h-4 w-4 mr-2" />
-                Import
+                <Bell className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Export JSON</p>
+                <p className="text-sm text-muted-foreground">
+                  Download your progress as JSON
+                </p>
+              </div>
+              <Button onClick={() => {
+                playClickSound();
+                exportData();
+              }} variant="outline" size="sm">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Export CSV</p>
+                <p className="text-sm text-muted-foreground">
+                  Download spreadsheet-compatible data
+                </p>
+              </div>
+              <Button onClick={() => {
+                playClickSound();
+                handleExportCSV();
+              }} variant="outline" size="sm">
+                <Table className="h-4 w-4 mr-2" />
+                CSV
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Text Report</p>
+                <p className="text-sm text-muted-foreground">
+                  Generate a detailed text summary
+                </p>
+              </div>
+              <Button onClick={() => {
+                playClickSound();
+                handleExportText();
+              }} variant="outline" size="sm">
+                <FileText className="h-4 w-4 mr-2" />
+                Report
+              </Button>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Import Data</p>
+                <p className="text-sm text-muted-foreground">
+                  Load progress from a JSON file
+                </p>
+              </div>
+              <div>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".json"
+                  onChange={handleImport}
+                  className="hidden"
+                />
+                <Button
+                  onClick={() => {
+                    playClickSound();
+                    fileInputRef.current?.click();
+                  }}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  Import
+                </Button>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-medium">Reset Data</p>
+                <p className="text-sm text-muted-foreground">
+                  Clear all progress and start fresh
+                </p>
+              </div>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={() => {
+                  playClickSound();
+                  handleReset();
+                }}
+              >
+                Reset
               </Button>
             </div>
           </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium">Reset Data</p>
-              <p className="text-sm text-muted-foreground">
-                Clear all progress and start fresh
-              </p>
-            </div>
-            <Dialog open={isResetOpen} onOpenChange={setIsResetOpen}>
-              <DialogTrigger asChild>
-                <Button variant="destructive" size="sm">
-                  <RotateCcw className="h-4 w-4 mr-2" />
-                  Reset
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Reset All Data?</DialogTitle>
-                  <DialogDescription>
-                    This will erase all progress. Continue?
-                  </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      playClickSound();
-                      setIsResetOpen(false);
-                    }}
-                  >
-                    Cancel
-                  </Button>
-                  <Button variant="destructive" onClick={() => {
-                    playClickSound();
-                    handleReset();
-                  }}>
-                    Reset Data
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
-          </div>
-        </div>
-      </DialogContent>
-    </Dialog>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

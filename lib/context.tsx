@@ -12,7 +12,7 @@ import { debounce, optimizeData } from "./performance";
 
 interface AppContextType {
   data: AppData;
-  setData: (data: AppData) => void;
+  setData: (data: AppData | ((prev: AppData) => AppData)) => void;
   resetData: () => void;
   exportData: () => void;
   importData: (file: File) => Promise<void>;
@@ -81,90 +81,102 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  const updateData = useCallback((newData: AppData) => {
-    const previousData = dataRef.current;
+  const updateData = useCallback((newData: AppData | ((prev: AppData) => AppData)) => {
+    setData((prevData) => {
+      const previousData = dataRef.current;
+      const dataToUpdate = typeof newData === 'function' ? newData(prevData) : newData;
 
-    // Calculate streak (only if weeklyLog changed)
-    const today = new Date();
-    const todayStr = today.toISOString().split("T")[0];
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split("T")[0];
-
-    const loggedToday = newData.weeklyLog.some((entry) => entry.date === todayStr);
-    const loggedYesterday = newData.weeklyLog.some((entry) => entry.date === yesterdayStr);
-
-    let newStreak = newData.currentStreak;
-    if (loggedToday && !loggedYesterday) {
-      newStreak = 1;
-    } else if (loggedToday && loggedYesterday) {
-      newStreak = newData.currentStreak + 1;
-    } else if (!loggedToday && !loggedYesterday) {
-      newStreak = 0;
-    }
-
-    const newLongestStreak = Math.max(newData.longestStreak, newStreak);
-
-    // Check for new achievements (only if relevant data changed)
-    const monthsChanged = newData.months !== previousData.months;
-    const weeklyLogChanged = newData.weeklyLog !== previousData.weeklyLog;
-    const competenciesChanged = newData.competencyChecklist !== previousData.competencyChecklist;
-    const portfolioChanged = newData.portfolio !== previousData.portfolio;
-
-    let newAchievements: string[] = [];
-    if (monthsChanged || weeklyLogChanged || competenciesChanged || portfolioChanged) {
-      newAchievements = checkAchievements(newData, newData.achievements);
-      if (newAchievements.length > 0) {
-        triggerConfetti();
+      // Skip expensive calculations if data hasn't meaningfully changed
+      if (JSON.stringify(dataToUpdate) === JSON.stringify(previousData)) {
+        return previousData;
       }
-    }
 
-    // Gamification: Award XP for logged hours (only if weeklyLog changed)
-    if (weeklyLogChanged) {
-      const totalHours = newData.weeklyLog.reduce((sum, entry) => sum + entry.hours, 0);
-      const previousHours = previousData.weeklyLog.reduce((sum, entry) => sum + entry.hours, 0);
-      if (totalHours > previousHours) {
-        newData = awardXPForHours(newData, totalHours - previousHours);
+      // Calculate streak (only if weeklyLog changed)
+      const weeklyLogChanged = dataToUpdate.weeklyLog !== previousData.weeklyLog;
+      let newStreak = dataToUpdate.currentStreak;
+      let newLongestStreak = dataToUpdate.longestStreak;
+
+      if (weeklyLogChanged) {
+        const today = new Date();
+        const todayStr = today.toISOString().split("T")[0];
+        const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toISOString().split("T")[0];
+
+        const loggedToday = dataToUpdate.weeklyLog.some((entry) => entry.date === todayStr);
+        const loggedYesterday = dataToUpdate.weeklyLog.some((entry) => entry.date === yesterdayStr);
+
+        if (loggedToday && !loggedYesterday) {
+          newStreak = 1;
+        } else if (loggedToday && loggedYesterday) {
+          newStreak = dataToUpdate.currentStreak + 1;
+        } else if (!loggedToday && !loggedYesterday) {
+          newStreak = 0;
+        }
+        newLongestStreak = Math.max(dataToUpdate.longestStreak, newStreak);
       }
-    }
 
-    // Update streak bonus (only if streak changed)
-    if (newStreak !== newData.currentStreak) {
-      newData = updateStreakBonus(newData);
-    }
+      // Check for new achievements (only if relevant data changed)
+      const monthsChanged = dataToUpdate.months !== previousData.months;
+      const competenciesChanged = dataToUpdate.competencyChecklist !== previousData.competencyChecklist;
+      const portfolioChanged = dataToUpdate.portfolio !== previousData.portfolio;
 
-    // Check daily challenges (only if weeklyLog or months changed)
-    if (weeklyLogChanged || monthsChanged) {
-      newData = checkDailyChallenges(newData);
-    }
+      let newAchievements: string[] = [];
+      if (monthsChanged || weeklyLogChanged || competenciesChanged || portfolioChanged) {
+        newAchievements = checkAchievements(dataToUpdate, dataToUpdate.achievements);
+        if (newAchievements.length > 0) {
+          triggerConfetti();
+        }
+      }
 
-    // Award badges for achievements
-    newAchievements.forEach((achievementId) => {
-      newData = addBadge(newData, achievementId);
+      // Gamification: Award XP for logged hours (only if weeklyLog changed)
+      let processedData = dataToUpdate;
+      if (weeklyLogChanged) {
+        const totalHours = dataToUpdate.weeklyLog.reduce((sum, entry) => sum + entry.hours, 0);
+        const previousHours = previousData.weeklyLog.reduce((sum, entry) => sum + entry.hours, 0);
+        if (totalHours > previousHours) {
+          processedData = awardXPForHours(dataToUpdate, totalHours - previousHours);
+        }
+      }
+
+      // Update streak bonus (only if streak changed)
+      if (newStreak !== dataToUpdate.currentStreak) {
+        processedData = updateStreakBonus(processedData);
+      }
+
+      // Check daily challenges (only if weeklyLog or months changed)
+      if (weeklyLogChanged || monthsChanged) {
+        processedData = checkDailyChallenges(processedData);
+      }
+
+      // Award badges for achievements
+      newAchievements.forEach((achievementId) => {
+        processedData = addBadge(processedData, achievementId);
+      });
+
+      const updatedData = {
+        ...processedData,
+        currentStreak: newStreak,
+        longestStreak: newLongestStreak,
+        achievements: [...new Set([...processedData.achievements, ...newAchievements])],
+        weeklyGoal: processedData.weeklyGoal || 20,
+      };
+
+      // Optimize data periodically (only if significant changes)
+      const shouldOptimize = updatedData.auditLog?.length !== previousData.auditLog?.length ||
+                            updatedData.gamification?.dailyChallenges?.length !== previousData.gamification?.dailyChallenges?.length;
+
+      const optimizedData = shouldOptimize ? optimizeData(updatedData) : updatedData;
+
+      // Use Firebase storage if authenticated and configured, otherwise use local storage
+      if (isConfigured && auth.currentUser) {
+        firebaseStorage.setData(optimizedData);
+      } else {
+        storage.setData(optimizedData);
+      }
+
+      return optimizedData;
     });
-
-    const updatedData = {
-      ...newData,
-      currentStreak: newStreak,
-      longestStreak: newLongestStreak,
-      achievements: [...new Set([...newData.achievements, ...newAchievements])],
-      weeklyGoal: newData.weeklyGoal || 20,
-    };
-
-    // Optimize data periodically (only if significant changes)
-    const shouldOptimize = updatedData.auditLog?.length !== previousData.auditLog?.length ||
-                          updatedData.gamification?.dailyChallenges?.length !== previousData.gamification?.dailyChallenges?.length;
-
-    const optimizedData = shouldOptimize ? optimizeData(updatedData) : updatedData;
-
-    setData(optimizedData);
-
-    // Use Firebase storage if authenticated and configured, otherwise use local storage
-    if (isConfigured && auth.currentUser) {
-      firebaseStorage.setData(optimizedData);
-    } else {
-      storage.setData(optimizedData);
-    }
   }, []);
 
   const resetData = useCallback(() => {
@@ -202,7 +214,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }), [data, preferences, isLoading, updateData, resetData, exportData, importData, updatePreferencesFn]);
 
   if (!mounted) {
-    return <div className="min-h-screen bg-background flex items-center justify-center">Loading...</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+    </div>;
   }
 
   return (

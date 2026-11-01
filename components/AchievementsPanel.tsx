@@ -9,7 +9,7 @@ export function AchievementsPanel() {
   const totalCount = ACHIEVEMENTS.length;
 
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Trophy className="h-5 w-5" />
@@ -23,7 +23,7 @@ export function AchievementsPanel() {
             return (
               <div
                 key={achievement.id}
-                className={`p-3 rounded-lg border text-center transition-all hover:scale-105 ${
+                className={`p-3 rounded-lg border text-center ${
                   isUnlocked
                     ? "bg-primary/10 border-primary"
                     : "bg-muted/30 border-muted opacity-50"

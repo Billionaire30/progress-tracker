@@ -13,7 +13,9 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
-    qualities: [75, 85],
+    qualities: [60, 75, 80, 85],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
   // Cloudflare tunnel configuration for external access
@@ -21,19 +23,19 @@ const nextConfig = {
   allowedDevOrigins: [
     '127.0.0.1', // Localhost IP
     'localhost', // Localhost hostname
-    process.env.CLOUDFLARE_TUNNEL_URL || 'dvd-finder-applicable-drainage.trycloudflare.com', // Current Cloudflare tunnel
-    'dvd-finder-applicable-drainage.trycloudflare.com', // Current tunnel (kept for compatibility)
+    '*.trycloudflare.com', // Allow all Cloudflare tunnel domains
+    'adipex-alumni-cloth-focus.trycloudflare.com', // Previous tunnel (kept for compatibility)
+    'dvd-finder-applicable-drainage.trycloudflare.com', // Previous tunnel (kept for compatibility)
     'blue-metals-processing-photographic.trycloudflare.com', // Previous tunnel (kept for compatibility)
     'moderator-variable-two-named.trycloudflare.com', // Previous tunnel (kept for compatibility)
     'surgeons-intellectual-transparent-roy.trycloudflare.com', // Previous tunnel (kept for compatibility)
     'harder-renewal-translation-lance.trycloudflare.com', // Previous tunnel (kept for compatibility)
+    'harley-oklahoma-inn-ultram.trycloudflare.com', // Previous tunnel (kept for compatibility)
+    'set-limited-ice-cheap.trycloudflare.com', // Previous tunnel (kept for compatibility)
     '100.112.31.210' // Local network IP
   ],
 
-  // Environment variables to expose to the browser
-  env: {
-    CLOUDFLARE_TUNNEL_URL: process.env.CLOUDFLARE_TUNNEL_URL,
-  },
+
 
   turbopack: {},
   webpack: (config, { isServer }) => {
@@ -75,10 +77,13 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', 'recharts'],
+    optimizeCss: true,
   },
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
+    reactRemoveProperties: process.env.NODE_ENV === 'production',
   },
+  productionBrowserSourceMaps: false,
 }
 
 module.exports = nextConfig

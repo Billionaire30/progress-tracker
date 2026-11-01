@@ -42,7 +42,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
   }, [expandedCategory, playClickSound]);
 
   return (
-    <Card className="hover-lift">
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
           <Clock className="h-5 w-5" />
@@ -62,10 +62,10 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
           const isExpanded = expandedCategory === category;
 
           return (
-            <div key={category} className="border rounded-lg overflow-hidden hover:border-primary/50 transition-colors">
+            <div key={category} className="border rounded-lg overflow-hidden">
               <button
                 onClick={() => toggleCategory(category)}
-                className="w-full flex items-center justify-between p-2 sm:p-3 hover:bg-muted/50 transition-colors"
+                className="w-full flex items-center justify-between p-2 sm:p-3"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between mb-1">
@@ -77,9 +77,9 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                   <Progress value={categoryProgress} className="h-1.5" />
                 </div>
                 {isExpanded ? (
-                  <ChevronDown className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0 transition-transform duration-200" />
+                  <ChevronDown className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0" />
                 ) : (
-                  <ChevronRight className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0 transition-transform duration-200" />
+                  <ChevronRight className="h-4 w-4 ml-2 text-muted-foreground flex-shrink-0" />
                 )}
               </button>
               {isExpanded && (
@@ -87,7 +87,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                   {categoryCompetencies.map((competency) => (
                     <div
                       key={competency.id}
-                      className="flex items-start gap-2 sm:gap-3 p-2 rounded hover:bg-muted/50 transition-colors"
+                      className="flex items-start gap-2 sm:gap-3 p-2 rounded"
                     >
                       <Checkbox
                         checked={competency.done}
@@ -95,7 +95,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                         className="mt-0.5 flex-shrink-0"
                       />
                       <p
-                        className={`text-xs sm:text-sm flex-1 transition-all ${
+                        className={`text-xs sm:text-sm flex-1 ${
                           competency.done ? "line-through text-muted-foreground" : ""
                         }`}
                       >

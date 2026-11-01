@@ -34,7 +34,7 @@ export const NotesEditor = memo(function NotesEditor({ notes = "", onSave, title
   }, []);
 
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           {title}

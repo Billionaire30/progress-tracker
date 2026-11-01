@@ -16,7 +16,7 @@ export const Hero = memo(function Hero() {
   }, []);
 
   return (
-    <Card className="overflow-hidden shadow-premium-xl hover:shadow-premium-xl transition-all duration-300 gradient-border">
+    <Card className="overflow-hidden shadow-lg border">
       <CardContent className="p-0">
         <div className="relative h-40 sm:h-48 md:h-64">
           <Image
@@ -24,8 +24,9 @@ export const Hero = memo(function Hero() {
             alt="Civil Engineering"
             fill
             className="object-cover"
-            loading="eager"
-            priority
+            loading="lazy"
+            quality={70}
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 100vw, (max-width: 1024px) 100vw, 100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">

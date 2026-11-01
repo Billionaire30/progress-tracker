@@ -47,7 +47,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
   }, [data.weeklyLog]);
 
   return (
-    <Card className="hover-lift">
+    <Card className="hover-lift glass-card">
       <CardHeader>
         <CardTitle className="flex items-center justify-between text-base sm:text-lg">
           <div className="flex items-center gap-2">
@@ -78,7 +78,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
             </div>
             <div className="h-2 bg-muted rounded-full overflow-hidden">
               <div
-                className={`h-full transition-all duration-500 ease-out ${isGoalMet ? "bg-gradient-to-r from-green-500 to-emerald-400" : "bg-gradient-to-r from-primary to-purple-500"}`}
+                className={`h-full ${isGoalMet ? "bg-gradient-to-r from-green-500 to-emerald-400" : "bg-gradient-to-r from-primary to-purple-500"}`}
                 style={{ width: `${goalProgress}%` }}
               />
             </div>
@@ -115,11 +115,11 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
                     borderRadius: '8px',
                   }}
                 />
-                <Bar 
-                  dataKey="hours" 
+                <Bar
+                  dataKey="hours"
                   fill="url(#barGradient)"
                   radius={[4, 4, 0, 0]}
-                  animationDuration={500}
+                  animationDuration={150}
                 />
                 <defs>
                   <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">

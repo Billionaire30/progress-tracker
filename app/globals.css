@@ -54,10 +54,13 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply text-foreground;
+    background: transparent;
+    transition: color 0.2s ease;
     /* Prevent pull-to-refresh on mobile */
     overscroll-behavior-y: none;
+    /* Enable GPU acceleration for smooth scrolling */
+    transform: translateZ(0);
   }
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
@@ -146,9 +149,9 @@
       0 0 40px rgba(168, 85, 247, 0.1);
   }
 
-  /* Glassmorphism card */
+  /* Glassmorphism card - disabled blur for performance */
   .glass-card {
-    @apply bg-white/70 dark:bg-card/70 backdrop-blur-xl border border-white/20 dark:border-white/10;
+    @apply bg-white/90 dark:bg-card/90 border border-white/20 dark:border-white/10;
   }
 
   /* Gradient border */
@@ -185,26 +188,28 @@
     100% { background-position: 0% 50%; }
   }
 
-  /* Smooth hover lift */
+  /* Disabled hover lift for performance */
   .hover-lift {
-    @apply transition-all duration-300 ease-out;
+    /* No transitions for instant response */
   }
 
-  .hover-lift:hover {
-    @apply -translate-y-1 shadow-premium-lg;
+  /* GPU acceleration hints for smoother animations */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
   }
 
-  /* Button premium effects */
+  .smooth-opacity {
+    will-change: opacity;
+  }
+
+  .smooth-transform {
+    will-change: transform;
+  }
+
+  /* Button premium effects - disabled for performance */
   .button-premium {
-    @apply transition-all duration-200 ease-out;
-  }
-
-  .button-premium:hover {
-    @apply scale-105 shadow-glow;
-  }
-
-  .button-premium:active {
-    @apply scale-95;
+    /* Transitions disabled for instant response */
   }
 
   /* Noise texture overlay */
@@ -221,33 +226,9 @@
     pointer-events: none;
   }
 
-  /* Stagger animation children */
+  /* Disabled stagger animations for performance */
   .stagger-children > * {
-    animation: fadeInUp 0.5s ease-out backwards;
-  }
-
-  .stagger-children > *:nth-child(1) { animation-delay: 0ms; }
-  .stagger-children > *:nth-child(2) { animation-delay: 50ms; }
-  .stagger-children > *:nth-child(3) { animation-delay: 100ms; }
-  .stagger-children > *:nth-child(4) { animation-delay: 150ms; }
-  .stagger-children > *:nth-child(5) { animation-delay: 200ms; }
-  .stagger-children > *:nth-child(6) { animation-delay: 250ms; }
-  .stagger-children > *:nth-child(7) { animation-delay: 300ms; }
-  .stagger-children > *:nth-child(8) { animation-delay: 350ms; }
-  .stagger-children > *:nth-child(9) { animation-delay: 400ms; }
-  .stagger-children > *:nth-child(10) { animation-delay: 450ms; }
-  .stagger-children > *:nth-child(11) { animation-delay: 500ms; }
-  .stagger-children > *:nth-child(12) { animation-delay: 550ms; }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    /* No animations */
   }
 
   /* Number counter animation */
@@ -261,10 +242,11 @@
     background: linear-gradient(90deg, transparent, hsl(var(--border)), transparent);
   }
 
-  /* Shimmer effect for skeletons */
+  /* Shimmer effect for skeletons - optimized */
   .shimmer {
     position: relative;
     overflow: hidden;
+    will-change: background-position;
   }
 
   .shimmer::after {
@@ -277,17 +259,59 @@
     background: linear-gradient(
       90deg,
       transparent,
-      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.1),
       transparent
     );
     transform: translateX(-100%);
-    animation: shimmer 2s infinite;
+    animation: shimmer 1.5s infinite;
   }
 
   @keyframes shimmer {
     100% {
       transform: translateX(100%);
     }
+  }
+
+  /* Smooth loading spinner animations */
+  @keyframes spin-slow {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin-reverse {
+    from {
+      transform: rotate(360deg);
+    }
+    to {
+      transform: rotate(0deg);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.1);
+    }
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 1.5s linear infinite;
+  }
+
+  .animate-spin-reverse {
+    animation: spin-reverse 2s linear infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 1.5s ease-in-out infinite;
   }
 
   /* Premium dark mode glow */

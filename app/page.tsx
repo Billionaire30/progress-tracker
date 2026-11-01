@@ -11,8 +11,6 @@ import { PortfolioPanel } from "@/components/PortfolioPanel";
 import { StreakTracker } from "@/components/StreakTracker";
 import { ProductivityInsights } from "@/components/ProductivityInsights";
 import { LogHoursModal } from "@/components/LogHoursModal";
-import { PageTransition } from "@/components/PageTransition";
-import { SlideshowBackdrop } from "@/components/SlideshowBackdrop";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 import { useReminder } from "@/lib/hooks/use-reminder";
 
@@ -34,9 +32,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
-      {/* Slideshow backdrop */}
-      <SlideshowBackdrop />
-      
       <Header />
 
       <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">

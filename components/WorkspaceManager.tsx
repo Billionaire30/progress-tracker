@@ -52,7 +52,7 @@ export function WorkspaceManager() {
   };
 
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle>Workspaces</CardTitle>
@@ -99,7 +99,7 @@ export function WorkspaceManager() {
           {workspaces.map((workspace) => (
             <div
               key={workspace.id}
-              className={`p-4 rounded-lg border-2 cursor-pointer transition-colors ${
+              className={`p-4 rounded-lg border-2 cursor-pointer ${
                 workspace.id === activeWorkspaceId
                   ? "border-primary bg-primary/5"
                   : "border-border hover:border-primary/50"

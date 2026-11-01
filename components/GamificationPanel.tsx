@@ -35,7 +35,7 @@ export const GamificationPanel = memo(function GamificationPanel() {
   return (
     <div className="space-y-6">
       {/* Level & XP */}
-      <Card>
+      <Card className="glass-card">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Trophy className="h-5 w-5 text-yellow-500" />

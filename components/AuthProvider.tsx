@@ -66,6 +66,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOutUser = async () => {
     if (!isConfigured) {
       console.log("Firebase auth not configured, skipping sign out");
+      // Still clear the user state even without Firebase
+      setUser(null);
       return;
     }
     try {

@@ -53,7 +53,7 @@ export const StatsDashboard = memo(function StatsDashboard() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
+        <Card className="glass-card">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="h-4 w-4 text-primary" />
@@ -62,7 +62,7 @@ export const StatsDashboard = memo(function StatsDashboard() {
             <div className="text-2xl font-bold tabular-nums">{stats.totalHours.toFixed(1)}</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass-card">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 mb-2">
               <Target className="h-4 w-4 text-primary" />
@@ -71,7 +71,7 @@ export const StatsDashboard = memo(function StatsDashboard() {
             <div className="text-2xl font-bold tabular-nums">{stats.monthsComplete}/12</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass-card">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 mb-2">
               <Award className="h-4 w-4 text-primary" />
@@ -80,7 +80,7 @@ export const StatsDashboard = memo(function StatsDashboard() {
             <div className="text-2xl font-bold tabular-nums">{stats.competenciesComplete}/17</div>
           </CardContent>
         </Card>
-        <Card>
+        <Card className="glass-card">
           <CardContent className="pt-6">
             <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="h-4 w-4 text-primary" />
@@ -92,7 +92,7 @@ export const StatsDashboard = memo(function StatsDashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>Hours by Month</CardTitle>
           </CardHeader>
@@ -109,7 +109,7 @@ export const StatsDashboard = memo(function StatsDashboard() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>Month Status Distribution</CardTitle>
           </CardHeader>

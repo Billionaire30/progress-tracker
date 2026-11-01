@@ -10,6 +10,7 @@ import { WorkspaceManager } from "@/components/WorkspaceManager";
 import { IntegrationsManager } from "@/components/IntegrationsManager";
 import { Header } from "@/components/Header";
 import { AuthRequired } from "@/components/AuthRequired";
+import { LoadingState } from "@/components/LoadingSpinner";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/context";
@@ -20,19 +21,14 @@ export default function StatsPage() {
   if (isLoading) {
     return (
       <AuthRequired>
-        <div className="min-h-screen bg-background flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Loading statistics...</p>
-          </div>
-        </div>
+        <LoadingState message="Loading statistics..." />
       </AuthRequired>
     );
   }
 
   return (
     <AuthRequired>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen">
         <Header />
 
       <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6" role="main">

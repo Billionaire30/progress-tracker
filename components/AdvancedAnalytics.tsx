@@ -99,7 +99,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
     <div className="space-y-6">
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Hours</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
@@ -110,7 +110,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Task Completion</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
@@ -123,7 +123,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Avg Hours/Day</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
@@ -134,7 +134,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
             <Flame className="h-4 w-4 text-muted-foreground" />
@@ -149,7 +149,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Focus Area Breakdown */}
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>Hours by Focus Area</CardTitle>
           </CardHeader>
@@ -177,7 +177,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
         </Card>
 
         {/* Productivity by Day of Week */}
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>Productivity by Day</CardTitle>
           </CardHeader>
@@ -195,7 +195,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
         </Card>
 
         {/* Weekly Progress */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 glass-card">
           <CardHeader>
             <CardTitle>Weekly Progress</CardTitle>
           </CardHeader>
@@ -214,7 +214,7 @@ export const AdvancedAnalytics = memo(function AdvancedAnalytics() {
         </Card>
 
         {/* Hourly Distribution */}
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 glass-card">
           <CardHeader>
             <CardTitle>Hourly Distribution</CardTitle>
           </CardHeader>

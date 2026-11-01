@@ -78,7 +78,7 @@ export const CalendarHeatMap = memo(function CalendarHeatMap({ year = new Date()
   }, [data.weeklyLog, year]);
 
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle>Activity Calendar - {year}</CardTitle>
       </CardHeader>
@@ -138,7 +138,7 @@ export const CalendarHeatMap = memo(function CalendarHeatMap({ year = new Date()
                       return (
                         <div
                           key={`${date.toISOString()}-${dayIndex}`}
-                          className={`w-3 h-3 rounded-sm ${colorClass} transition-all duration-150 ${hasHours ? 'hover:scale-125 hover:shadow-sm cursor-pointer' : ''}`}
+                          className={`w-3 h-3 rounded-sm ${colorClass} ${hasHours ? 'cursor-pointer' : ''}`}
                           title={`${date.toLocaleDateString()}: ${hours.toFixed(1)} hrs`}
                         />
                       );

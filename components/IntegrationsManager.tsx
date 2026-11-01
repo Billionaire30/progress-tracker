@@ -42,7 +42,7 @@ export function IntegrationsManager() {
   };
 
   return (
-    <Card>
+    <Card className="glass-card">
       <CardHeader>
         <CardTitle>Integrations</CardTitle>
       </CardHeader>
