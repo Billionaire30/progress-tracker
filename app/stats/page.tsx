@@ -26,18 +26,24 @@ import { AuthModal } from "@/components/AuthModal";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/context";
+import { SlideshowBackdrop } from "@/components/SlideshowBackdrop";
 import SoftAurora from "@/components/SoftAurora";
 import ClickSpark from "@/components/ClickSpark";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 
 export default function StatsPage() {
   const { isLoading } = useApp();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
+  const [showShortcuts, setShowShortcuts] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   useKeyboardShortcuts([
     {
       key: "/",
       ctrlKey: true,
-      action: () => console.log("Shortcuts"),
+      action: () => setShowShortcuts(true),
       description: "Show keyboard shortcuts",
     },
   ]);
@@ -54,6 +60,9 @@ export default function StatsPage() {
     <AuthRequired>
       <div className="min-h-screen relative overflow-hidden">
         <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300} layer="back">
+        <div className="pointer-events-none fixed inset-0 z-[-1]">
+          <SlideshowBackdrop />
+        </div>
         <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
           <SoftAurora
             color1="#8b5cf6"
@@ -116,6 +125,11 @@ export default function StatsPage() {
           <AchievementsPanel />
       </main>
 
+      <SettingsMenuContent open={isSettingsOpen} onOpenChange={setIsSettingsOpen} />
+      <NotificationCenterContent open={isNotificationsOpen} onOpenChange={setIsNotificationsOpen} />
+      <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
+      <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
+      <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </ClickSpark>
     </div>
     </AuthRequired>

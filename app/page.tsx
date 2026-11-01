@@ -15,6 +15,7 @@ import { LogHoursModal } from "@/components/LogHoursModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorBoundary as HeaderErrorBoundary } from "@/components/ErrorBoundary";
 import { PageTransition } from "@/components/PageTransition";
+import { SlideshowBackdrop } from "@/components/SlideshowBackdrop";
 import SoftAurora from "@/components/SoftAurora";
 import ClickSpark from "@/components/ClickSpark";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
@@ -39,6 +40,9 @@ export default function Home() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300} layer="back">
+        <div className="pointer-events-none fixed inset-0 z-[-1]">
+          <SlideshowBackdrop />
+        </div>
         <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
           <SoftAurora
             color1="#8b5cf6"

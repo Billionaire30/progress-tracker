@@ -5,7 +5,6 @@ import { AuthProvider } from "@/components/AuthProvider";
 import { Toaster } from "@/components/ui/toaster";
 import { SkipToMain } from "@/components/SkipToMain";
 import { BodyWrapper } from "@/components/BodyWrapper";
-import { SlideshowBackdrop } from "@/components/SlideshowBackdrop";
 import { ThemeProvider } from "next-themes";
 import { Inter, Playfair_Display } from "next/font/google";
 import { FallbackModals } from "@/components/FallbackModals";
@@ -49,9 +48,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${inter.variable} ${playfair.variable}`}>
       <body className="pointer-events-auto font-sans relative">
-        <div className="pointer-events-none fixed inset-0 z-[-1]">
-          <SlideshowBackdrop />
-        </div>
         <SkipToMain />
         <ThemeProvider
           attribute="class"
