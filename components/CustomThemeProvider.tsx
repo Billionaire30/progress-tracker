@@ -65,8 +65,55 @@ function isLightColor(hex: string): boolean {
     b = parseInt(hex.substring(5, 7), 16);
   }
 
+  // Use standard luminance formula for better contrast detection
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
   return luminance > 0.5;
+}
+
+// Helper to get contrasting text color (black or white) based on background
+function getContrastingTextColor(hex: string): string {
+  let r = 0, g = 0, b = 0;
+
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex.substring(1, 3), 16);
+    g = parseInt(hex.substring(3, 5), 16);
+    b = parseInt(hex.substring(5, 7), 16);
+  }
+
+  // Calculate relative luminance (W3C formula)
+  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+
+  // Use a lower threshold to ensure better contrast
+  // If luminance > 0.6, use black text; otherwise use white
+  return luminance > 0.6 ? "0 0% 0%" : "0 0% 100%";
+}
+
+// Helper to adjust color for better contrast
+function adjustColorForContrast(hex: string, targetLuminance: number): string {
+  let r = 0, g = 0, b = 0;
+
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex.substring(1, 3), 16);
+    g = parseInt(hex.substring(3, 5), 16);
+    b = parseInt(hex.substring(5, 7), 16);
+  }
+
+  const currentLuminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  const factor = targetLuminance / (currentLuminance || 0.001);
+
+  r = Math.min(255, Math.max(0, Math.round(r * factor)));
+  g = Math.min(255, Math.max(0, Math.round(g * factor)));
+  b = Math.min(255, Math.max(0, Math.round(b * factor)));
+
+  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
 }
 
 export function CustomThemeProvider({ children }: { children: React.ReactNode }) {
@@ -80,21 +127,24 @@ export function CustomThemeProvider({ children }: { children: React.ReactNode })
       const root = document.documentElement;
       const { colors } = data.theme;
 
+      // Ensure foreground has good contrast with background
+      const adjustedForeground = adjustColorForContrast(colors.foreground, isLightColor(colors.background) ? 0.15 : 0.85);
+
       // Apply custom colors as CSS variables
       root.style.setProperty("--background", hexToHSL(colors.background));
-      root.style.setProperty("--foreground", hexToHSL(colors.foreground));
+      root.style.setProperty("--foreground", hexToHSL(adjustedForeground));
       root.style.setProperty("--primary", hexToHSL(colors.primary));
-      root.style.setProperty("--primary-foreground", isLightColor(colors.primary) ? "0 0% 0%" : "0 0% 100%");
+      root.style.setProperty("--primary-foreground", getContrastingTextColor(colors.primary));
       root.style.setProperty("--secondary", hexToHSL(colors.secondary));
-      root.style.setProperty("--secondary-foreground", isLightColor(colors.secondary) ? "0 0% 0%" : "0 0% 100%");
+      root.style.setProperty("--secondary-foreground", getContrastingTextColor(colors.secondary));
       root.style.setProperty("--accent", hexToHSL(colors.accent));
-      root.style.setProperty("--accent-foreground", isLightColor(colors.accent) ? "0 0% 0%" : "0 0% 100%");
+      root.style.setProperty("--accent-foreground", getContrastingTextColor(colors.accent));
       root.style.setProperty("--card", hexToHSL(colors.background));
-      root.style.setProperty("--card-foreground", hexToHSL(colors.foreground));
+      root.style.setProperty("--card-foreground", hexToHSL(adjustedForeground));
       root.style.setProperty("--popover", hexToHSL(colors.background));
-      root.style.setProperty("--popover-foreground", hexToHSL(colors.foreground));
+      root.style.setProperty("--popover-foreground", hexToHSL(adjustedForeground));
       root.style.setProperty("--muted", hexToHSL(colors.background));
-      root.style.setProperty("--muted-foreground", hexToHSL(colors.foreground));
+      root.style.setProperty("--muted-foreground", hexToHSL(adjustedForeground));
       root.style.setProperty("--border", hexToHSL(colors.primary));
       root.style.setProperty("--input", hexToHSL(colors.primary));
       root.style.setProperty("--ring", hexToHSL(colors.primary));
