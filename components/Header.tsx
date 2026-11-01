@@ -15,6 +15,7 @@ import { AuthModal } from "@/components/AuthModal";
 import { useToast } from "@/lib/hooks/use-toast";
 
 export function Header() {
+  // Force rebuild - dialog button fix
   const { data } = useApp();
   const { user, signOutUser } = useAuth();
   const { toast } = useToast();
