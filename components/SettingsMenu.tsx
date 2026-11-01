@@ -279,8 +279,8 @@ export function SettingsMenuContent({ open, onOpenChange }: SettingsMenuContentP
   );
 }
 
-export const SettingsButton = forwardRef<HTMLButtonElement, { onClick: () => void }>(
-  ({ onClick }, ref) => {
+export const SettingsButton = forwardRef<HTMLButtonElement, { onClick: () => void; onMouseDown?: (e: React.MouseEvent) => void }>(
+  ({ onClick, onMouseDown }, ref) => {
     const { playClickSound } = useClickSound();
     return (
       <Button
@@ -292,6 +292,7 @@ export const SettingsButton = forwardRef<HTMLButtonElement, { onClick: () => voi
           playClickSound();
           onClick();
         }}
+        onMouseDown={onMouseDown}
         title="Settings"
       >
         <Settings className="h-4 w-4 pointer-events-none" />
