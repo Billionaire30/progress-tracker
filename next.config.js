@@ -13,6 +13,7 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 60,
+    qualities: [75, 85],
   },
 
   // Cloudflare tunnel configuration for external access

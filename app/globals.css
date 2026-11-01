@@ -58,11 +58,6 @@
     transition: background-color 0.3s ease, color 0.3s ease;
     /* Prevent pull-to-refresh on mobile */
     overscroll-behavior-y: none;
-    /* Premium gradient background */
-    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--muted)) 100%);
-  }
-  .dark body {
-    background: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(var(--card)) 100%);
   }
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-ring;
