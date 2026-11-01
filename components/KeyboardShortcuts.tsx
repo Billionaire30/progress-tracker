@@ -14,6 +14,7 @@ const shortcuts = [
   { key: "Ctrl + L", description: "Open log hours modal" },
   { key: "Esc", description: "Close modals" },
   { key: "Ctrl + /", description: "Show keyboard shortcuts" },
+  { key: "Click icons", description: "Notifications, Voice, Stats, Settings" },
 ];
 
 export const KeyboardShortcuts = memo(function KeyboardShortcuts({ open, onOpenChange }: KeyboardShortcutsProps) {

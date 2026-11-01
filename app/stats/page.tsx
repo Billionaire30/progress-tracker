@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { StatsDashboard } from "@/components/StatsDashboard";
 import { StreakTracker } from "@/components/StreakTracker";
 import { AchievementsPanel } from "@/components/AchievementsPanel";
@@ -20,6 +20,9 @@ import { AuthModal } from "@/components/AuthModal";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/context";
+import SoftAurora from "@/components/SoftAurora";
+import ClickSpark from "@/components/ClickSpark";
+import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 
 export default function StatsPage() {
   const { isLoading } = useApp();
@@ -28,6 +31,15 @@ export default function StatsPage() {
   const [isVoiceAssistantOpen, setIsVoiceAssistantOpen] = useState(false);
   const [showShortcuts, setShowShortcuts] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
+
+  useKeyboardShortcuts([
+    {
+      key: "/",
+      ctrlKey: true,
+      action: () => setShowShortcuts(true),
+      description: "Show keyboard shortcuts",
+    },
+  ]);
 
   if (isLoading) {
     return (
@@ -39,7 +51,19 @@ export default function StatsPage() {
 
   return (
     <AuthRequired>
-      <div className="min-h-screen">
+      <div className="min-h-screen relative overflow-hidden">
+        <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300} layer="back">
+        <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
+          <SoftAurora
+            color1="#8b5cf6"
+            color2="#ec4899"
+            speed={0.2}
+            scale={0.8}
+            brightness={0.5}
+            enableMouseInteraction={false}
+            opacity={0.3}
+          />
+        </div>
         <Header
           onSettingsClick={() => setIsSettingsOpen(true)}
           onNotificationsClick={() => setIsNotificationsOpen(true)}
@@ -84,6 +108,7 @@ export default function StatsPage() {
       <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
       <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
       <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      </ClickSpark>
     </div>
     </AuthRequired>
   );

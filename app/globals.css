@@ -89,6 +89,9 @@
     bottom: 0;
     z-index: var(--z-dialog-overlay);
   }
+  [data-radix-portal][data-state="closed"] {
+    display: none;
+  }
   [data-radix-dialog-content] {
     pointer-events: auto;
     will-change: transform, opacity;
@@ -99,6 +102,9 @@
     pointer-events: auto;
     cursor: pointer;
     will-change: opacity;
+  }
+  [data-radix-dialog-overlay][data-state="closed"] {
+    pointer-events: none;
   }
   /* Smooth dialog animations */
   [data-radix-dialog-content][data-state="open"] {

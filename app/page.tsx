@@ -40,11 +40,17 @@ export default function Home() {
       action: openLogModal,
       description: "Open log hours modal",
     },
+    {
+      key: "/",
+      ctrlKey: true,
+      action: () => setShowShortcuts(true),
+      description: "Show keyboard shortcuts",
+    },
   ]);
 
   return (
-    <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300}>
-      <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden">
+      <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300} layer="back">
         <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
           <SoftAurora
             color1="#8b5cf6"
@@ -88,7 +94,7 @@ export default function Home() {
         <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
         <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
         <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
-      </div>
-    </ClickSpark>
+      </ClickSpark>
+    </div>
   );
 }
