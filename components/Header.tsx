@@ -119,11 +119,7 @@ export function Header({
             aria-label="Notifications"
             className="relative inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground transition-colors pointer-events-auto"
             style={{ pointerEvents: 'auto' }}
-            onMouseDown={(e) => {
-              console.log('Button mousedown: Notifications');
-              const modal = document.getElementById('fallback-notifications-modal');
-              if (modal) modal.style.display = 'flex';
-            }}
+            data-fallback-modal="fallback-notifications-modal"
           >
             <Bell className="h-4 w-4 pointer-events-none" />
             {notificationsUnreadCount > 0 && (
@@ -139,11 +135,7 @@ export function Header({
             title="Voice Assistant"
             className="inline-flex items-center justify-center rounded-md p-2 hover:bg-accent hover:text-accent-foreground transition-colors pointer-events-auto"
             style={{ pointerEvents: 'auto' }}
-            onMouseDown={(e) => {
-              console.log('Button mousedown: Voice Assistant');
-              const modal = document.getElementById('fallback-voice-modal');
-              if (modal) modal.style.display = 'flex';
-            }}
+            data-fallback-modal="fallback-voice-modal"
           >
             <Mic className="h-4 w-4 pointer-events-none" />
           </button>
@@ -155,11 +147,7 @@ export function Header({
             className="hidden sm:flex pointer-events-auto"
             title="Keyboard shortcuts (Ctrl+/)"
             style={{ pointerEvents: 'auto' }}
-            onMouseDown={(e) => {
-              console.log('Button mousedown: Shortcuts');
-              const modal = document.getElementById('fallback-shortcuts-modal');
-              if (modal) modal.style.display = 'flex';
-            }}
+            data-fallback-modal="fallback-shortcuts-modal"
           >
             <Keyboard className="h-4 w-4 pointer-events-none" />
           </Button>
@@ -200,11 +188,7 @@ export function Header({
           )}
           <SettingsButton
             onClick={handleSettingsClick}
-            onMouseDown={(e) => {
-              console.log('Button mousedown: Settings');
-              const modal = document.getElementById('fallback-settings-modal');
-              if (modal) modal.style.display = 'flex';
-            }}
+            data-fallback-modal="fallback-settings-modal"
           />
         </nav>
       </div>

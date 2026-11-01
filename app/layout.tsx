@@ -93,6 +93,21 @@ export default function RootLayout({
             <button onClick={() => { const el = document.getElementById('fallback-voice-modal'); if (el) el.style.display = 'none'; }} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
           </div>
         </div>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                document.addEventListener('click', function(e) {
+                  const button = e.target.closest('[data-fallback-modal]');
+                  if (!button) return;
+                  const modalId = button.getAttribute('data-fallback-modal');
+                  const modal = document.getElementById(modalId);
+                  if (modal) modal.style.display = 'flex';
+                }, true);
+              })();
+            `,
+          }}
+        />
       </body>
     </html>
   );
