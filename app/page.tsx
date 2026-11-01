@@ -58,25 +58,34 @@ export default function Home() {
           <Header />
         </HeaderErrorBoundary>
 
-        <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-6 sm:space-y-8 relative" role="main">
+        <main id="main-content" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl relative" role="main">
           <PageTransition>
             <Hero />
-            <OverallProgress />
-            <MonthGrid />
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-              <WeeklyHoursChart onLogHoursClick={openLogModal} />
-              <div className="space-y-6 sm:space-y-8">
-                <CompetencyPanel />
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 mb-8">
+              <div className="lg:col-span-2">
+                <OverallProgress />
+              </div>
+              <div className="lg:col-span-1">
                 <StreakTracker />
               </div>
             </div>
 
-            <ProductivityInsights />
+            <div className="mb-8">
+              <MonthGrid />
+            </div>
 
-            <ErrorBoundary>
-              <HabitTracker />
-            </ErrorBoundary>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
+              <WeeklyHoursChart onLogHoursClick={openLogModal} />
+              <CompetencyPanel />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mb-8">
+              <ProductivityInsights />
+              <ErrorBoundary>
+                <HabitTracker />
+              </ErrorBoundary>
+            </div>
 
             <PortfolioPanel />
           </PageTransition>
