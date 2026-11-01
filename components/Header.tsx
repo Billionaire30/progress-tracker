@@ -13,14 +13,20 @@ import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
 import { useToast } from "@/lib/hooks/use-toast";
 
 interface HeaderProps {
-  onSettingsClick: () => void;
-  onNotificationsClick: () => void;
-  onVoiceAssistantClick: () => void;
-  onShortcutsClick: () => void;
-  onAuthClick: () => void;
+  onSettingsClick?: () => void;
+  onNotificationsClick?: () => void;
+  onVoiceAssistantClick?: () => void;
+  onShortcutsClick?: () => void;
+  onAuthClick?: () => void;
 }
 
-export function Header({ onSettingsClick, onNotificationsClick, onVoiceAssistantClick, onShortcutsClick, onAuthClick }: HeaderProps) {
+export function Header({
+  onSettingsClick = () => {},
+  onNotificationsClick = () => {},
+  onVoiceAssistantClick = () => {},
+  onShortcutsClick = () => {},
+  onAuthClick = () => {},
+}: HeaderProps) {
   const { data } = useApp();
   const { user, signOutUser } = useAuth();
   const { toast } = useToast();
