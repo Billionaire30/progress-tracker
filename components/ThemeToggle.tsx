@@ -2,6 +2,7 @@
 
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Magnet } from "@/components/Magnet";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -22,16 +23,18 @@ export function ThemeToggle() {
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      onClick={() => {
-        setTheme(theme === "dark" ? "light" : "dark");
-      }}
-      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-      title="Toggle theme"
-    >
-      {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
-    </Button>
+    <Magnet padding={40} magnetStrength={2} scale={1.05}>
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={() => {
+          setTheme(theme === "dark" ? "light" : "dark");
+        }}
+        aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+        title="Toggle theme"
+      >
+        {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+      </Button>
+    </Magnet>
   );
 }

@@ -13,6 +13,7 @@ import { ProductivityInsights } from "@/components/ProductivityInsights";
 import { LogHoursModal } from "@/components/LogHoursModal";
 import { SoftAurora } from "@/components/SoftAurora";
 import { ClickSpark } from "@/components/ClickSpark";
+import { FadeContent } from "@/components/FadeContent";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 import { useReminder } from "@/lib/hooks/use-reminder";
 
@@ -49,21 +50,37 @@ export default function Home() {
         <Header />
 
         <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 space-y-4 sm:space-y-6 relative" role="main">
-          <Hero />
-          <OverallProgress />
-          <MonthGrid />
+          <FadeContent effect="fade" duration={0.8} threshold={0.1}>
+            <Hero />
+          </FadeContent>
+          <FadeContent effect="fade" duration={0.8} delay={0.1} threshold={0.1}>
+            <OverallProgress />
+          </FadeContent>
+          <FadeContent effect="fade" duration={0.8} delay={0.2} threshold={0.1}>
+            <MonthGrid />
+          </FadeContent>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <WeeklyHoursChart onLogHoursClick={openLogModal} />
+            <FadeContent effect="fade" duration={0.8} delay={0.3} threshold={0.1}>
+              <WeeklyHoursChart onLogHoursClick={openLogModal} />
+            </FadeContent>
             <div className="space-y-4 sm:space-y-6">
-              <CompetencyPanel />
-              <StreakTracker />
+              <FadeContent effect="fade" duration={0.8} delay={0.4} threshold={0.1}>
+                <CompetencyPanel />
+              </FadeContent>
+              <FadeContent effect="fade" duration={0.8} delay={0.5} threshold={0.1}>
+                <StreakTracker />
+              </FadeContent>
             </div>
           </div>
 
-          <ProductivityInsights />
+          <FadeContent effect="fade" duration={0.8} delay={0.6} threshold={0.1}>
+            <ProductivityInsights />
+          </FadeContent>
 
-          <PortfolioPanel />
+          <FadeContent effect="fade" duration={0.8} delay={0.7} threshold={0.1}>
+            <PortfolioPanel />
+          </FadeContent>
         </main>
 
         <LogHoursModal open={isLogModalOpen} onOpenChange={setIsLogModalOpen} />
