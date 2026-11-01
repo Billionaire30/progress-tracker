@@ -79,8 +79,8 @@ const nextConfig = {
     optimizeCss: true,
   },
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
-    reactRemoveProperties: process.env.NODE_ENV === 'production',
+    removeConsole: false,
+    reactRemoveProperties: false,
   },
   productionBrowserSourceMaps: false,
 }
