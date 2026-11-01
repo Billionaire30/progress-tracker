@@ -1,6 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { StatusPill } from "@/components/StatusPill";
+import { SpotlightCard } from "@/components/SpotlightCard";
 import { Month } from "@/lib/data";
 import { getCurrentWeekNumber, getCurrentMonthNumber } from "@/lib/week";
 import { useApp } from "@/lib/context";
@@ -40,10 +41,14 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
 
   return (
     <a href={`/month/${month.id}`} className="block cursor-pointer">
-      <Card
+      <SpotlightCard
         className={`hover:border-primary cursor-pointer relative glass-card ${
           cardData.isCurrentMonth ? "ring-2 ring-accent" : ""
         } ${cardData.isNotStarted ? "opacity-85" : ""}`}
+        intensity={0.15}
+        spotlightSize={200}
+        softness={0.7}
+        theme="dark"
       >
         {cardData.isCurrentMonth && (
           <div className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs px-3 py-1.5 rounded-full font-medium z-10">
@@ -87,7 +92,7 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
             )}
           </div>
         </CardContent>
-      </Card>
+      </SpotlightCard>
     </a>
   );
 });
