@@ -65,61 +65,78 @@ export default function RootLayout({
           </BodyWrapper>
         </ThemeProvider>
         <Toaster />
+        <div id="fallback-notifications-modal" style={{ display: 'none', position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Notifications</h2>
+            <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
+            <button onClick={() => document.getElementById('fallback-notifications-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+          </div>
+        </div>
+        <div id="fallback-settings-modal" style={{ display: 'none', position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Settings</h2>
+            <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
+            <button onClick={() => document.getElementById('fallback-settings-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+          </div>
+        </div>
+        <div id="fallback-shortcuts-modal" style={{ display: 'none', position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Keyboard Shortcuts</h2>
+            <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
+            <button onClick={() => document.getElementById('fallback-shortcuts-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+          </div>
+        </div>
+        <div id="fallback-voice-modal" style={{ display: 'none', position: 'fixed', inset: 0, zIndex: 9999, backgroundColor: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ backgroundColor: 'white', padding: '24px', borderRadius: '8px', maxWidth: '500px', width: '90%', maxHeight: '80vh', overflow: 'auto' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>Voice Assistant</h2>
+            <p style={{ color: '#666' }}>React is not loading. Please refresh the page.</p>
+            <button onClick={() => document.getElementById('fallback-voice-modal').style.display = 'none'} style={{ marginTop: '16px', padding: '8px 16px', backgroundColor: '#2563eb', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}>Close</button>
+          </div>
+        </div>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Fallback event handler for when React fails to hydrate
-                document.addEventListener('click', function(e) {
-                  const button = e.target.closest('button');
-                  if (!button) return;
+                console.log('Fallback script loaded');
 
-                  const ariaLabel = button.getAttribute('aria-label');
-                  const dialogs = document.querySelectorAll('[role="dialog"]');
+                function attachButtonHandlers() {
+                  const buttons = document.querySelectorAll('button[aria-label]');
+                  console.log('Found buttons:', buttons.length);
 
-                  function openDialog() {
-                    dialogs.forEach(dialog => {
-                      dialog.style.display = 'flex';
-                      dialog.style.position = 'fixed';
-                      dialog.style.inset = '0';
-                      dialog.style.zIndex = '50';
-                      dialog.style.backgroundColor = 'rgba(0,0,0,0.5)';
-                    });
-                  }
+                  buttons.forEach(button => {
+                    const ariaLabel = button.getAttribute('aria-label');
 
-                  function closeDialog() {
-                    dialogs.forEach(dialog => {
-                      dialog.style.display = 'none';
-                    });
-                  }
+                    button.addEventListener('click', function(e) {
+                      console.log('Button clicked:', ariaLabel);
+                      e.preventDefault();
+                      e.stopPropagation();
 
-                  switch(ariaLabel) {
-                    case 'Notifications':
-                      console.log('Fallback: Opening notifications dialog');
-                      openDialog();
-                      break;
-                    case 'Voice Assistant':
-                      console.log('Fallback: Opening voice assistant dialog');
-                      openDialog();
-                      break;
-                    case 'Show keyboard shortcuts':
-                      console.log('Fallback: Opening shortcuts dialog');
-                      openDialog();
-                      break;
-                    case 'Settings':
-                      console.log('Fallback: Opening settings dialog');
-                      openDialog();
-                      break;
-                  }
-                }, true);
+                      switch(ariaLabel) {
+                        case 'Notifications':
+                          document.getElementById('fallback-notifications-modal').style.display = 'flex';
+                          break;
+                        case 'Settings':
+                          document.getElementById('fallback-settings-modal').style.display = 'flex';
+                          break;
+                        case 'Show keyboard shortcuts':
+                          document.getElementById('fallback-shortcuts-modal').style.display = 'flex';
+                          break;
+                        case 'Voice Assistant':
+                          document.getElementById('fallback-voice-modal').style.display = 'flex';
+                          break;
+                      }
+                    }, true);
+                  });
+                }
 
-                // Close dialogs on backdrop click
-                document.addEventListener('click', function(e) {
-                  const dialog = e.target.closest('[role="dialog"]');
-                  if (dialog && e.target === dialog) {
-                    dialog.style.display = 'none';
-                  }
-                }, true);
+                attachButtonHandlers();
+                setTimeout(attachButtonHandlers, 100);
+                setTimeout(attachButtonHandlers, 500);
+
+                const observer = new MutationObserver(function(mutations) {
+                  attachButtonHandlers();
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
               })();
             `,
           }}
