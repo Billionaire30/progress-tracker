@@ -132,8 +132,8 @@ export function HabitTracker() {
       color: getCategoryColor(newHabitCategory),
     };
 
-    // Use the actual data.habits instead of the memoized habits
-    const currentHabits = data.habits || [];
+    // Use the current habits (including defaults if data.habits is empty)
+    const currentHabits = habits;
     setData({ ...data, habits: [...currentHabits, newHabit] });
     setNewHabitName("");
     setNewHabitDesc("");
@@ -143,7 +143,7 @@ export function HabitTracker() {
 
   const deleteHabit = (habitId: string) => {
     if (confirm("Are you sure you want to delete this habit?")) {
-      const currentHabits = data.habits || [];
+      const currentHabits = habits;
       setData({ ...data, habits: currentHabits.filter((h) => h.id !== habitId) });
     }
   };
