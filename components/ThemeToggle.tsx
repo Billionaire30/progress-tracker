@@ -21,16 +21,13 @@ export function ThemeToggle() {
     );
   }
 
-  const handleToggle = () => {
-    const newTheme = theme === "dark" ? "light" : "dark";
-    setTheme(newTheme);
-  };
-
   return (
     <Button
       variant="ghost"
       size="icon"
-      onClick={handleToggle}
+      onClick={() => {
+        setTheme(theme === "dark" ? "light" : "dark");
+      }}
       aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
       title="Toggle theme"
     >

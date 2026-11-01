@@ -7,8 +7,8 @@ import { getCurrentWeekNumber } from "@/lib/week";
 import { SettingsButton } from "@/components/SettingsMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
-import { SimpleNotificationCenter } from "@/components/SimpleNotificationCenter";
-import { SimpleVoiceAssistant } from "@/components/SimpleVoiceAssistant";
+import { NotificationCenter } from "@/components/NotificationCenter";
+import { VoiceAssistant } from "@/components/VoiceAssistant";
 import { Button } from "@/components/ui/button";
 import { BarChart3, LogOut, Keyboard, LogIn } from "lucide-react";
 import { AuthModal } from "@/components/AuthModal";
@@ -67,8 +67,8 @@ export function Header() {
             Week {headerStats.weekNumber} of 52
           </div>
           <ThemeToggle />
-          <SimpleNotificationCenter />
-          <SimpleVoiceAssistant />
+          <NotificationCenter />
+          <VoiceAssistant />
           <Button
             variant="ghost"
             size="icon"
