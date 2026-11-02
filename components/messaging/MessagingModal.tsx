@@ -115,7 +115,7 @@ export function MessagingModal({
         <DialogHeader className="p-4 border-b flex flex-row items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarImage src={friendPhoto} />
+              <AvatarImage src={friendPhoto || undefined} />
               <AvatarFallback>{friendName.charAt(0)}</AvatarFallback>
             </Avatar>
             <div>

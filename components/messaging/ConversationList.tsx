@@ -73,7 +73,7 @@ export function ConversationList({
                   <div className="flex items-center gap-3 w-full">
                     <div className="relative">
                       <Avatar>
-                        <AvatarImage src={friendPhoto} />
+                        <AvatarImage src={friendPhoto || undefined} />
                         <AvatarFallback>{friendName.charAt(0)}</AvatarFallback>
                       </Avatar>
                       {conversation.unreadCount > 0 && (

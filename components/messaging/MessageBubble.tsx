@@ -66,7 +66,7 @@ export function MessageBubble({
       onMouseLeave={() => setShowReactions(false)}
     >
       <Avatar className="h-8 w-8 flex-shrink-0">
-        <AvatarImage src={isOwn ? user?.photoURL : undefined} />
+        <AvatarImage src={isOwn ? (user?.photoURL || undefined) : undefined} />
         <AvatarFallback>{isOwn ? "You" : "Friend"}</AvatarFallback>
       </Avatar>
 
