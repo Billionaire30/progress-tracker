@@ -71,7 +71,7 @@ export function WorkspaceManager() {
                 New Workspace
               </Button>
             </DialogTrigger>
-            <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
+            <DialogContent>
               <DialogHeader>
                 <DialogTitle>Create New Workspace</DialogTitle>
               </DialogHeader>
@@ -83,7 +83,6 @@ export function WorkspaceManager() {
                     value={newWorkspaceName}
                     onChange={(e) => setNewWorkspaceName(e.target.value)}
                     placeholder="e.g., Web Development"
-                    autoFocus={false}
                   />
                 </div>
                 <div>
@@ -93,7 +92,6 @@ export function WorkspaceManager() {
                     value={newWorkspaceDesc}
                     onChange={(e) => setNewWorkspaceDesc(e.target.value)}
                     placeholder="Describe your learning path"
-                    autoFocus={false}
                   />
                 </div>
                 <Button onClick={handleCreateWorkspace} className="w-full">

@@ -209,7 +209,7 @@ export function HabitTracker() {
                 Add Habit
               </Button>
             </DialogTrigger>
-            <DialogContent className="glass-card" onOpenAutoFocus={(e) => e.preventDefault()}>
+            <DialogContent className="glass-card">
               <DialogHeader>
                 <DialogTitle>Add New Habit</DialogTitle>
               </DialogHeader>
@@ -222,7 +222,6 @@ export function HabitTracker() {
                     onChange={(e) => setNewHabitName(e.target.value)}
                     placeholder="e.g., Morning meditation"
                     className="transition-colors focus:border-primary"
-                    autoFocus={false}
                   />
                 </div>
                 <div>
@@ -233,7 +232,6 @@ export function HabitTracker() {
                     onChange={(e) => setNewHabitDesc(e.target.value)}
                     placeholder="e.g., 10 minutes of meditation"
                     className="transition-colors focus:border-primary"
-                    autoFocus={false}
                   />
                 </div>
                 <div>
@@ -246,7 +244,6 @@ export function HabitTracker() {
                     value={newHabitTarget}
                     onChange={(e) => setNewHabitTarget(parseInt(e.target.value))}
                     className="transition-colors focus:border-primary"
-                    autoFocus={false}
                   />
                 </div>
                 <div>

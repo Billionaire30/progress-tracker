@@ -132,7 +132,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
       </CardContent>
 
       <Dialog open={editingNotesId !== null} onOpenChange={() => setEditingNotesId(null)}>
-        <DialogContent className="max-w-[95vw] sm:max-w-lg bg-background" onOpenAutoFocus={(e) => e.preventDefault()}>
+        <DialogContent className="max-w-[95vw] sm:max-w-lg bg-background">
           <DialogHeader>
             <DialogTitle>Edit Notes</DialogTitle>
           </DialogHeader>
@@ -143,7 +143,6 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
                 onChange={(e) => setNotesValue(e.target.value)}
                 className="w-full min-h-[150px] p-3 border rounded-md text-sm resize-y transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 bg-background"
                 placeholder="Add your notes here..."
-                autoFocus={false}
               />
               <div className="flex gap-2">
                 <Button onClick={() => {
