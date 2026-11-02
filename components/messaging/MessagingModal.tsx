@@ -64,47 +64,23 @@ export function MessagingModal({
   };
 
   const handleEdit = (messageId: string, content: string) => {
-    if (settings.messageEditingEnabled) {
-      setEditingMessage({ id: messageId, content });
-    } else {
-      toast({
-        title: "Premium Feature",
-        description: "Message editing is available in Premium tier",
-        variant: "destructive",
-      });
-    }
+    setEditingMessage({ id: messageId, content });
   };
 
   const handleDelete = (messageId: string) => {
-    if (settings.messageDeletionEnabled) {
-      // Would need delete function passed in
-      toast({
-        title: "Message Deleted",
-        description: "Message has been deleted",
-      });
-    } else {
-      toast({
-        title: "Premium Feature",
-        description: "Message deletion is available in Basic tier",
-        variant: "destructive",
-      });
-    }
+    // Would need delete function passed in
+    toast({
+      title: "Message Deleted",
+      description: "Message has been deleted",
+    });
   };
 
   const handleReact = (messageId: string, emoji: string) => {
-    if (settings.messageReactionEnabled) {
-      // Would need react function passed in
-      toast({
-        title: "Reaction Added",
-        description: `Reacted with ${emoji}`,
-      });
-    } else {
-      toast({
-        title: "Premium Feature",
-        description: "Message reactions are available in Basic tier",
-        variant: "destructive",
-      });
-    }
+    // Would need react function passed in
+    toast({
+      title: "Reaction Added",
+      description: `Reacted with ${emoji}`,
+    });
   };
 
   const isTyping = typingUsers.includes(friendName);

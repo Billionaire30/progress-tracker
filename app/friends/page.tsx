@@ -20,10 +20,9 @@ import {
   Medal,
   Crown,
   MessageCircle,
-  Sparkles,
 } from "lucide-react";
 import { getFriends, getFriendsProfiles } from "@/lib/friends";
-import { Friend, PublicProfile, Conversation, Message, PREMIUM_TIERS } from "@/lib/data";
+import { Friend, PublicProfile, Conversation, Message } from "@/lib/data";
 import { getCurrentWeekNumber } from "@/lib/week";
 import {
   getOrCreateConversation,
@@ -34,7 +33,6 @@ import {
 } from "@/lib/messaging";
 import { MessagingModal } from "@/components/messaging/MessagingModal";
 import { ConversationList } from "@/components/messaging/ConversationList";
-import { PremiumTierSelector } from "@/components/messaging/PremiumTierSelector";
 
 export default function FriendsPage() {
   const { user } = useAuth();
@@ -49,8 +47,6 @@ export default function FriendsPage() {
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isMessagingModalOpen, setIsMessagingModalOpen] = useState(false);
-  const [showPremiumUpgrade, setShowPremiumUpgrade] = useState(false);
-  const [premiumTier, setPremiumTier] = useState<"free" | "basic" | "premium" | "elite">("free");
 
   useEffect(() => {
     loadFriendsData();
@@ -179,11 +175,7 @@ export default function FriendsPage() {
     }
   };
 
-  const handleUpgradeTier = (tier: any) => {
-    // In production, this would integrate with Stripe or another payment processor
-    alert(`Upgrade to ${tier.name} would be processed here. Integration with payment provider needed.`);
-    setShowPremiumUpgrade(false);
-  };
+
 
   const getFriendName = (friendId: string) => {
     const friend = friends.find((f) => f.userId === friendId);
@@ -506,7 +498,7 @@ export default function FriendsPage() {
                     onSelectConversation={handleSelectConversation}
                     friendNames={friends.reduce((acc, f) => ({ ...acc, [f.userId]: f.displayName }), {})}
                     friendPhotos={friends.reduce((acc, f) => ({ ...acc, [f.userId]: f.photoURL }), {})}
-                    premiumTier={premiumTier}
+                    premiumTier="free"
                   />
                 </Card>
 
@@ -518,31 +510,6 @@ export default function FriendsPage() {
                   </div>
                 </Card>
               </div>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-purple-500" />
-                    Premium Messaging Features
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">Current Tier: {premiumTier.charAt(0).toUpperCase() + premiumTier.slice(1)}</p>
-                      <p className="text-sm text-muted-foreground">
-                        {premiumTier === "free" && "Upgrade to unlock unlimited messaging, reactions, and more!"}
-                        {premiumTier === "basic" && "Upgrade to Premium for voice messages, ephemeral messages, and more!"}
-                        {premiumTier === "premium" && "Upgrade to Elite for encryption and custom settings!"}
-                        {premiumTier === "elite" && "You have access to all premium features!"}
-                      </p>
-                    </div>
-                    <Button onClick={() => setShowPremiumUpgrade(true)}>
-                      Upgrade
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
             </TabsContent>
           </Tabs>
         )}
@@ -556,32 +523,8 @@ export default function FriendsPage() {
           onSendMessage={handleSendMessage}
           messages={messages}
           typingUsers={selectedConversation?.typingUsers || []}
-          premiumTier={premiumTier}
+          premiumTier="free"
         />
-
-        {showPremiumUpgrade && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    Upgrade Your Plan
-                  </CardTitle>
-                  <Button variant="ghost" size="icon" onClick={() => setShowPremiumUpgrade(false)}>
-                    ✕
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <PremiumTierSelector
-                  currentTier={premiumTier}
-                  onSelectTier={handleUpgradeTier}
-                />
-              </CardContent>
-            </Card>
-          </div>
-        )}
       </main>
     </div>
   );
