@@ -617,7 +617,7 @@ export default function FriendsPage() {
           onOpenChange={setIsMessagingModalOpen}
           conversation={selectedConversation}
           friendName={selectedConversation ? getFriendName(selectedConversation.participants.find((id) => id !== user?.uid) || "") : ""}
-          friendPhoto={selectedConversation ? getFriendPhoto(selectedConversation.participants.find((id) => id !== user?.uid) || "") : undefined}
+          friendPhoto={selectedConversation ? (getFriendPhoto(selectedConversation.participants.find((id) => id !== user?.uid) || "") || undefined) : undefined}
           onSendMessage={handleSendMessage}
           messages={messages}
           typingUsers={selectedConversation?.typingUsers || []}
