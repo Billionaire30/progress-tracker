@@ -82,16 +82,16 @@ export function Certificates() {
       reader.onloadend = () => {
         const base64String = reader.result as string;
         setUploadedImage(base64String);
-        setNewCertificate({ ...newCertificate, image: base64String });
+        setNewCertificate((prev) => ({ ...prev, image: base64String }));
       };
       reader.readAsDataURL(file);
     }
-  }, [newCertificate]);
+  }, []);
 
   const handleRemoveImage = useCallback(() => {
     setUploadedImage(null);
-    setNewCertificate({ ...newCertificate, image: undefined });
-  }, [newCertificate]);
+    setNewCertificate((prev) => ({ ...prev, image: undefined }));
+  }, []);
 
   useEffect(() => {
     if (!isAddDialogOpen) {
