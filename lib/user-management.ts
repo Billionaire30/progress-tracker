@@ -8,6 +8,7 @@ import {
   query,
   where,
   getDocs,
+  arrayUnion,
 } from "firebase/firestore";
 
 const USERS_COLLECTION = "users";
@@ -56,6 +57,9 @@ export async function ensureUserDocument(): Promise<void> {
       if (user.email) {
         await convertPendingFriendRequests(user.email, user.uid);
       }
+
+      // Add friends from accepted requests where this user is the sender
+      await addFriendsFromAcceptedRequests(user.uid);
     } else {
       console.log("User document exists, updating last active timestamp");
       // Update last active timestamp
@@ -68,10 +72,56 @@ export async function ensureUserDocument(): Promise<void> {
         },
         { merge: true }
       );
+
+      // Also check for new friends from accepted requests
+      await addFriendsFromAcceptedRequests(user.uid);
     }
   } catch (error) {
     console.error("Error ensuring user document:", error);
     console.error("Error details:", JSON.stringify(error, null, 2));
+  }
+}
+
+// Add friends from accepted friend requests where this user is the sender
+async function addFriendsFromAcceptedRequests(userId: string): Promise<void> {
+  try {
+    const requestsRef = collection(db, "friendRequests");
+    const q = query(
+      requestsRef,
+      where("fromUserId", "==", userId),
+      where("status", "==", "accepted")
+    );
+    const querySnapshot = await getDocs(q);
+
+    if (querySnapshot.empty) {
+      return;
+    }
+
+    const userRef = doc(db, USERS_COLLECTION, userId);
+    const userDoc = await getDoc(userRef);
+    if (!userDoc.exists()) {
+      return;
+    }
+
+    const userData = userDoc.data();
+    const currentFriends = userData?.friends || [];
+
+    const newFriends: string[] = [];
+    for (const doc of querySnapshot.docs) {
+      const requestData = doc.data();
+      if (requestData.toUserId && !currentFriends.includes(requestData.toUserId)) {
+        newFriends.push(requestData.toUserId);
+      }
+    }
+
+    if (newFriends.length > 0) {
+      await updateDoc(userRef, {
+        friends: arrayUnion(...newFriends),
+      });
+      console.log(`Added ${newFriends.length} friends from accepted requests`);
+    }
+  } catch (error) {
+    console.error("Error adding friends from accepted requests:", error);
   }
 }
 

@@ -166,30 +166,7 @@ export async function acceptFriendRequest(requestId: string): Promise<{ success:
     console.log("Ensuring current user document exists");
     await ensureUserDocument();
 
-    // Ensure sender user document exists
-    console.log("Checking sender user document");
-    const senderUserRef = doc(db, "users", requestData.fromUserId);
-    const senderDoc = await getDoc(senderUserRef);
-    if (!senderDoc.exists()) {
-      console.log("Sender document does not exist, creating it");
-      // Create minimal sender document
-      await setDoc(senderUserRef, {
-        uid: requestData.fromUserId,
-        email: requestData.fromEmail,
-        displayName: requestData.fromDisplayName,
-        photoURL: requestData.fromPhotoURL,
-        createdAt: new Date().toISOString(),
-        lastActiveAt: new Date().toISOString(),
-        friends: [],
-      });
-    }
-
-    // Add to both users' friends lists
-    console.log("Adding to sender's friends list");
-    await updateDoc(senderUserRef, {
-      friends: arrayUnion(currentUserId),
-    });
-
+    // Only add to current user's friends list (sender will be added when they sync)
     console.log("Adding to current user's friends list");
     const currentUserRef = doc(db, "users", currentUserId);
     await updateDoc(currentUserRef, {
