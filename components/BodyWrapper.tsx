@@ -10,7 +10,7 @@ export function BodyWrapper({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div className="pointer-events-auto relative z-0 isolate">
+    <div className="pointer-events-auto relative z-0 isolate min-h-screen">
       <ErrorBoundary>
         {children}
       </ErrorBoundary>

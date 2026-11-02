@@ -26,9 +26,6 @@ import { AuthModal } from "@/components/AuthModal";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useApp } from "@/lib/context";
-import { SlideshowBackdrop } from "@/components/SlideshowBackdrop";
-import SoftAurora from "@/components/SoftAurora";
-import ClickSpark from "@/components/ClickSpark";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 
 export default function StatsPage() {
@@ -58,22 +55,7 @@ export default function StatsPage() {
 
   return (
     <AuthRequired>
-      <div className="min-h-screen relative overflow-hidden">
-        <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300} layer="back">
-        <div className="pointer-events-none fixed inset-0 z-[-1]">
-          <SlideshowBackdrop />
-        </div>
-        <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
-          <SoftAurora
-            color1="#8b5cf6"
-            color2="#ec4899"
-            speed={0.2}
-            scale={0.8}
-            brightness={0.5}
-            enableMouseInteraction={false}
-            opacity={0.3}
-          />
-        </div>
+      <div className="relative overflow-hidden">
         <HeaderErrorBoundary>
           <Header />
         </HeaderErrorBoundary>
@@ -130,7 +112,6 @@ export default function StatsPage() {
       <VoiceAssistantContent open={isVoiceAssistantOpen} onOpenChange={setIsVoiceAssistantOpen} />
       <KeyboardShortcuts open={showShortcuts} onOpenChange={setShowShortcuts} />
       <AuthModal open={showAuthModal} onClose={() => setShowAuthModal(false)} />
-      </ClickSpark>
     </div>
     </AuthRequired>
   );

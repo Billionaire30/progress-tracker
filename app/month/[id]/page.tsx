@@ -156,7 +156,7 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
 
   return (
     <AuthRequired>
-      <div className="min-h-screen flex flex-col">
+      <div className="flex flex-col">
       <header className="border-b bg-card sticky top-0 z-40">
         <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
           <a href="/">

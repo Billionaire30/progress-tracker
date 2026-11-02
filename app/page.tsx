@@ -15,10 +15,6 @@ import { LogHoursModal } from "@/components/LogHoursModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorBoundary as HeaderErrorBoundary } from "@/components/ErrorBoundary";
 import { PageTransition } from "@/components/PageTransition";
-import { SlideshowBackdrop } from "@/components/SlideshowBackdrop";
-import SoftAurora from "@/components/SoftAurora";
-import ClickSpark from "@/components/ClickSpark";
-import GlowCursor from "@/components/GlowCursor";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 import { useReminder } from "@/lib/hooks/use-reminder";
 
@@ -39,39 +35,10 @@ export default function Home() {
   ]);
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      <GlowCursor
-        color="#8b5cf6"
-        secondaryColor="#ec4899"
-        intensity={1.2}
-        trailWidth={2.5}
-        linger={1.5}
-        glow={1.0}
-        hotspot={0.7}
-        followSpeed={0.6}
-        quality="medium"
-        theme="dark"
-        clickBurst={true}
-        enabled={true}
-      >
-        <ClickSpark sparkColor={['#8b5cf6', '#ec4899', '#3b82f6']} sparkSize={8} sparkCount={4} duration={300} layer="back">
-          <div className="pointer-events-none fixed inset-0 z-[-1]">
-            <SlideshowBackdrop />
-          </div>
-          <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
-            <SoftAurora
-              color1="#8b5cf6"
-              color2="#ec4899"
-              speed={0.2}
-              scale={0.8}
-              brightness={0.5}
-              enableMouseInteraction={false}
-              opacity={0.3}
-            />
-          </div>
-        <HeaderErrorBoundary>
-          <Header />
-        </HeaderErrorBoundary>
+    <div className="relative overflow-hidden">
+      <HeaderErrorBoundary>
+        <Header />
+      </HeaderErrorBoundary>
 
         <main id="main-content" className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-7xl relative" role="main">
           <PageTransition>
@@ -107,8 +74,6 @@ export default function Home() {
         </main>
 
         <LogHoursModal open={isLogModalOpen} onOpenChange={setIsLogModalOpen} />
-        </ClickSpark>
-      </GlowCursor>
     </div>
   );
 }
