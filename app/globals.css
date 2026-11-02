@@ -58,6 +58,12 @@
     --border: 217.2 32.6% 20%;
     --input: 217.2 32.6% 20%;
     --ring: 224.3 76.3% 48%;
+    /* LatticeLoader CSS variables for dark mode */
+    --ll-cell: 12px;
+    --ll-color: #a78bfa;
+    --ll-idle: 0.2;
+    --ll-peak: 1;
+    --ll-cycle: 1s;
   }
 }
 
@@ -778,5 +784,40 @@
   }
   .no-print {
     @apply hidden;
+  }
+}
+
+/* LatticeLoader animations */
+@keyframes lattice-on {
+  0%, 100% { opacity: var(--ll-idle, 0.2); }
+  18%, 42% { opacity: var(--ll-peak, 1); }
+  62% { opacity: var(--ll-idle, 0.2); }
+}
+
+@keyframes lattice-on-45 {
+  0%, 100% { opacity: var(--ll-idle, 0.2); }
+  13%, 31% { opacity: var(--ll-peak, 1); }
+  45% { opacity: var(--ll-idle, 0.2); }
+}
+
+@keyframes lattice-on-35 {
+  0%, 100% { opacity: var(--ll-idle, 0.2); }
+  10%, 24% { opacity: var(--ll-peak, 1); }
+  35% { opacity: var(--ll-idle, 0.2); }
+}
+
+@keyframes lattice-on-25 {
+  0%, 100% { opacity: var(--ll-idle, 0.2); }
+  7%, 17% { opacity: var(--ll-peak, 1); }
+  25% { opacity: var(--ll-idle, 0.2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ll-run {
+    --ll-peak: 0.7;
+  }
+  .ll-run > span {
+    animation-delay: 0ms !important;
+    animation-duration: 1400ms !important;
   }
 }

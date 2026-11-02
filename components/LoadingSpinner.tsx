@@ -1,29 +1,28 @@
 "use client";
 
 import { memo } from "react";
+import LatticeLoader from "@/components/LatticeLoader";
 
 export const LoadingSpinner = memo(function LoadingSpinner({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
-  const sizeClasses = {
-    sm: "w-8 h-8",
-    md: "w-12 h-12",
-    lg: "w-16 h-16",
+  const cellSize = {
+    sm: 8,
+    md: 12,
+    lg: 16,
   };
 
   return (
-    <div className={`${sizeClasses[size]} relative`}>
-      {/* Outer ring */}
-      <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
-      
-      {/* Spinning ring */}
-      <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-primary animate-spin" style={{ animationDuration: '1s' }} />
-      
-      {/* Inner ring - counter-rotating */}
-      <div className="absolute inset-2 rounded-full border-3 border-transparent border-b-purple-500 animate-spin" style={{ animationDuration: '1.5s', animationDirection: 'reverse' }} />
-      
-      {/* Center dot */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
-      </div>
+    <div style={{ '--ll-cell': `${cellSize[size]}px`, '--ll-color': '#8b5cf6', '--ll-idle': '0.2', '--ll-peak': '1', '--ll-cycle': '1s' } as React.CSSProperties}>
+      <LatticeLoader
+        pattern="orbit"
+        grid={3}
+        shape="round"
+        color="#8b5cf6"
+        cellSize={cellSize[size]}
+        gap={4}
+        glow={true}
+        glowColor="#8b5cf6"
+        className="ll-run"
+      />
     </div>
   );
 });
