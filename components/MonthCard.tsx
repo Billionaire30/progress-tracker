@@ -51,7 +51,7 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
   };
 
   return (
-    <a href={`/month/${month.id}`} className="block cursor-pointer group">
+    <a href={`/month/${month.id}`} className="block cursor-pointer group h-full">
       <Magnet padding={40} magnetStrength={2.5} maxOffset={10} scale={1.02} tilt={3}>
         <GlareHover
           variant="streak"
@@ -62,10 +62,10 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
           softness={0.5}
           mode="hover"
           borderRadius="12px"
-          className="w-full"
+          className="w-full h-full"
         >
           <Card
-            className={`hover:border-primary cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden ${
+            className={`hover:border-primary cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden h-full flex flex-col ${
               cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium-lg gradient-border-animated" : ""
             } ${cardData.isNotStarted ? "opacity-85" : ""}`}
           >
@@ -106,7 +106,7 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
             <StatusPill status={month.status} />
           </div>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="space-y-3 flex-1 flex flex-col justify-between">
           <p className="text-sm text-muted-foreground line-clamp-2">{month.focus}</p>
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
