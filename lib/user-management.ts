@@ -4,6 +4,7 @@ import {
   doc,
   getDoc,
   setDoc,
+  updateDoc,
   query,
   where,
   getDocs,
@@ -47,6 +48,9 @@ export async function ensureUserDocument(): Promise<void> {
 
       await setDoc(userRef, userProfile);
       console.log("User document created in Firestore");
+
+      // Convert pending friend requests to this user
+      await convertPendingFriendRequests(user.email || "", user.uid);
     } else {
       // Update last active timestamp
       await setDoc(
@@ -61,6 +65,28 @@ export async function ensureUserDocument(): Promise<void> {
     }
   } catch (error) {
     console.error("Error ensuring user document:", error);
+  }
+}
+
+// Convert pending friend requests (by email) to actual user IDs
+async function convertPendingFriendRequests(email: string, userId: string): Promise<void> {
+  try {
+    const requestsRef = collection(db, "friendRequests");
+    const q = query(requestsRef, where("toEmail", "==", email), where("status", "==", "pending"));
+    const querySnapshot = await getDocs(q);
+
+    for (const doc of querySnapshot.docs) {
+      await updateDoc(doc.ref, {
+        toUserId: userId,
+        toEmail: undefined,
+      });
+    }
+
+    if (!querySnapshot.empty) {
+      console.log(`Converted ${querySnapshot.size} pending friend requests`);
+    }
+  } catch (error) {
+    console.error("Error converting pending friend requests:", error);
   }
 }
 

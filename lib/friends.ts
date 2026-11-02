@@ -32,40 +32,60 @@ export async function sendFriendRequest(friendEmail: string): Promise<{ success:
     // Ensure current user document exists
     await ensureUserDocument();
 
-    // Find the target user by email
+    // Find the target user by email (they may not have signed in yet)
     const targetUserProfile = await getUserProfileByEmail(friendEmail);
 
-    if (!targetUserProfile) {
-      return { success: false, error: "User not found. Make sure they have the app installed and are signed in." };
+    let targetUserId: string;
+
+    if (targetUserProfile) {
+      // User exists in database
+      targetUserId = targetUserProfile.uid;
+
+      if (targetUserId === currentUserId) {
+        return { success: false, error: "You cannot send a friend request to yourself" };
+      }
+
+      // Check if already friends
+      const currentUserDoc = await getDoc(doc(db, "users", currentUserId));
+      const currentUserData = currentUserDoc.data();
+      const friends = currentUserData?.friends || [];
+
+      if (friends.includes(targetUserId)) {
+        return { success: false, error: "You are already friends with this user" };
+      }
+    } else {
+      // User doesn't exist yet - use email as temporary ID
+      targetUserId = `pending_${friendEmail}`;
+
+      // Check if request already exists for this email
+      const requestsRef = collection(db, FRIEND_REQUESTS_COLLECTION);
+      const existingRequestQuery = query(
+        requestsRef,
+        where("fromUserId", "==", currentUserId),
+        where("toEmail", "==", friendEmail),
+        where("status", "==", "pending")
+      );
+      const existingRequestSnapshot = await getDocs(existingRequestQuery);
+
+      if (!existingRequestSnapshot.empty) {
+        return { success: false, error: "Friend request already sent" };
+      }
     }
 
-    const targetUserId = targetUserProfile.uid;
+    // Check if request already exists (for existing users)
+    if (targetUserProfile) {
+      const requestsRef = collection(db, FRIEND_REQUESTS_COLLECTION);
+      const existingRequestQuery = query(
+        requestsRef,
+        where("fromUserId", "==", currentUserId),
+        where("toUserId", "==", targetUserId),
+        where("status", "==", "pending")
+      );
+      const existingRequestSnapshot = await getDocs(existingRequestQuery);
 
-    if (targetUserId === currentUserId) {
-      return { success: false, error: "You cannot send a friend request to yourself" };
-    }
-
-    // Check if already friends
-    const currentUserDoc = await getDoc(doc(db, "users", currentUserId));
-    const currentUserData = currentUserDoc.data();
-    const friends = currentUserData?.friends || [];
-
-    if (friends.includes(targetUserId)) {
-      return { success: false, error: "You are already friends with this user" };
-    }
-
-    // Check if request already exists
-    const requestsRef = collection(db, FRIEND_REQUESTS_COLLECTION);
-    const existingRequestQuery = query(
-      requestsRef,
-      where("fromUserId", "==", currentUserId),
-      where("toUserId", "==", targetUserId),
-      where("status", "==", "pending")
-    );
-    const existingRequestSnapshot = await getDocs(existingRequestQuery);
-
-    if (!existingRequestSnapshot.empty) {
-      return { success: false, error: "Friend request already sent" };
+      if (!existingRequestSnapshot.empty) {
+        return { success: false, error: "Friend request already sent" };
+      }
     }
 
     // Create friend request
@@ -77,6 +97,7 @@ export async function sendFriendRequest(friendEmail: string): Promise<{ success:
       fromEmail: currentUser.email || "",
       fromPhotoURL: currentUser.photoURL || undefined,
       toUserId: targetUserId,
+      toEmail: friendEmail, // Store email for pending users
       status: "pending",
       createdAt: new Date().toISOString(),
     };
@@ -107,7 +128,12 @@ export async function acceptFriendRequest(requestId: string): Promise<{ success:
 
     const requestData = requestDoc.data() as FriendRequest;
 
-    if (requestData.toUserId !== currentUserId) {
+    // Check if this request is for the current user (by email match if needed)
+    const isForCurrentUser =
+      requestData.toUserId === currentUserId ||
+      (requestData.toEmail && requestData.toEmail === auth.currentUser?.email);
+
+    if (!isForCurrentUser) {
       return { success: false, error: "You can only accept requests sent to you" };
     }
 
@@ -115,20 +141,38 @@ export async function acceptFriendRequest(requestId: string): Promise<{ success:
       return { success: false, error: "This request has already been processed" };
     }
 
-    // Add to both users' friends lists
-    const fromUserRef = doc(db, "users", requestData.fromUserId);
-    const toUserRef = doc(db, "users", currentUserId);
+    // Ensure current user document exists
+    await ensureUserDocument();
 
-    await updateDoc(fromUserRef, {
+    // Ensure sender user document exists
+    const senderUserRef = doc(db, "users", requestData.fromUserId);
+    const senderDoc = await getDoc(senderUserRef);
+    if (!senderDoc.exists()) {
+      // Create minimal sender document
+      await setDoc(senderUserRef, {
+        uid: requestData.fromUserId,
+        email: requestData.fromEmail,
+        displayName: requestData.fromDisplayName,
+        photoURL: requestData.fromPhotoURL,
+        createdAt: new Date().toISOString(),
+        lastActiveAt: new Date().toISOString(),
+        friends: [],
+      });
+    }
+
+    // Add to both users' friends lists
+    await updateDoc(senderUserRef, {
       friends: arrayUnion(currentUserId),
     });
 
-    await updateDoc(toUserRef, {
+    const currentUserRef = doc(db, "users", currentUserId);
+    await updateDoc(currentUserRef, {
       friends: arrayUnion(requestData.fromUserId),
     });
 
     // Update request status
     await updateDoc(doc(db, FRIEND_REQUESTS_COLLECTION, requestId), {
+      toUserId: currentUserId, // Ensure it's set to the actual user ID
       status: "accepted",
       respondedAt: new Date().toISOString(),
     });
@@ -210,15 +254,34 @@ export async function getPendingFriendRequests(): Promise<FriendRequest[]> {
     }
 
     const currentUserId = auth.currentUser.uid;
+    const currentUserEmail = auth.currentUser.email;
+
+    // Get requests by user ID
     const requestsRef = collection(db, FRIEND_REQUESTS_COLLECTION);
-    const q = query(
+    const q1 = query(
       requestsRef,
       where("toUserId", "==", currentUserId),
       where("status", "==", "pending")
     );
-    const querySnapshot = await getDocs(q);
+    const querySnapshot1 = await getDocs(q1);
 
-    return querySnapshot.docs.map((doc) => doc.data() as FriendRequest);
+    // Get requests by email (for users who just signed in)
+    let querySnapshot2;
+    if (currentUserEmail) {
+      const q2 = query(
+        requestsRef,
+        where("toEmail", "==", currentUserEmail),
+        where("status", "==", "pending")
+      );
+      querySnapshot2 = await getDocs(q2);
+    }
+
+    const requests = querySnapshot1.docs.map((doc) => doc.data() as FriendRequest);
+    if (querySnapshot2) {
+      requests.push(...querySnapshot2.docs.map((doc) => doc.data() as FriendRequest));
+    }
+
+    return requests;
   } catch (error) {
     console.error("Error getting friend requests:", error);
     return [];

@@ -213,6 +213,7 @@ export interface FriendRequest {
   fromEmail: string;
   fromPhotoURL?: string;
   toUserId: string;
+  toEmail?: string; // For users who haven't signed in yet
   status: "pending" | "accepted" | "rejected";
   createdAt: string;
   respondedAt?: string;

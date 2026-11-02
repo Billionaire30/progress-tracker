@@ -328,7 +328,7 @@ export function FriendsManager() {
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                Your friend must have the app installed and be signed in to receive your request.
+                Send a friend request by email. They'll see it when they sign in to the app.
               </p>
             </CardContent>
           </Card>
