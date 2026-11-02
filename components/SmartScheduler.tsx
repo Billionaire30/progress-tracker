@@ -224,7 +224,7 @@ export function SmartScheduler() {
                   Add Event
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent onOpenAutoFocus={(e) => e.preventDefault()}>
                 <DialogHeader>
                   <DialogTitle>Add Schedule Event</DialogTitle>
                 </DialogHeader>
@@ -236,6 +236,7 @@ export function SmartScheduler() {
                       value={newEventTitle}
                       onChange={(e) => setNewEventTitle(e.target.value)}
                       placeholder="e.g., Study Session"
+                      autoFocus={false}
                     />
                   </div>
                   <div>
@@ -245,6 +246,7 @@ export function SmartScheduler() {
                       type="date"
                       value={newEventDate}
                       onChange={(e) => setNewEventDate(e.target.value)}
+                      autoFocus={false}
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
@@ -255,6 +257,7 @@ export function SmartScheduler() {
                         type="time"
                         value={newEventStartTime}
                         onChange={(e) => setNewEventStartTime(e.target.value)}
+                        autoFocus={false}
                       />
                     </div>
                     <div>
@@ -264,6 +267,7 @@ export function SmartScheduler() {
                         type="time"
                         value={newEventEndTime}
                         onChange={(e) => setNewEventEndTime(e.target.value)}
+                        autoFocus={false}
                       />
                     </div>
                   </div>
