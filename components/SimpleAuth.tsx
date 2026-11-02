@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/components/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { LogIn, LogOut, User, CheckCircle, Loader2, X, Shield } from "lucide-react";
+import { LogIn, LogOut, User, CheckCircle, Loader2, X, Shield, Users } from "lucide-react";
 import { isConfigured } from "@/lib/firebase";
+import { FriendsManager } from "@/components/FriendsManager";
 
 export function SimpleAuth() {
   const { user, loading, signInWithGoogle, signOutUser } = useAuth();
@@ -182,6 +183,15 @@ export function SimpleAuth() {
                   </p>
                 </div>
               </div>
+
+              <div className="border-t pt-4">
+                <div className="flex items-center gap-2 mb-3">
+                  <Users className="h-4 w-4 text-primary" />
+                  <h3 className="font-medium text-sm">Friends & Competition</h3>
+                </div>
+                <FriendsManager />
+              </div>
+
               <Button
                 onClick={handleSignOut}
                 variant="outline"

@@ -9,7 +9,7 @@ import { SimpleShortcuts } from "@/components/SimpleShortcuts";
 import { SimpleAuth } from "@/components/SimpleAuth";
 import { SimpleVoice } from "@/components/SimpleVoice";
 import { Button } from "@/components/ui/button";
-import { BarChart3, Zap, Sparkles, Menu, X } from "lucide-react";
+import { BarChart3, Zap, Sparkles, Menu, X, Users } from "lucide-react";
 
 export function Header() {
   const { data } = useApp();
@@ -58,6 +58,11 @@ export function Header() {
           <SimpleShortcuts />
           <SimpleVoice />
           <SimpleAuth />
+          <a href="/friends">
+            <Button variant="ghost" size="icon" aria-label="View friends" className="hover:bg-primary/10 hover:scale-110 transition-transform">
+              <Users className="h-4 w-4" />
+            </Button>
+          </a>
           <a href="/stats">
             <Button variant="ghost" size="icon" aria-label="View statistics" className="hover:bg-primary/10 hover:scale-110 transition-transform">
               <BarChart3 className="h-4 w-4" />
@@ -99,12 +104,20 @@ export function Header() {
             </div>
             <div className="flex items-center justify-between pt-2 border-t">
               <SimpleAuth />
-              <a href="/stats">
-                <Button variant="ghost" size="sm" className="hover:bg-primary/10">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Stats
-                </Button>
-              </a>
+              <div className="flex gap-2">
+                <a href="/friends">
+                  <Button variant="ghost" size="sm" className="hover:bg-primary/10">
+                    <Users className="h-4 w-4 mr-2" />
+                    Friends
+                  </Button>
+                </a>
+                <a href="/stats">
+                  <Button variant="ghost" size="sm" className="hover:bg-primary/10">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    Stats
+                  </Button>
+                </a>
+              </div>
             </div>
           </div>
         </div>

@@ -87,11 +87,23 @@ const migrations: Record<number, MigrationFunction> = {
       collaboration: data.collaboration || {},
     };
   },
+
+  // Migration from version 3 to version 4
+  // - Added friends system (friends list, friend requests, profile visibility)
+  4: (data: any): AppData => {
+    return {
+      ...data,
+      version: 4,
+      friends: data.friends || [],
+      friendRequests: data.friendRequests || [],
+      profileVisibility: data.profileVisibility || "friends-only",
+    };
+  },
 };
 
 export function migrateData(data: any): AppData {
   const currentVersion = data.version || 0;
-  const targetVersion = 3; // Current schema version
+  const targetVersion = 4; // Current schema version
 
   if (currentVersion >= targetVersion) {
     return data as AppData;

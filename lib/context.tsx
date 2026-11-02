@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef } from "react";
-import { AppData, initialData, Preferences, initializeDefaultWorkspace } from "./data";
+import { AppData, initialData, Preferences, initializeDefaultWorkspace, PublicProfile } from "./data";
 import { storage } from "./storage";
 import { firebaseStorage, initFirebaseAuth } from "./firebase-storage";
 import { checkAchievements } from "./achievements";
@@ -9,6 +9,7 @@ import { triggerConfetti } from "./confetti";
 import { auth, isConfigured } from "./firebase";
 import { awardXPForHours, updateStreakBonus, checkDailyChallenges, addBadge } from "./gamification";
 import { debounce, optimizeData } from "./performance";
+import { updatePublicProfile } from "./friends";
 
 interface AppContextType {
   data: AppData;
@@ -178,6 +179,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       // Use Firebase storage if authenticated and configured, otherwise use local storage
       if (isConfigured && auth.currentUser) {
         firebaseStorage.setData(optimizedData);
+
+        // Update public profile if visibility is not private
+        if (optimizedData.profileVisibility && optimizedData.profileVisibility !== "private") {
+          const profile: Partial<PublicProfile> = {
+            userId: auth.currentUser.uid,
+            displayName: auth.currentUser.displayName || "Unknown",
+            photoURL: auth.currentUser.photoURL || undefined,
+            overallProgress: Math.round(
+              ((optimizedData.months.filter((m) => m.status === "complete").length +
+                optimizedData.portfolio.filter((p) => p.status === "complete").length +
+                optimizedData.competencyChecklist.filter((c) => c.done).length) /
+                (12 + 5 + 17)) *
+                100
+            ),
+            currentStreak: optimizedData.currentStreak,
+            longestStreak: optimizedData.longestStreak,
+            totalHours: optimizedData.weeklyLog.reduce((sum, entry) => sum + entry.hours, 0),
+            level: optimizedData.gamification?.level || 1,
+            totalXP: optimizedData.gamification?.totalXP || 0,
+            badges: optimizedData.gamification?.badges || [],
+            monthsCompleted: optimizedData.months.filter((m) => m.status === "complete").length,
+            lastUpdated: optimizedData.lastUpdated,
+          };
+          updatePublicProfile(profile).catch((err) => console.error("Failed to update public profile:", err));
+        }
       } else {
         storage.setData(optimizedData);
       }

@@ -197,6 +197,42 @@ export interface CalendarEvent {
   recurrence?: string;
 }
 
+export interface Friend {
+  userId: string;
+  displayName: string;
+  email: string;
+  photoURL?: string;
+  addedAt: string;
+  lastActiveAt?: string;
+}
+
+export interface FriendRequest {
+  id: string;
+  fromUserId: string;
+  fromDisplayName: string;
+  fromEmail: string;
+  fromPhotoURL?: string;
+  toUserId: string;
+  status: "pending" | "accepted" | "rejected";
+  createdAt: string;
+  respondedAt?: string;
+}
+
+export interface PublicProfile {
+  userId: string;
+  displayName: string;
+  photoURL?: string;
+  overallProgress: number;
+  currentStreak: number;
+  longestStreak: number;
+  totalHours: number;
+  level: number;
+  totalXP: number;
+  badges: string[];
+  monthsCompleted: number;
+  lastUpdated: string;
+}
+
 export interface AppData {
   version: number; // Data schema version for migrations
   months: Month[];
@@ -231,6 +267,10 @@ export interface AppData {
   habits?: Habit[];
   schedule?: ScheduleEvent[];
   theme?: ThemePreset;
+  // Friends system
+  friends?: Friend[];
+  friendRequests?: FriendRequest[];
+  profileVisibility?: "public" | "friends-only" | "private";
 }
 
 const createInitialWorkspace = (months: Month[], weeklyLog: WeeklyLogEntry[], competencyChecklist: CompetencyItem[], portfolio: PortfolioItem[]): Workspace => ({
@@ -259,7 +299,7 @@ const createInitialWorkspace = (months: Month[], weeklyLog: WeeklyLogEntry[], co
 });
 
 export const initialData: AppData = {
-  version: 3,
+  version: 4,
   months: [
     {
       id: 1,
@@ -550,7 +590,10 @@ export const initialData: AppData = {
   },
   collaboration: {},
   habits: [],
-  schedule: []
+  schedule: [],
+  friends: [],
+  friendRequests: [],
+  profileVisibility: "friends-only"
 };
 
 // Helper to initialize workspace with data
