@@ -65,8 +65,8 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
           className="w-full h-full"
         >
           <Card
-            className={`hover:border-primary cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden h-full flex flex-col ${
-              cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium-lg gradient-border-animated" : ""
+            className={`cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden h-full flex flex-col min-h-[420px] border-2 ${
+              cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium-lg gradient-border-animated border-accent" : "border-border/50"
             } ${cardData.isNotStarted ? "opacity-85" : ""}`}
           >
         {cardData.isCurrentMonth && (
@@ -76,7 +76,7 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
           </div>
         )}
         {month.image && (
-          <div className="h-36 overflow-hidden relative">
+          <div className="h-36 overflow-hidden relative flex-shrink-0">
             <Image
               src={month.image}
               alt={month.title}
