@@ -14,6 +14,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { Friend, FriendRequest, PublicProfile } from "./data";
+import { ensureUserDocument, getUserProfileByEmail } from "./user-management";
 
 const FRIEND_REQUESTS_COLLECTION = "friendRequests";
 const PROFILES_COLLECTION = "publicProfiles";
@@ -28,18 +29,17 @@ export async function sendFriendRequest(friendEmail: string): Promise<{ success:
     const currentUser = auth.currentUser;
     const currentUserId = currentUser.uid;
 
-    // Find the target user by email
-    const usersRef = collection(db, "users");
-    const q = query(usersRef, where("email", "==", friendEmail));
-    const querySnapshot = await getDocs(q);
+    // Ensure current user document exists
+    await ensureUserDocument();
 
-    if (querySnapshot.empty) {
-      return { success: false, error: "User not found. Make sure they have the app installed." };
+    // Find the target user by email
+    const targetUserProfile = await getUserProfileByEmail(friendEmail);
+
+    if (!targetUserProfile) {
+      return { success: false, error: "User not found. Make sure they have the app installed and are signed in." };
     }
 
-    const targetUserDoc = querySnapshot.docs[0];
-    const targetUserId = targetUserDoc.id;
-    const targetUserData = targetUserDoc.data();
+    const targetUserId = targetUserProfile.uid;
 
     if (targetUserId === currentUserId) {
       return { success: false, error: "You cannot send a friend request to yourself" };
@@ -257,7 +257,7 @@ export async function getFriends(): Promise<Friend[]> {
           displayName: friendData.displayName || "Unknown",
           email: friendData.email || "",
           photoURL: friendData.photoURL,
-          addedAt: friendData.addedAt || new Date().toISOString(),
+          addedAt: friendData.createdAt || new Date().toISOString(),
           lastActiveAt: friendData.lastActiveAt,
         });
       }

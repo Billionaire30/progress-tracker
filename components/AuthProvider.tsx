@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, isConfigured } from "@/lib/firebase";
 import { GoogleAuthProvider, signInWithPopup, signInAnonymously, signOut, onAuthStateChanged, User } from "firebase/auth";
+import { ensureUserDocument } from "@/lib/user-management";
 
 interface AuthContextType {
   user: User | null;
@@ -26,8 +27,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
+      if (user) {
+        // Ensure user document exists in Firestore
+        await ensureUserDocument();
+      }
       setLoading(false);
     });
 
