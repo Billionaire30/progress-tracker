@@ -106,8 +106,8 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
             </tbody>
           </table>
         ) : (
-          <div style={{ height: 120 }}>
-            <ResponsiveContainer width="100%" height="100%">
+          <div className="min-h-[120px]">
+            <ResponsiveContainer width="100%" height={120}>
               <BarChart data={weekData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                 <XAxis dataKey="day" tick={{ fontSize: 10 }} stroke="hsl(var(--muted-foreground))" />
@@ -123,7 +123,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
                   dataKey="hours"
                   fill="url(#barGradient)"
                   radius={[4, 4, 0, 0]}
-                  animationDuration={300}
+                  isAnimationActive={false}
                 />
                 <defs>
                   <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">

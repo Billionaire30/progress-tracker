@@ -34,10 +34,38 @@ export const WorkspaceSchema = z.object({
 // AppData validation schema (basic structure validation)
 const AppDataSchema = z.object({
   version: z.number(),
-  months: z.array(z.any()),
-  weeklyLog: z.array(z.any()),
-  competencyChecklist: z.array(z.any()),
-  portfolio: z.array(z.any()),
+  months: z.array(z.object({
+    id: z.number(),
+    title: z.string(),
+    focus: z.string(),
+    software: z.array(z.string()),
+    project: z.string(),
+    portfolioOutput: z.string(),
+    learningTopics: z.array(z.string()),
+    status: z.enum(["not-started", "in-progress", "complete"]),
+    tasks: z.array(z.object({
+      id: z.string(),
+      label: z.string(),
+      done: z.boolean(),
+    })),
+  })).length(12),
+  weeklyLog: z.array(z.object({
+    id: z.string(),
+    date: z.string(),
+    hours: z.number(),
+    focus: z.string(),
+  })),
+  competencyChecklist: z.array(z.object({
+    id: z.string(),
+    label: z.string(),
+    done: z.boolean(),
+  })).length(17),
+  portfolio: z.array(z.object({
+    id: z.number(),
+    name: z.string(),
+    description: z.string(),
+    status: z.enum(["not-started", "in-progress", "complete"]),
+  })).length(5),
   startDate: z.string().optional(),
   preferences: z.object({}).optional(),
   lastUpdated: z.string().optional(),

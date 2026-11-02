@@ -27,7 +27,7 @@ export const WeekEntriesList = memo(function WeekEntriesList({ entries, onDelete
     return (
       <div className="text-center py-4">
         <p className="text-sm text-muted-foreground mb-2">
-          No hours logged this week yet
+          No hours logged this week yet.
         </p>
         <p className="text-xs text-muted-foreground">
           Start logging your study hours to track your progress

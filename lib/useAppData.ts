@@ -169,5 +169,5 @@ export function useAppData() {
     importJson,
     setStartDate,
     setPreferences,
-  }), [data, setData, toggleTask, addTask, deleteTask, setMonthStatus, cycleMonthStatus, logHours, deleteLogEntry, toggleCompetency, cyclePortfolio, reset, seed, exportJson, importJson, setStartDate, setPreferences]);
+  }), [setData, toggleTask, addTask, deleteTask, setMonthStatus, cycleMonthStatus, logHours, deleteLogEntry, toggleCompetency, cyclePortfolio, reset, seed, exportJson, importJson, setStartDate, setPreferences]);
 }
