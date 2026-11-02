@@ -87,7 +87,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: var(--z-dialog-overlay);
+    z-index: 50;
   }
   [data-radix-portal][data-state="closed"] {
     display: none;
@@ -97,11 +97,13 @@
     will-change: transform, opacity;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+    z-index: 51 !important;
   }
   [data-radix-dialog-overlay] {
     pointer-events: auto !important;
     cursor: pointer;
     will-change: opacity;
+    z-index: 50 !important;
   }
   [data-radix-dialog-overlay][data-state="closed"] {
     pointer-events: none !important;
