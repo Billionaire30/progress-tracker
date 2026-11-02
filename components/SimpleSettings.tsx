@@ -115,7 +115,7 @@ export function SimpleSettings() {
       className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-opacity duration-300 ${isAnimating ? 'opacity-100' : 'opacity-0'}`}
       onClick={handleClickOutside}
     >
-      <div className={`w-full max-w-md transition-all duration-300 ${isAnimating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}>
+      <div className={`w-full max-w-md transition-all duration-300 flex flex-col ${isAnimating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}>
         <Card className="relative shadow-2xl border-2 max-h-[90vh] overflow-y-auto">
         <Button
           variant="ghost"
