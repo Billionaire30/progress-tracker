@@ -22,18 +22,24 @@ const PROFILES_COLLECTION = "publicProfiles";
 // Send a friend request
 export async function sendFriendRequest(friendEmail: string): Promise<{ success: boolean; error?: string }> {
   try {
+    console.log("Attempting to send friend request to:", friendEmail);
+
     if (!auth.currentUser) {
+      console.error("No current user");
       return { success: false, error: "You must be signed in to send friend requests" };
     }
 
     const currentUser = auth.currentUser;
     const currentUserId = currentUser.uid;
+    console.log("Current user ID:", currentUserId);
 
     // Ensure current user document exists
     await ensureUserDocument();
+    console.log("User document ensured");
 
     // Find the target user by email (they may not have signed in yet)
     const targetUserProfile = await getUserProfileByEmail(friendEmail);
+    console.log("Target user profile found:", !!targetUserProfile);
 
     let targetUserId: string;
 
@@ -102,12 +108,15 @@ export async function sendFriendRequest(friendEmail: string): Promise<{ success:
       createdAt: new Date().toISOString(),
     };
 
+    console.log("Creating friend request with ID:", requestId);
     await setDoc(doc(db, FRIEND_REQUESTS_COLLECTION, requestId), friendRequest);
+    console.log("Friend request created successfully");
 
     return { success: true };
   } catch (error) {
     console.error("Error sending friend request:", error);
-    return { success: false, error: "Failed to send friend request" };
+    console.error("Error details:", JSON.stringify(error, null, 2));
+    return { success: false, error: `Failed to send friend request: ${error instanceof Error ? error.message : 'Unknown error'}` };
   }
 }
 

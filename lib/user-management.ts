@@ -25,6 +25,7 @@ export interface UserProfile {
 // Ensure user document exists in Firestore
 export async function ensureUserDocument(): Promise<void> {
   if (!auth.currentUser) {
+    console.log("No current user, skipping user document creation");
     return;
   }
 
@@ -32,9 +33,11 @@ export async function ensureUserDocument(): Promise<void> {
   const userRef = doc(db, USERS_COLLECTION, user.uid);
 
   try {
+    console.log("Checking if user document exists for:", user.uid);
     const userDoc = await getDoc(userRef);
 
     if (!userDoc.exists()) {
+      console.log("User document does not exist, creating new one");
       // Create new user document
       const userProfile: UserProfile = {
         uid: user.uid,
@@ -50,8 +53,11 @@ export async function ensureUserDocument(): Promise<void> {
       console.log("User document created in Firestore");
 
       // Convert pending friend requests to this user
-      await convertPendingFriendRequests(user.email || "", user.uid);
+      if (user.email) {
+        await convertPendingFriendRequests(user.email, user.uid);
+      }
     } else {
+      console.log("User document exists, updating last active timestamp");
       // Update last active timestamp
       await setDoc(
         userRef,
@@ -65,6 +71,7 @@ export async function ensureUserDocument(): Promise<void> {
     }
   } catch (error) {
     console.error("Error ensuring user document:", error);
+    console.error("Error details:", JSON.stringify(error, null, 2));
   }
 }
 
