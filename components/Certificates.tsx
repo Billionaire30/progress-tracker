@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ export function Certificates() {
     issueDate: "",
     skills: [],
   });
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
   const certificates = data.certificates || [];
 
@@ -47,6 +48,7 @@ export function Certificates() {
     });
 
     setNewCertificate({ title: "", issuer: "", issueDate: "", skills: [] });
+    setUploadedImage(null);
     setIsAddDialogOpen(false);
   }, [newCertificate, certificates, data, setData]);
 
@@ -72,6 +74,30 @@ export function Certificates() {
       skills: newCertificate.skills?.filter((s) => s !== skill) || [],
     });
   }, [newCertificate]);
+
+  const handleImageUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result as string;
+        setUploadedImage(base64String);
+        setNewCertificate({ ...newCertificate, image: base64String });
+      };
+      reader.readAsDataURL(file);
+    }
+  }, [newCertificate]);
+
+  const handleRemoveImage = useCallback(() => {
+    setUploadedImage(null);
+    setNewCertificate({ ...newCertificate, image: undefined });
+  }, [newCertificate]);
+
+  useEffect(() => {
+    if (!isAddDialogOpen) {
+      setUploadedImage(null);
+    }
+  }, [isAddDialogOpen]);
 
   if (certificates.length === 0) {
     return (
@@ -153,13 +179,39 @@ export function Certificates() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="image">Certificate Image URL (Optional)</Label>
-                    <Input
-                      id="image"
-                      value={newCertificate.image}
-                      onChange={(e) => setNewCertificate({ ...newCertificate, image: e.target.value })}
-                      placeholder="https://example.com/certificate.jpg"
-                    />
+                    <Label>Certificate Image (Optional)</Label>
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <Input
+                          id="image-upload"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="cursor-pointer"
+                        />
+                        {uploadedImage && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={handleRemoveImage}
+                          >
+                            <X className="h-4 w-4 mr-2" />
+                            Remove
+                          </Button>
+                        )}
+                      </div>
+                      {uploadedImage && (
+                        <div className="relative h-40 w-full rounded-lg overflow-hidden border border-border">
+                          <Image
+                            src={uploadedImage}
+                            alt="Certificate preview"
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label>Skills (Optional)</Label>
@@ -307,13 +359,39 @@ export function Certificates() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="image">Certificate Image URL (Optional)</Label>
-                <Input
-                  id="image"
-                  value={newCertificate.image}
-                  onChange={(e) => setNewCertificate({ ...newCertificate, image: e.target.value })}
-                  placeholder="https://example.com/certificate.jpg"
-                />
+                <Label>Certificate Image (Optional)</Label>
+                <div className="space-y-3">
+                  <div className="flex gap-2">
+                    <Input
+                      id="image-upload"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageUpload}
+                      className="cursor-pointer"
+                    />
+                    {uploadedImage && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={handleRemoveImage}
+                      >
+                        <X className="h-4 w-4 mr-2" />
+                        Remove
+                      </Button>
+                    )}
+                  </div>
+                  {uploadedImage && (
+                    <div className="relative h-40 w-full rounded-lg overflow-hidden border border-border">
+                      <Image
+                        src={uploadedImage}
+                        alt="Certificate preview"
+                        fill
+                        className="object-contain"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="space-y-2">
                 <Label>Skills (Optional)</Label>
