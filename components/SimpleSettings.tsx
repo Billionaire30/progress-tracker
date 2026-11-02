@@ -178,12 +178,12 @@ export function SimpleSettings() {
         onMouseUp={handleMouseUp}
       >
         <Card className={`relative shadow-2xl border-2 max-h-[90vh] overflow-y-auto ${isDragging ? 'cursor-move select-none' : ''}`}>
-        <CardHeader className="space-y-1 pb-4 pr-12">
+        <CardHeader className="space-y-1 pb-4 pl-12">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => { setIsOpen(false); setIsAnimating(false); }}
-            className="absolute top-3 right-3 z-10 hover:bg-destructive/10 transition-colors"
+            className="absolute top-3 left-3 z-10 hover:bg-destructive/10 transition-colors"
           >
             <X className="h-4 w-4" />
           </Button>
