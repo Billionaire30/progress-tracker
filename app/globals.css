@@ -98,6 +98,8 @@
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     z-index: 51 !important;
+    max-height: 90vh;
+    overflow-y: auto;
   }
   [data-radix-dialog-overlay] {
     pointer-events: auto !important;
