@@ -162,15 +162,15 @@ export function SimpleVoice() {
         onMouseUp={handleMouseUp}
       >
         <Card className={`relative shadow-2xl border-2 ${isDragging ? 'cursor-move select-none' : ''}`}>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => { setIsOpen(false); setIsAnimating(false); }}
-          className="absolute top-3 right-3 z-10 hover:bg-destructive/10 transition-colors"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-        <CardHeader className="space-y-1 pb-4">
+        <CardHeader className="space-y-1 pb-4 pr-12">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => { setIsOpen(false); setIsAnimating(false); }}
+            className="absolute top-3 right-3 z-10 hover:bg-destructive/10 transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </Button>
           <CardTitle className="flex items-center gap-2 text-2xl">
             <div className="p-2 bg-primary/10 rounded-lg">
               <Volume2 className="h-5 w-5 text-primary" />
