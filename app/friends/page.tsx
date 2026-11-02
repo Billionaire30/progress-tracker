@@ -142,11 +142,21 @@ export default function FriendsPage() {
   const handleStartConversation = async (friendUserId: string) => {
     const result = await getOrCreateConversation(friendUserId);
     if (result.success && result.conversationId) {
-      const conv = conversations.find((c) => c.id === result.conversationId);
-      if (conv) {
-        setSelectedConversation(conv);
-        setIsMessagingModalOpen(true);
-      }
+      // Create a temporary conversation object if not in state
+      const conv = conversations.find((c) => c.id === result.conversationId) || {
+        id: result.conversationId,
+        participants: [user?.uid || "", friendUserId],
+        unreadCount: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        isPinned: false,
+        isArchived: false,
+        typingUsers: [],
+      };
+      setSelectedConversation(conv);
+      setIsMessagingModalOpen(true);
+    } else if (result.error) {
+      alert(result.error);
     }
   };
 
@@ -178,13 +188,33 @@ export default function FriendsPage() {
 
 
   const getFriendName = (friendId: string) => {
+    // Check friends list first
     const friend = friends.find((f) => f.userId === friendId);
-    return friend?.displayName || "Unknown";
+    if (friend) return friend.displayName;
+
+    // Check profiles (includes leaderboard users)
+    const profile = friendsProfiles.find((p) => p.userId === friendId);
+    if (profile) return profile.displayName;
+
+    // Check if it's the current user
+    if (friendId === user?.uid) return user.displayName || "You";
+
+    return "Unknown";
   };
 
   const getFriendPhoto = (friendId: string) => {
+    // Check friends list first
     const friend = friends.find((f) => f.userId === friendId);
-    return friend?.photoURL;
+    if (friend) return friend.photoURL;
+
+    // Check profiles (includes leaderboard users)
+    const profile = friendsProfiles.find((p) => p.userId === friendId);
+    if (profile) return profile.photoURL;
+
+    // Check if it's the current user
+    if (friendId === user?.uid) return user.photoURL;
+
+    return undefined;
   };
 
   if (isLoading) {
@@ -345,19 +375,31 @@ export default function FriendsPage() {
                   <CardContent>
                     <div className="space-y-3">
                       {allProfiles.map((profile) => (
-                        <div key={profile.userId}>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm font-medium truncate">
-                              {profile.displayName}
-                            </span>
-                            <span className="text-sm font-bold">{profile.overallProgress}%</span>
+                        <div key={profile.userId} className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-sm font-medium truncate">
+                                {profile.displayName}
+                              </span>
+                              <span className="text-sm font-bold">{profile.overallProgress}%</span>
+                            </div>
+                            <div className="h-2 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-500"
+                                style={{ width: `${profile.overallProgress}%` }}
+                              />
+                            </div>
                           </div>
-                          <div className="h-2 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-primary to-purple-500 transition-all duration-500"
-                              style={{ width: `${profile.overallProgress}%` }}
-                            />
-                          </div>
+                          {profile.userId !== user?.uid && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="ml-2"
+                              onClick={() => handleStartConversation(profile.userId)}
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -374,19 +416,31 @@ export default function FriendsPage() {
                   <CardContent>
                     <div className="space-y-3">
                       {allProfiles.map((profile) => (
-                        <div key={profile.userId}>
-                          <div className="flex items-center justify-between mb-1">
-                            <span className="text-sm font-medium truncate">
-                              {profile.displayName}
-                            </span>
-                            <span className="text-sm font-bold">{profile.monthsCompleted}/12</span>
+                        <div key={profile.userId} className="flex items-center justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <span className="text-sm font-medium truncate">
+                                {profile.displayName}
+                              </span>
+                              <span className="text-sm font-bold">{profile.monthsCompleted}/12</span>
+                            </div>
+                            <div className="h-2 bg-muted rounded-full overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-500"
+                                style={{ width: `${(profile.monthsCompleted / 12) * 100}%` }}
+                              />
+                            </div>
                           </div>
-                          <div className="h-2 bg-muted rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-gradient-to-r from-green-500 to-emerald-500 transition-all duration-500"
-                              style={{ width: `${(profile.monthsCompleted / 12) * 100}%` }}
-                            />
-                          </div>
+                          {profile.userId !== user?.uid && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="ml-2"
+                              onClick={() => handleStartConversation(profile.userId)}
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </Button>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -407,7 +461,18 @@ export default function FriendsPage() {
                           <span className="text-sm font-medium truncate">
                             {profile.displayName}
                           </span>
-                          <span className="text-sm font-bold">{profile.totalHours.toFixed(1)}h</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold">{profile.totalHours.toFixed(1)}h</span>
+                            {profile.userId !== user?.uid && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleStartConversation(profile.userId)}
+                              >
+                                <MessageCircle className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -428,7 +493,18 @@ export default function FriendsPage() {
                           <span className="text-sm font-medium truncate">
                             {profile.displayName}
                           </span>
-                          <span className="text-sm font-bold">{profile.badges.length}</span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold">{profile.badges.length}</span>
+                            {profile.userId !== user?.uid && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleStartConversation(profile.userId)}
+                              >
+                                <MessageCircle className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -453,10 +529,21 @@ export default function FriendsPage() {
                           <span className="text-sm font-medium truncate">
                             {profile.displayName}
                           </span>
-                          <span className="text-sm font-bold flex items-center gap-1">
-                            <Flame className="h-4 w-4 text-orange-500" />
-                            {profile.currentStreak} days
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold flex items-center gap-1">
+                              <Flame className="h-4 w-4 text-orange-500" />
+                              {profile.currentStreak} days
+                            </span>
+                            {profile.userId !== user?.uid && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleStartConversation(profile.userId)}
+                              >
+                                <MessageCircle className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -477,10 +564,21 @@ export default function FriendsPage() {
                           <span className="text-sm font-medium truncate">
                             {profile.displayName}
                           </span>
-                          <span className="text-sm font-bold flex items-center gap-1">
-                            <Trophy className="h-4 w-4 text-yellow-500" />
-                            {profile.longestStreak} days
-                          </span>
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-bold flex items-center gap-1">
+                              <Trophy className="h-4 w-4 text-yellow-500" />
+                              {profile.longestStreak} days
+                            </span>
+                            {profile.userId !== user?.uid && (
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleStartConversation(profile.userId)}
+                              >
+                                <MessageCircle className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
