@@ -9,6 +9,8 @@ import { useApp } from "@/lib/context";
 import Image from "next/image";
 import { memo, useMemo } from "react";
 import { Sparkles, Clock, TrendingUp, ArrowRight } from "lucide-react";
+import Magnet from "@/components/Magnet";
+import GlareHover from "@/components/GlareHover";
 
 interface MonthCardProps {
   month: Month;
@@ -50,11 +52,23 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
 
   return (
     <a href={`/month/${month.id}`} className="block cursor-pointer group">
-      <Card
-        className={`hover:border-primary cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden ${
-          cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium-lg gradient-border-animated" : ""
-        } ${cardData.isNotStarted ? "opacity-85" : ""}`}
-      >
+      <Magnet padding={40} magnetStrength={2.5} maxOffset={10} scale={1.02} tilt={3}>
+        <GlareHover
+          variant="streak"
+          glareColor="#8b5cf6"
+          glareOpacity={0.3}
+          glareAngle={-45}
+          glareSize={25}
+          softness={0.5}
+          mode="hover"
+          borderRadius="12px"
+          className="w-full"
+        >
+          <Card
+            className={`hover:border-primary cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden ${
+              cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium-lg gradient-border-animated" : ""
+            } ${cardData.isNotStarted ? "opacity-85" : ""}`}
+          >
         {cardData.isCurrentMonth && (
           <div className="absolute -top-2 -right-2 bg-gradient-to-r from-accent to-purple-500 text-white text-xs px-3 py-1.5 rounded-full font-medium z-10 shadow-glow animate-pulse-glow flex items-center gap-1">
             <Sparkles className="h-3 w-3" />
@@ -123,6 +137,8 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
           </div>
         </CardContent>
       </Card>
+      </GlareHover>
+    </Magnet>
     </a>
   );
 });

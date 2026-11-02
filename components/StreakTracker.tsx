@@ -4,6 +4,8 @@ import { useApp } from "@/lib/context";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Flame, TrendingUp } from "lucide-react";
 import { memo, useMemo } from "react";
+import Magnet from "@/components/Magnet";
+import GlareHover from "@/components/GlareHover";
 
 export const StreakTracker = memo(function StreakTracker() {
   const { data } = useApp();
@@ -17,8 +19,20 @@ export const StreakTracker = memo(function StreakTracker() {
   const offset = circumference - (streakPercentage / 100) * circumference;
 
   return (
-    <Card className="overflow-hidden hover-lift glass-card card-premium">
-      <CardHeader className="pb-3">
+    <Magnet padding={50} magnetStrength={3} maxOffset={15} scale={1.02} tilt={5}>
+      <GlareHover
+        variant="streak"
+        glareColor="#f97316"
+        glareOpacity={0.4}
+        glareAngle={-45}
+        glareSize={30}
+        softness={0.5}
+        mode="hover"
+        borderRadius="12px"
+        className="w-full"
+      >
+        <Card className="overflow-hidden hover-lift glass-card card-premium">
+          <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <Flame className={`h-5 w-5 ${data.currentStreak > 0 ? "text-orange-500 animate-pulse-glow" : "text-muted-foreground"}`} />
           Current Streak
@@ -80,7 +94,9 @@ export const StreakTracker = memo(function StreakTracker() {
             )}
           </div>
         </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+      </GlareHover>
+    </Magnet>
   );
 });

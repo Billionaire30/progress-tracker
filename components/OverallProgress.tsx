@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { useMemo, memo, useState, useEffect } from "react";
 import { TrendingUp, Award, CheckCircle2, Sparkles, Zap } from "lucide-react";
+import Magnet from "@/components/Magnet";
+import GlareHover from "@/components/GlareHover";
 
 export const OverallProgress = memo(function OverallProgress() {
   const { data } = useApp();
@@ -59,8 +61,20 @@ export const OverallProgress = memo(function OverallProgress() {
   };
 
   return (
-    <Card className={`glass-card shadow-premium-lg gradient-border gradient-border-animated card-premium ${isLoaded ? 'animate-scale-in' : ''}`}>
-      <CardContent className="pt-6 pb-6">
+    <Magnet padding={50} magnetStrength={3} maxOffset={15} scale={1.02} tilt={5}>
+      <GlareHover
+        variant="streak"
+        glareColor="#8b5cf6"
+        glareOpacity={0.4}
+        glareAngle={-45}
+        glareSize={30}
+        softness={0.5}
+        mode="hover"
+        borderRadius="12px"
+        className="w-full"
+      >
+        <Card className={`glass-card shadow-premium-lg gradient-border gradient-border-animated card-premium ${isLoaded ? 'animate-scale-in' : ''}`}>
+          <CardContent className="pt-6 pb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
             {getProgressIcon()}
@@ -106,7 +120,9 @@ export const OverallProgress = memo(function OverallProgress() {
             <div className="text-xs text-muted-foreground">Skills</div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      </GlareHover>
+    </Magnet>
   );
 });
