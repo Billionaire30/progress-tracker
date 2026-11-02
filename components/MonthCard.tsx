@@ -65,7 +65,7 @@ export const MonthCard = memo(function MonthCard({ month }: MonthCardProps) {
           className="w-full h-full"
         >
           <Card
-            className={`cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden h-full flex flex-col min-h-[420px] border-2 ${
+            className={`cursor-pointer relative glass-card card-premium transition-all duration-300 hover:shadow-premium-xl hover:-translate-y-1 dark:hover:bg-card/95 hover:bg-white overflow-hidden h-full flex flex-col min-h-[500px] border-2 ${
               cardData.isCurrentMonth ? "ring-2 ring-accent shadow-premium-lg gradient-border-animated border-accent" : "border-border/50"
             } ${cardData.isNotStarted ? "opacity-85" : ""}`}
           >
