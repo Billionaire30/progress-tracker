@@ -13,7 +13,7 @@ const slideshowImages = [
 ];
 
 const SLIDESHOW_INTERVAL = 60000; // 1 minute
-const TRANSITION_DURATION = 300; // Faster transition
+const TRANSITION_DURATION = 1500; // Smoother, slower transition
 
 export function SlideshowBackdrop() {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -33,13 +33,13 @@ export function SlideshowBackdrop() {
         src={slideshowImages[currentIndex]}
         alt=""
         fill
-        className="object-cover transition-opacity duration-300 ease-in-out smooth-opacity"
+        className="object-cover transition-opacity duration-1500 ease-in-out smooth-opacity"
         priority
         quality={60}
         sizes="100vw"
       />
-      <div className="absolute inset-0 bg-black/60 dark:bg-black/75" />
-      <div className="absolute inset-0 bg-gradient-to-br from-black/50 via-transparent to-black/50" />
+      <div className="absolute inset-0 bg-black/40 dark:bg-black/50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black/30 via-transparent to-black/30" />
     </div>
   );
 }

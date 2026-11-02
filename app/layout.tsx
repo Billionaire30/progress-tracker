@@ -78,7 +78,7 @@ export default function RootLayout({
               <div className="pointer-events-none fixed inset-0 z-[-1]">
                 <SlideshowBackdrop />
               </div>
-              <div className="fixed inset-0 -z-10 opacity-15 dark:opacity-20">
+              <div className="fixed inset-0 -z-10 opacity-30 dark:opacity-40">
                 <SoftAurora
                   color1="#8b5cf6"
                   color2="#ec4899"

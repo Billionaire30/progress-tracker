@@ -15,6 +15,7 @@ import { LogHoursModal } from "@/components/LogHoursModal";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { ErrorBoundary as HeaderErrorBoundary } from "@/components/ErrorBoundary";
 import { PageTransition } from "@/components/PageTransition";
+import { Certificates } from "@/components/Certificates";
 import { useKeyboardShortcuts } from "@/lib/hooks/use-keyboard-shortcuts";
 import { useReminder } from "@/lib/hooks/use-reminder";
 
@@ -70,6 +71,10 @@ export default function Home() {
             </div>
 
             <PortfolioPanel />
+
+            <div className="mb-8">
+              <Certificates />
+            </div>
           </PageTransition>
         </main>
 

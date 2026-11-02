@@ -63,6 +63,19 @@ export interface PortfolioItem {
   notes?: string;   // User notes
 }
 
+export interface Certificate {
+  id: string;
+  title: string;
+  issuer: string;
+  issueDate: string;
+  expiryDate?: string;
+  credentialId?: string;
+  credentialUrl?: string;
+  image?: string;
+  skills: string[];
+  notes?: string;
+}
+
 export interface Preferences {
   theme?: "light" | "dark" | "system";
   showChartAsTable?: boolean;
@@ -190,6 +203,7 @@ export interface AppData {
   weeklyLog: WeeklyLogEntry[];
   competencyChecklist: CompetencyItem[];
   portfolio: PortfolioItem[];
+  certificates?: Certificate[];
   startDate: string; // "YYYY-MM-DD" — when the user began Month 1
   preferences: Preferences;
   lastUpdated: string; // ISO timestamp
