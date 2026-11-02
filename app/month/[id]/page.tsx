@@ -12,6 +12,7 @@ import { AddTaskInput } from "@/components/AddTaskInput";
 import { NotesEditor } from "@/components/NotesEditor";
 import { AuthRequired } from "@/components/AuthRequired";
 import { LoadingState } from "@/components/LoadingSpinner";
+import { Header } from "@/components/Header";
 import { ArrowLeft } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useMemo, use } from "react";
@@ -156,9 +157,11 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
 
   return (
     <AuthRequired>
-      <div className="flex flex-col">
-      <header className="border-b bg-card sticky top-0 z-40">
-        <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-4">
+      <div className="relative overflow-hidden">
+        <Header />
+
+      <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-6 flex-1" role="main">
+        <div className="flex items-center gap-2 sm:gap-4 mb-4">
           <a href="/">
             <Button variant="ghost" size="sm" aria-label="Back to Dashboard" className="text-xs sm:text-sm">
               <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
@@ -167,9 +170,6 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
             </Button>
           </a>
         </div>
-      </header>
-
-      <main id="main-content" className="container mx-auto px-3 sm:px-4 py-4 sm:py-8 space-y-4 sm:space-y-6 flex-1" role="main">
         {month.image && (
           <div className="relative h-40 sm:h-48 md:h-64 rounded-lg overflow-hidden">
             <Image
@@ -288,14 +288,6 @@ export default function MonthPage({ params }: { params: Promise<{ id: string }> 
           title="Month Notes"
         />
       </main>
-
-      <footer className="border-t bg-card py-3 sm:py-4">
-        <div className="container mx-auto px-3 sm:px-4">
-          <p className="text-xs sm:text-sm text-muted-foreground">
-            Last updated: {formatLastUpdated()}
-          </p>
-        </div>
-      </footer>
     </div>
     </AuthRequired>
   );
