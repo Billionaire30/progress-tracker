@@ -12,7 +12,7 @@ export const storage = {
 
     const stored = localStorage.getItem(DATA_KEY);
     if (!stored) {
-      this.setData(initialData);
+      // Return initial data without saving - allows reset to persist across refreshes
       return initialData;
     }
 
@@ -28,7 +28,7 @@ export const storage = {
       return migrated;
     } catch (e) {
       console.error("Failed to parse stored data:", e);
-      this.setData(initialData);
+      // Return initial data without saving on error
       return initialData;
     }
   },

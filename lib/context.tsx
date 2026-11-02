@@ -29,6 +29,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const dataRef = useRef<AppData>(initialData);
+  const isResettingRef = useRef(false);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -85,6 +86,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setData((prevData) => {
       const previousData = dataRef.current;
       const dataToUpdate = typeof newData === 'function' ? newData(prevData) : newData;
+
+      // Skip saving if we're in the middle of a reset operation
+      if (isResettingRef.current) {
+        dataRef.current = dataToUpdate;
+        return dataToUpdate;
+      }
 
       // Skip expensive calculations if data hasn't meaningfully changed
       if (JSON.stringify(dataToUpdate) === JSON.stringify(previousData)) {
@@ -180,8 +187,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const resetData = useCallback(() => {
+    isResettingRef.current = true;
     storage.reset();
+    // Clear Firebase data if configured and authenticated
+    if (isConfigured && auth.currentUser) {
+      firebaseStorage.setData(initialData);
+    }
+    // Set state directly without triggering save (to keep data cleared)
+    dataRef.current = initialData;
     setData(initialData);
+    // Reset the flag after a brief delay to ensure state update completes
+    setTimeout(() => {
+      isResettingRef.current = false;
+    }, 100);
   }, []);
 
   const exportData = useCallback(() => {
