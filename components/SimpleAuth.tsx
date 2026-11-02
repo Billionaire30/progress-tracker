@@ -11,6 +11,9 @@ export function SimpleAuth() {
   const { user, loading, signInWithGoogle, signOutUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const handleSignIn = async () => {
     try {
@@ -42,6 +45,54 @@ export function SimpleAuth() {
       setIsAnimating(false);
     }
   };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('input, textarea, button, select')) {
+      return
+    }
+    setIsDragging(true)
+    setDragStart({
+      x: e.clientX - position.x,
+      y: e.clientY - position.y
+    })
+  }
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return
+    e.preventDefault()
+    setPosition({
+      x: e.clientX - dragStart.x,
+      y: e.clientY - dragStart.y
+    })
+  }
+
+  const handleMouseUp = () => {
+    setIsDragging(false)
+  }
+
+  useEffect(() => {
+    const handleGlobalMouseMove = (e: MouseEvent) => {
+      if (!isDragging) return
+      setPosition({
+        x: e.clientX - dragStart.x,
+        y: e.clientY - dragStart.y
+      })
+    }
+
+    const handleGlobalMouseUp = () => {
+      setIsDragging(false)
+    }
+
+    if (isDragging) {
+      window.addEventListener('mousemove', handleGlobalMouseMove)
+      window.addEventListener('mouseup', handleGlobalMouseUp)
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', handleGlobalMouseMove)
+      window.removeEventListener('mouseup', handleGlobalMouseUp)
+    }
+  }, [isDragging, dragStart])
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -84,8 +135,18 @@ export function SimpleAuth() {
         className={`fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md transition-opacity duration-300 ${isAnimating ? 'opacity-100' : 'opacity-0'}`}
         onClick={handleClickOutside}
       >
-        <div className={`w-full max-w-md transition-all duration-300 ${isAnimating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}>
-          <Card className="relative shadow-2xl border-2">
+        <div 
+          className={`w-full max-w-md transition-all duration-300 ${isAnimating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4'}`}
+          style={{
+            left: position.x,
+            top: position.y,
+            position: 'relative'
+          }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+        >
+          <Card className={`relative shadow-2xl border-2 ${isDragging ? 'cursor-move select-none' : ''}`}>
             <Button
               variant="ghost"
               size="icon"
