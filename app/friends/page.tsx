@@ -255,7 +255,7 @@ export default function FriendsPage() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Friends & Competition</h1>
           <p className="text-muted-foreground">
-            Compare your progress with friends and stay motivated together
+            Compare your progress with friends, message them, and stay motivated together
           </p>
         </div>
 
