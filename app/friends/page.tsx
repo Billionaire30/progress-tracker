@@ -19,10 +19,22 @@ import {
   Flame,
   Medal,
   Crown,
+  MessageCircle,
+  Sparkles,
 } from "lucide-react";
 import { getFriends, getFriendsProfiles } from "@/lib/friends";
-import { Friend, PublicProfile } from "@/lib/data";
+import { Friend, PublicProfile, Conversation, Message, PREMIUM_TIERS } from "@/lib/data";
 import { getCurrentWeekNumber } from "@/lib/week";
+import {
+  getOrCreateConversation,
+  sendMessage,
+  getMessages,
+  subscribeToMessages,
+  subscribeToConversations,
+} from "@/lib/messaging";
+import { MessagingModal } from "@/components/messaging/MessagingModal";
+import { ConversationList } from "@/components/messaging/ConversationList";
+import { PremiumTierSelector } from "@/components/messaging/PremiumTierSelector";
 
 export default function FriendsPage() {
   const { user } = useAuth();
@@ -32,9 +44,49 @@ export default function FriendsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("leaderboard");
 
+  // Messaging state
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [isMessagingModalOpen, setIsMessagingModalOpen] = useState(false);
+  const [showPremiumUpgrade, setShowPremiumUpgrade] = useState(false);
+  const [premiumTier, setPremiumTier] = useState<"free" | "basic" | "premium" | "elite">("free");
+
   useEffect(() => {
     loadFriendsData();
   }, [user]);
+
+  // Load conversations
+  useEffect(() => {
+    if (!user) return;
+
+    const unsubscribe = subscribeToConversations((convs) => {
+      setConversations(convs);
+    });
+
+    return () => unsubscribe();
+  }, [user]);
+
+  // Load messages when conversation is selected
+  useEffect(() => {
+    if (!selectedConversation) {
+      setMessages([]);
+      return;
+    }
+
+    const loadMessages = async () => {
+      const msgs = await getMessages(selectedConversation.id);
+      setMessages(msgs);
+    };
+
+    loadMessages();
+
+    const unsubscribe = subscribeToMessages(selectedConversation.id, (msgs) => {
+      setMessages(msgs);
+    });
+
+    return () => unsubscribe();
+  }, [selectedConversation]);
 
   const loadFriendsData = async () => {
     if (!user) {
@@ -88,6 +140,59 @@ export default function FriendsPage() {
     if (index === 1) return <Medal className="h-5 w-5 text-gray-400" />;
     if (index === 2) return <Medal className="h-5 w-5 text-amber-600" />;
     return <span className="text-sm font-medium text-muted-foreground">#{index + 1}</span>;
+  };
+
+  // Messaging handlers
+  const handleStartConversation = async (friendUserId: string) => {
+    const result = await getOrCreateConversation(friendUserId);
+    if (result.success && result.conversationId) {
+      const conv = conversations.find((c) => c.id === result.conversationId);
+      if (conv) {
+        setSelectedConversation(conv);
+        setIsMessagingModalOpen(true);
+      }
+    }
+  };
+
+  const handleSendMessage = async (content: string) => {
+    if (!selectedConversation || !user) return;
+
+    const friendId = selectedConversation.participants.find((id) => id !== user.uid);
+    if (!friendId) return;
+
+    const result = await sendMessage(
+      selectedConversation.id,
+      friendId,
+      content
+    );
+
+    if (!result.success) {
+      alert(result.error);
+    }
+  };
+
+  const handleSelectConversation = (conversationId: string) => {
+    const conv = conversations.find((c) => c.id === conversationId);
+    if (conv) {
+      setSelectedConversation(conv);
+      setIsMessagingModalOpen(true);
+    }
+  };
+
+  const handleUpgradeTier = (tier: any) => {
+    // In production, this would integrate with Stripe or another payment processor
+    alert(`Upgrade to ${tier.name} would be processed here. Integration with payment provider needed.`);
+    setShowPremiumUpgrade(false);
+  };
+
+  const getFriendName = (friendId: string) => {
+    const friend = friends.find((f) => f.userId === friendId);
+    return friend?.displayName || "Unknown";
+  };
+
+  const getFriendPhoto = (friendId: string) => {
+    const friend = friends.find((f) => f.userId === friendId);
+    return friend?.photoURL;
   };
 
   if (isLoading) {
@@ -147,7 +252,7 @@ export default function FriendsPage() {
           </Card>
         ) : (
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="leaderboard" className="gap-2">
                 <Trophy className="h-4 w-4" />
                 Leaderboard
@@ -159,6 +264,10 @@ export default function FriendsPage() {
               <TabsTrigger value="streaks" className="gap-2">
                 <Flame className="h-4 w-4" />
                 Streaks
+              </TabsTrigger>
+              <TabsTrigger value="messages" className="gap-2">
+                <MessageCircle className="h-4 w-4" />
+                Messages
               </TabsTrigger>
             </TabsList>
 
@@ -213,6 +322,17 @@ export default function FriendsPage() {
                             {profile.overallProgress}%
                           </div>
                           <div className="text-xs text-muted-foreground">Overall</div>
+                          {profile.userId !== user?.uid && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="mt-2"
+                              onClick={() => handleStartConversation(profile.userId)}
+                            >
+                              <MessageCircle className="h-4 w-4 mr-1" />
+                              Message
+                            </Button>
+                          )}
                         </div>
                       </div>
                     ))}
@@ -376,7 +496,91 @@ export default function FriendsPage() {
                 </Card>
               </div>
             </TabsContent>
+
+            <TabsContent value="messages" className="space-y-4 mt-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <Card className="lg:col-span-1 h-[600px]">
+                  <ConversationList
+                    conversations={conversations}
+                    selectedConversationId={selectedConversation?.id || null}
+                    onSelectConversation={handleSelectConversation}
+                    friendNames={friends.reduce((acc, f) => ({ ...acc, [f.userId]: f.displayName }), {})}
+                    friendPhotos={friends.reduce((acc, f) => ({ ...acc, [f.userId]: f.photoURL }), {})}
+                    premiumTier={premiumTier}
+                  />
+                </Card>
+
+                <Card className="lg:col-span-2 h-[600px] flex items-center justify-center">
+                  <div className="text-center text-muted-foreground">
+                    <MessageCircle className="h-16 w-16 mx-auto mb-4 opacity-50" />
+                    <p className="text-lg font-medium mb-2">Select a conversation to start messaging</p>
+                    <p className="text-sm mb-4">Or start a new conversation with a friend from the leaderboard</p>
+                  </div>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-purple-500" />
+                    Premium Messaging Features
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Current Tier: {premiumTier.charAt(0).toUpperCase() + premiumTier.slice(1)}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {premiumTier === "free" && "Upgrade to unlock unlimited messaging, reactions, and more!"}
+                        {premiumTier === "basic" && "Upgrade to Premium for voice messages, ephemeral messages, and more!"}
+                        {premiumTier === "premium" && "Upgrade to Elite for encryption and custom settings!"}
+                        {premiumTier === "elite" && "You have access to all premium features!"}
+                      </p>
+                    </div>
+                    <Button onClick={() => setShowPremiumUpgrade(true)}>
+                      Upgrade
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
           </Tabs>
+        )}
+
+        <MessagingModal
+          open={isMessagingModalOpen}
+          onOpenChange={setIsMessagingModalOpen}
+          conversation={selectedConversation}
+          friendName={selectedConversation ? getFriendName(selectedConversation.participants.find((id) => id !== user?.uid) || "") : ""}
+          friendPhoto={selectedConversation ? getFriendPhoto(selectedConversation.participants.find((id) => id !== user?.uid) || "") : undefined}
+          onSendMessage={handleSendMessage}
+          messages={messages}
+          typingUsers={selectedConversation?.typingUsers || []}
+          premiumTier={premiumTier}
+        />
+
+        {showPremiumUpgrade && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5" />
+                    Upgrade Your Plan
+                  </CardTitle>
+                  <Button variant="ghost" size="icon" onClick={() => setShowPremiumUpgrade(false)}>
+                    ✕
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <PremiumTierSelector
+                  currentTier={premiumTier}
+                  onSelectTier={handleUpgradeTier}
+                />
+              </CardContent>
+            </Card>
+          </div>
         )}
       </main>
     </div>

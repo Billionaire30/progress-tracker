@@ -232,6 +232,62 @@ export interface PublicProfile {
   badges: string[];
   monthsCompleted: number;
   lastUpdated: string;
+  premiumTier?: "free" | "basic" | "premium" | "elite";
+  messagingEnabled?: boolean;
+}
+
+export type MessageStatus = "sent" | "delivered" | "read";
+export type MessageType = "text" | "emoji" | "image" | "voice" | "reaction" | "system";
+
+export interface Message {
+  id: string;
+  conversationId: string;
+  fromUserId: string;
+  toUserId: string;
+  content: string;
+  type: MessageType;
+  status: MessageStatus;
+  timestamp: string;
+  edited?: boolean;
+  editedAt?: string;
+  replyTo?: string; // ID of message being replied to
+  reactions?: Reaction[];
+  isEncrypted?: boolean;
+  expiresAt?: string; // For ephemeral messages
+}
+
+export interface Reaction {
+  emoji: string;
+  userId: string;
+  timestamp: string;
+}
+
+export interface Conversation {
+  id: string;
+  participants: string[]; // User IDs
+  lastMessage?: Message;
+  unreadCount: number;
+  createdAt: string;
+  updatedAt: string;
+  isPinned?: boolean;
+  isArchived?: boolean;
+  muteUntil?: string;
+  typingUsers?: string[]; // User IDs currently typing
+}
+
+export interface MessagingSettings {
+  ephemeralMessagesEnabled: boolean;
+  ephemeralMessageDuration: number; // hours
+  readReceiptsEnabled: boolean;
+  typingIndicatorsEnabled: boolean;
+  messageReactionEnabled: boolean;
+  messageEditingEnabled: boolean;
+  messageDeletionEnabled: boolean;
+  voiceMessagesEnabled: boolean;
+  imageMessagesEnabled: boolean;
+  maxMessageLength: number;
+  dailyMessageLimit?: number;
+  messageHistoryDays?: number;
 }
 
 export interface AppData {
@@ -272,7 +328,157 @@ export interface AppData {
   friends?: Friend[];
   friendRequests?: FriendRequest[];
   profileVisibility?: "public" | "friends-only" | "private";
+  // Messaging system
+  conversations?: Conversation[];
+  messagingSettings?: MessagingSettings;
+  premiumTier?: "free" | "basic" | "premium" | "elite";
+  premiumActivatedAt?: string;
+  premiumExpiresAt?: string;
 }
+
+export interface PremiumTier {
+  id: "free" | "basic" | "premium" | "elite";
+  name: string;
+  price: number;
+  interval: "monthly" | "yearly";
+  features: string[];
+  messagingFeatures: MessagingSettings;
+  maxFriends: number;
+  xpMultiplier: number;
+  badge?: string;
+  color: string;
+}
+
+export const PREMIUM_TIERS: PremiumTier[] = [
+  {
+    id: "free",
+    name: "Free",
+    price: 0,
+    interval: "monthly",
+    features: [
+      "Basic progress tracking",
+      "Up to 5 friends",
+      "Text messages (100/day)",
+      "Standard support"
+    ],
+    messagingFeatures: {
+      ephemeralMessagesEnabled: false,
+      ephemeralMessageDuration: 0,
+      readReceiptsEnabled: false,
+      typingIndicatorsEnabled: false,
+      messageReactionEnabled: false,
+      messageEditingEnabled: false,
+      messageDeletionEnabled: false,
+      voiceMessagesEnabled: false,
+      imageMessagesEnabled: false,
+      maxMessageLength: 280,
+      dailyMessageLimit: 100,
+      messageHistoryDays: 7
+    },
+    maxFriends: 5,
+    xpMultiplier: 1.0,
+    color: "#6b7280"
+  },
+  {
+    id: "basic",
+    name: "Basic",
+    price: 4.99,
+    interval: "monthly",
+    features: [
+      "Everything in Free",
+      "Up to 20 friends",
+      "Text messages (500/day)",
+      "Read receipts",
+      "Typing indicators",
+      "Message reactions",
+      "1.2x XP multiplier"
+    ],
+    messagingFeatures: {
+      ephemeralMessagesEnabled: false,
+      ephemeralMessageDuration: 0,
+      readReceiptsEnabled: true,
+      typingIndicatorsEnabled: true,
+      messageReactionEnabled: true,
+      messageEditingEnabled: false,
+      messageDeletionEnabled: true,
+      voiceMessagesEnabled: false,
+      imageMessagesEnabled: false,
+      maxMessageLength: 500,
+      dailyMessageLimit: 500,
+      messageHistoryDays: 30
+    },
+    maxFriends: 20,
+    xpMultiplier: 1.2,
+    color: "#3b82f6"
+  },
+  {
+    id: "premium",
+    name: "Premium",
+    price: 9.99,
+    interval: "monthly",
+    features: [
+      "Everything in Basic",
+      "Unlimited friends",
+      "Unlimited messages",
+      "Message editing (10 min)",
+      "Voice messages",
+      "Image sharing",
+      "Ephemeral messages (24h)",
+      "1.5x XP multiplier",
+      "Priority support"
+    ],
+    messagingFeatures: {
+      ephemeralMessagesEnabled: true,
+      ephemeralMessageDuration: 24,
+      readReceiptsEnabled: true,
+      typingIndicatorsEnabled: true,
+      messageReactionEnabled: true,
+      messageEditingEnabled: true,
+      messageDeletionEnabled: true,
+      voiceMessagesEnabled: true,
+      imageMessagesEnabled: true,
+      maxMessageLength: 1000,
+      dailyMessageLimit: Infinity,
+      messageHistoryDays: 90
+    },
+    maxFriends: Infinity,
+    xpMultiplier: 1.5,
+    color: "#8b5cf6"
+  },
+  {
+    id: "elite",
+    name: "Elite",
+    price: 19.99,
+    interval: "monthly",
+    features: [
+      "Everything in Premium",
+      "Custom ephemeral duration",
+      "Message encryption",
+      "Advanced analytics",
+      "2x XP multiplier",
+      "Exclusive badge",
+      "Dedicated support"
+    ],
+    messagingFeatures: {
+      ephemeralMessagesEnabled: true,
+      ephemeralMessageDuration: 168, // 7 days
+      readReceiptsEnabled: true,
+      typingIndicatorsEnabled: true,
+      messageReactionEnabled: true,
+      messageEditingEnabled: true,
+      messageDeletionEnabled: true,
+      voiceMessagesEnabled: true,
+      imageMessagesEnabled: true,
+      maxMessageLength: 2000,
+      dailyMessageLimit: Infinity,
+      messageHistoryDays: 365
+    },
+    maxFriends: Infinity,
+    xpMultiplier: 2.0,
+    badge: "👑",
+    color: "#f59e0b"
+  }
+];
 
 const createInitialWorkspace = (months: Month[], weeklyLog: WeeklyLogEntry[], competencyChecklist: CompetencyItem[], portfolio: PortfolioItem[]): Workspace => ({
   id: "default",
