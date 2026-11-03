@@ -22,6 +22,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { getFriends, getFriendsProfiles, getAllPublicProfiles } from "@/lib/friends";
+import { updatePublicProfileData } from "@/lib/user-management";
 import { Friend, PublicProfile, Conversation, Message } from "@/lib/data";
 import { getCurrentWeekNumber } from "@/lib/week";
 import {
@@ -123,6 +124,15 @@ export default function FriendsPage() {
     monthsCompleted: data.months.filter((m) => m.status === "complete").length,
     lastUpdated: data.lastUpdated,
   };
+
+  // Update public profile in Firebase when data changes
+  useEffect(() => {
+    if (user && data) {
+      updatePublicProfileData(data).catch((err) =>
+        console.error("Failed to update public profile:", err)
+      );
+    }
+  }, [data, user]);
 
   // Combine all profiles for leaderboard
   const allProfiles = [...allPublicProfiles, currentProfile].sort((a, b) => {

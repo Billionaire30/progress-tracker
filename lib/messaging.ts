@@ -34,16 +34,20 @@ export async function getOrCreateConversation(
     const currentUserId = auth.currentUser.uid;
     const participants = [currentUserId, friendUserId].sort();
 
-    // Check if conversation already exists
+    // Check if conversation already exists using array-contains
     const conversationsRef = collection(db, CONVERSATIONS_COLLECTION);
     const q = query(
       conversationsRef,
-      where("participants", "==", participants)
+      where("participants", "array-contains", currentUserId)
     );
     const querySnapshot = await getDocs(q);
 
-    if (!querySnapshot.empty) {
-      return { success: true, conversationId: querySnapshot.docs[0].id };
+    // Check if any conversation contains both users
+    for (const doc of querySnapshot.docs) {
+      const conv = doc.data() as Conversation;
+      if (conv.participants.includes(friendUserId)) {
+        return { success: true, conversationId: doc.id };
+      }
     }
 
     // Create new conversation
@@ -81,26 +85,6 @@ export async function sendMessage(
 
     const currentUserId = auth.currentUser.uid;
 
-    // Check daily message limit for free tier
-    const today = new Date().toISOString().split('T')[0];
-    const messagesRef = collection(db, MESSAGES_COLLECTION);
-    const dailyQuery = query(
-      messagesRef,
-      where("fromUserId", "==", currentUserId),
-      where("timestamp", ">=", today)
-    );
-    const dailySnapshot = await getDocs(dailyQuery);
-
-    // Get user's premium tier
-    const userDoc = await getDoc(doc(db, "users", currentUserId));
-    const userData = userDoc.data();
-    const premiumTier = userData?.premiumTier || "free";
-
-    // Apply limits based on tier (simplified - would be more robust in production)
-    if (premiumTier === "free" && dailySnapshot.size >= 100) {
-      return { success: false, error: "Daily message limit reached. Upgrade to Basic for more!" };
-    }
-
     const message: Omit<Message, "id"> = {
       conversationId,
       fromUserId: currentUserId,
@@ -111,9 +95,10 @@ export async function sendMessage(
       timestamp: new Date().toISOString(),
       replyTo,
       expiresAt,
-      isEncrypted: premiumTier === "elite",
+      isEncrypted: false,
     };
 
+    const messagesRef = collection(db, MESSAGES_COLLECTION);
     const docRef = await addDoc(messagesRef, message);
 
     // Update conversation
@@ -254,16 +239,7 @@ export async function editMessage(
       return { success: false, error: "You can only edit your own messages" };
     }
 
-    // Check if editing is allowed (premium feature)
-    const userDoc = await getDoc(doc(db, "users", currentUserId));
-    const userData = userDoc.data();
-    const premiumTier = userData?.premiumTier || "free";
-
-    if (premiumTier === "free" || premiumTier === "basic") {
-      return { success: false, error: "Message editing is a Premium feature" };
-    }
-
-    // Check time limit (10 minutes for premium)
+    // Check time limit (10 minutes)
     const messageTime = new Date(messageData.timestamp).getTime();
     const currentTime = new Date().getTime();
     const timeDiff = (currentTime - messageTime) / 1000 / 60; // minutes
@@ -310,15 +286,6 @@ export async function deleteMessage(
       return { success: false, error: "You can only delete your own messages" };
     }
 
-    // Check if deletion is allowed
-    const userDoc = await getDoc(doc(db, "users", currentUserId));
-    const userData = userDoc.data();
-    const premiumTier = userData?.premiumTier || "free";
-
-    if (premiumTier === "free") {
-      return { success: false, error: "Message deletion is a Basic feature" };
-    }
-
     await deleteDoc(messageRef);
 
     return { success: true };
@@ -339,15 +306,6 @@ export async function addReaction(
     }
 
     const currentUserId = auth.currentUser.uid;
-
-    // Check if reactions are allowed
-    const userDoc = await getDoc(doc(db, "users", currentUserId));
-    const userData = userDoc.data();
-    const premiumTier = userData?.premiumTier || "free";
-
-    if (premiumTier === "free") {
-      return { success: false, error: "Message reactions are a Basic feature" };
-    }
 
     const messageRef = doc(db, MESSAGES_COLLECTION, messageId);
     const messageDoc = await getDoc(messageRef);
@@ -398,15 +356,6 @@ export async function setTypingIndicator(
     }
 
     const currentUserId = auth.currentUser.uid;
-
-    // Check if typing indicators are allowed
-    const userDoc = await getDoc(doc(db, "users", currentUserId));
-    const userData = userDoc.data();
-    const premiumTier = userData?.premiumTier || "free";
-
-    if (premiumTier === "free") {
-      return;
-    }
 
     const conversationRef = doc(db, CONVERSATIONS_COLLECTION, conversationId);
 
