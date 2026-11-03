@@ -152,7 +152,7 @@ export default function FriendsPage() {
   const handleStartConversation = async (friendUserId: string) => {
     console.log("Starting conversation with user ID:", friendUserId);
     if (!friendUserId) {
-      alert("Invalid user ID - cannot start conversation");
+      alert("Invalid user ID - cannot start conversation. Please ensure you have published Firestore security rules.");
       return;
     }
     const result = await getOrCreateConversation(friendUserId);
@@ -173,7 +173,11 @@ export default function FriendsPage() {
       setSelectedConversation(conv);
       setIsMessagingModalOpen(true);
     } else if (result.error) {
-      alert(result.error);
+      if (result.error.includes("permission") || result.error.includes("Missing or insufficient")) {
+        alert("Firestore permissions error. Please publish the Firestore security rules in Firebase Console.");
+      } else {
+        alert(result.error);
+      }
     }
   };
 

@@ -30,11 +30,15 @@ export function triggerConfetti() {
   }, 250);
 }
 
-export function triggerMiniConfetti() {
+export function triggerMiniConfetti(x?: number, y?: number) {
+  const origin = x !== undefined && y !== undefined
+    ? { x: x / window.innerWidth, y: y / window.innerHeight }
+    : { y: 0.6 };
+
   confetti({
     particleCount: 100,
     spread: 70,
-    origin: { y: 0.6 },
+    origin,
     colors: ['#3b82f6', '#8b5cf6', '#ec4899'],
     zIndex: 9999,
   });
