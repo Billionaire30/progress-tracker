@@ -95,7 +95,10 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                     >
                       <Checkbox
                         checked={competency.done}
-                        onCheckedChange={() => handleToggle(competency.id)}
+                        onCheckedChange={(checked) => {
+                          console.log("Checkbox changed:", checked, "for:", competency.id);
+                          handleToggle(competency.id);
+                        }}
                         className="mt-0.5 flex-shrink-0"
                       />
                       <p
