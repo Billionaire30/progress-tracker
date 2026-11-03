@@ -28,6 +28,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
   );
 
   const handleToggle = useCallback((id: string) => {
+    console.log("Toggling competency:", id);
     playClickSound();
     const competency = data.competencyChecklist.find((c) => c.id === id);
     const wasNotDone = competency && !competency.done;

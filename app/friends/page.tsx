@@ -150,6 +150,11 @@ export default function FriendsPage() {
 
   // Messaging handlers
   const handleStartConversation = async (friendUserId: string) => {
+    console.log("Starting conversation with user ID:", friendUserId);
+    if (!friendUserId) {
+      alert("Invalid user ID - cannot start conversation");
+      return;
+    }
     const result = await getOrCreateConversation(friendUserId);
     if (result.success && result.conversationId) {
       // Create a temporary conversation object if not in state
