@@ -45,8 +45,21 @@ export function MessagingModal({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [editingMessage, setEditingMessage] = useState<{ id: string; content: string } | null>(null);
 
-  const tierConfig = PREMIUM_TIERS.find((t) => t.id === premiumTier) || PREMIUM_TIERS[0];
-  const settings = tierConfig.messagingFeatures;
+  // Use unlimited settings for all users (all features free)
+  const settings = {
+    ephemeralMessagesEnabled: true,
+    ephemeralMessageDuration: 24,
+    readReceiptsEnabled: true,
+    typingIndicatorsEnabled: true,
+    messageReactionEnabled: true,
+    messageEditingEnabled: true,
+    messageDeletionEnabled: true,
+    voiceMessagesEnabled: true,
+    imageMessagesEnabled: true,
+    maxMessageLength: 10000,
+    dailyMessageLimit: Infinity,
+    messageHistoryDays: 365,
+  };
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -123,16 +136,12 @@ export function MessagingModal({
           </div>
 
           <div className="flex items-center gap-2">
-            {premiumTier !== "free" && (
-              <>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Phone className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Video className="h-4 w-4" />
-                </Button>
-              </>
-            )}
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Phone className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Video className="h-4 w-4" />
+            </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

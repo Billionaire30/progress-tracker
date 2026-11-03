@@ -132,12 +132,10 @@ export function MessageInput({
           />
           <div className="flex items-center justify-between mt-2">
             <div className="flex items-center gap-2">
-              {settings?.ephemeralMessagesEnabled && (
-                <span className="text-xs text-orange-500 flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
-                  Ephemeral ({settings.ephemeralMessageDuration}h)
-                </span>
-              )}
+              <span className="text-xs text-orange-500 flex items-center gap-1">
+                <Clock className="h-3 w-3" />
+                Ephemeral (24h)
+              </span>
               <span
                 className={`text-xs ${
                   charCount > maxLength * 0.9
