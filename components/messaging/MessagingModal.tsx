@@ -172,6 +172,9 @@ export function MessagingModal({
                 onEdit={handleEdit}
                 onDelete={handleDelete}
                 onReact={handleReact}
+                onReply={handleReply}
+                onPin={handlePin}
+                onBookmark={handleBookmark}
               />
             ))
           )}
@@ -182,23 +185,11 @@ export function MessagingModal({
             onSend={handleSend}
             settings={settings}
             maxLength={settings.maxMessageLength}
-            placeholder={
-              editingMessage
-                ? "Edit your message..."
-                : premiumTier === "free"
-                ? `Type a message (${settings.dailyMessageLimit}/day limit)`
-                : "Type a message..."
-            }
+            placeholder={editingMessage ? "Edit your message..." : "Type a message..."}
+            replyTo={null}
+            onCancelReply={() => {}}
           />
         </div>
-
-        {premiumTier === "free" && (
-          <div className="px-4 pb-2">
-            <p className="text-xs text-muted-foreground text-center">
-              ⬆️ Upgrade to Basic for unlimited messages, reactions, and more!
-            </p>
-          </div>
-        )}
       </DialogContent>
     </Dialog>
   );
