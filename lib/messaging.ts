@@ -51,7 +51,7 @@ export async function getOrCreateConversation(
     }
 
     // Create new conversation
-    const newConversation: Omit<Conversation, "id"> = {
+    const newConversation = {
       participants,
       unreadCount: 0,
       createdAt: new Date().toISOString(),
@@ -59,6 +59,8 @@ export async function getOrCreateConversation(
       isPinned: false,
       isArchived: false,
       typingUsers: [],
+      lastMessage: null,
+      muteUntil: null,
     };
 
     const docRef = await addDoc(conversationsRef, newConversation);
