@@ -62,10 +62,12 @@ export async function getOrCreateConversation(
     };
 
     const docRef = await addDoc(conversationsRef, newConversation);
+    console.log("Conversation created successfully:", docRef.id);
     return { success: true, conversationId: docRef.id };
   } catch (error) {
     console.error("Error creating conversation:", error);
-    return { success: false, error: "Failed to create conversation" };
+    const errorMessage = error instanceof Error ? error.message : "Failed to create conversation";
+    return { success: false, error: errorMessage };
   }
 }
 
