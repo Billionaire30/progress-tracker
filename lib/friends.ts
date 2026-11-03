@@ -419,3 +419,25 @@ export async function getFriendsProfiles(): Promise<PublicProfile[]> {
     return [];
   }
 }
+
+// Get all public profiles for leaderboard
+export async function getAllPublicProfiles(): Promise<PublicProfile[]> {
+  try {
+    const profilesRef = collection(db, PROFILES_COLLECTION);
+    const querySnapshot = await getDocs(profilesRef);
+
+    const profiles: PublicProfile[] = [];
+    querySnapshot.forEach((doc) => {
+      const profile = doc.data() as PublicProfile;
+      // Don't include current user's profile (it's added separately)
+      if (profile.userId !== auth.currentUser?.uid) {
+        profiles.push(profile);
+      }
+    });
+
+    return profiles;
+  } catch (error) {
+    console.error("Error getting all public profiles:", error);
+    return [];
+  }
+}

@@ -21,7 +21,7 @@ import {
   Crown,
   MessageCircle,
 } from "lucide-react";
-import { getFriends, getFriendsProfiles } from "@/lib/friends";
+import { getFriends, getFriendsProfiles, getAllPublicProfiles } from "@/lib/friends";
 import { Friend, PublicProfile, Conversation, Message } from "@/lib/data";
 import { getCurrentWeekNumber } from "@/lib/week";
 import {
@@ -38,7 +38,7 @@ export default function FriendsPage() {
   const { user } = useAuth();
   const { data } = useApp();
   const [friends, setFriends] = useState<Friend[]>([]);
-  const [friendsProfiles, setFriendsProfiles] = useState<PublicProfile[]>([]);
+  const [allPublicProfiles, setAllPublicProfiles] = useState<PublicProfile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("leaderboard");
 
@@ -92,9 +92,9 @@ export default function FriendsPage() {
 
     setIsLoading(true);
     try {
-      const [friendsList, profiles] = await Promise.all([getFriends(), getFriendsProfiles()]);
+      const [friendsList, profiles] = await Promise.all([getFriends(), getAllPublicProfiles()]);
       setFriends(friendsList);
-      setFriendsProfiles(profiles);
+      setAllPublicProfiles(profiles);
     } catch (error) {
       console.error("Error loading friends data:", error);
     } finally {
@@ -125,7 +125,7 @@ export default function FriendsPage() {
   };
 
   // Combine all profiles for leaderboard
-  const allProfiles = [...friendsProfiles, currentProfile].sort((a, b) => {
+  const allProfiles = [...allPublicProfiles, currentProfile].sort((a, b) => {
     // Sort by total XP first, then by level
     if (b.totalXP !== a.totalXP) return b.totalXP - a.totalXP;
     return b.level - a.level;
@@ -193,7 +193,7 @@ export default function FriendsPage() {
     if (friend) return friend.displayName;
 
     // Check profiles (includes leaderboard users)
-    const profile = friendsProfiles.find((p) => p.userId === friendId);
+    const profile = allPublicProfiles.find((p) => p.userId === friendId);
     if (profile) return profile.displayName;
 
     // Check if it's the current user
@@ -208,7 +208,7 @@ export default function FriendsPage() {
     if (friend) return friend.photoURL;
 
     // Check profiles (includes leaderboard users)
-    const profile = friendsProfiles.find((p) => p.userId === friendId);
+    const profile = allPublicProfiles.find((p) => p.userId === friendId);
     if (profile) return profile.photoURL;
 
     // Check if it's the current user
@@ -594,8 +594,8 @@ export default function FriendsPage() {
                     conversations={conversations}
                     selectedConversationId={selectedConversation?.id || null}
                     onSelectConversation={handleSelectConversation}
-                    friendNames={friends.reduce((acc, f) => ({ ...acc, [f.userId]: f.displayName }), {})}
-                    friendPhotos={friends.reduce((acc, f) => ({ ...acc, [f.userId]: f.photoURL }), {})}
+                    friendNames={allPublicProfiles.reduce((acc, p) => ({ ...acc, [p.userId]: p.displayName }), {})}
+                    friendPhotos={allPublicProfiles.reduce((acc, p) => ({ ...acc, [p.userId]: p.photoURL }), {})}
                     premiumTier="free"
                   />
                 </Card>
