@@ -20,6 +20,7 @@ interface AppContextType {
   preferences: Preferences;
   updatePreferences: (preferences: Partial<Preferences>) => void;
   isLoading: boolean;
+  saveImmediately: (data: AppData) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -177,6 +178,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const optimizedData = shouldOptimize ? optimizeData(updatedData) : updatedData;
 
       // Use Firebase storage if authenticated and configured, otherwise use local storage
+      // Use debounced storage for frequent updates (habit completions, etc.)
       if (isConfigured && auth.currentUser) {
         firebaseStorage.setData(optimizedData);
 
@@ -205,11 +207,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           updatePublicProfileData(optimizedData).catch((err) => console.error("Failed to update public profile:", err));
         }
       } else {
-        storage.setData(optimizedData);
+        // Use debounced storage for better performance on frequent updates
+        storage.setDataDebounced(optimizedData);
       }
 
       return optimizedData;
     });
+  }, []);
+
+  // Immediate save for critical operations (reset, export, import)
+  const saveImmediately = useCallback((data: AppData) => {
+    if (isConfigured && auth.currentUser) {
+      firebaseStorage.setData(data);
+    } else {
+      storage.setData(data);
+    }
   }, []);
 
   const resetData = useCallback(() => {
@@ -255,7 +267,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     preferences,
     updatePreferences: updatePreferencesFn,
     isLoading,
-  }), [data, preferences, isLoading, updateData, resetData, exportData, importData, updatePreferencesFn]);
+    saveImmediately,
+  }), [data, preferences, isLoading, updateData, resetData, exportData, importData, updatePreferencesFn, saveImmediately]);
 
   if (!mounted) {
     return <div className="min-h-screen flex items-center justify-center bg-background">

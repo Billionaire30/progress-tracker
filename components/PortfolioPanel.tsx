@@ -9,6 +9,8 @@ import { StatusPill } from "@/components/StatusPill";
 import { SearchBar } from "@/components/SearchBar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Edit2 } from "lucide-react";
 import Image from "next/image";
 import { useState, useMemo, useCallback, memo } from "react";
@@ -20,6 +22,9 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
   const [searchQuery, setSearchQuery] = useState("");
   const [editingNotesId, setEditingNotesId] = useState<number | null>(null);
   const [notesValue, setNotesValue] = useState("");
+  const [selectedItem, setSelectedItem] = useState<number | null>(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newItem, setNewItem] = useState({ name: "", description: "" });
 
   const filteredPortfolio = useMemo(() =>
     data.portfolio.filter((item) =>
@@ -72,10 +77,41 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
     }
   }, []);
 
+  const handleAddItem = useCallback(() => {
+    if (!newItem.name.trim() || !newItem.description.trim()) return;
+
+    const newItemData = {
+      id: Date.now(),
+      name: newItem.name,
+      description: newItem.description,
+      status: "not-started" as const,
+      image: undefined as string | undefined,
+      notes: "",
+    };
+
+    setData((prevData) => ({
+      ...prevData,
+      portfolio: [...prevData.portfolio, newItemData],
+    }));
+
+    setNewItem({ name: "", description: "", tags: "" });
+    setIsAddDialogOpen(false);
+    toast({
+      title: "Portfolio item added",
+      description: `${newItem.name} has been added to your portfolio`,
+    });
+  }, [newItem, setData, toast]);
+
   return (
     <Card className="glass-card card-premium">
       <CardHeader>
-        <CardTitle className="text-lg sm:text-xl">Portfolio Progress</CardTitle>
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-lg sm:text-xl">Portfolio Progress</CardTitle>
+          <Button size="sm" onClick={() => setIsAddDialogOpen(true)} className="button-premium">
+            <Edit2 className="h-4 w-4 mr-2" />
+            Add Item
+          </Button>
+        </div>
         <div className="mt-2">
           <SearchBar
             onSearch={setSearchQuery}
@@ -86,7 +122,11 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
       <CardContent>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 stagger-children">
           {filteredPortfolio.map((item, index) => (
-            <div key={item.id} className="overflow-hidden border p-0 rounded-2xl glass-card hover:shadow-premium transition-all duration-300 hover:-translate-y-1 group">
+            <div
+              key={item.id}
+              className="overflow-hidden border p-0 rounded-2xl glass-card hover:shadow-premium transition-all duration-300 hover:-translate-y-1 group cursor-pointer"
+              onClick={() => setSelectedItem(item.id)}
+            >
               {item.image && (
                 <div className="h-20 sm:h-24 overflow-hidden relative">
                   <Image
@@ -108,13 +148,17 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
                 <div className="flex items-center justify-between">
                   <StatusPill
                     status={item.status}
-                    onClick={() => handleCycle(item.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCycle(item.id);
+                    }}
                     aria-label={`Cycle status for ${item.name}, currently ${getStatusLabel(item.status)}`}
                   />
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       playClickSound();
                       setEditingNotesId(item.id);
                       setNotesValue(item.notes || "");
@@ -152,6 +196,79 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Detail Drawer */}
+      <Dialog open={selectedItem !== null} onOpenChange={() => setSelectedItem(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedItem && data.portfolio.find(p => p.id === selectedItem)?.name}
+            </DialogTitle>
+          </DialogHeader>
+          {selectedItem && (() => {
+            const item = data.portfolio.find(p => p.id === selectedItem);
+            if (!item) return null;
+            return (
+              <div className="space-y-4">
+                {item.image && (
+                  <div className="relative h-48 rounded-lg overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div>
+                  <h3 className="font-semibold mb-2">Description</h3>
+                  <p className="text-sm text-muted-foreground">{item.description}</p>
+                </div>
+                {item.notes && (
+                  <div>
+                    <h3 className="font-semibold mb-2">Notes</h3>
+                    <p className="text-sm text-muted-foreground whitespace-pre-wrap">{item.notes}</p>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+        </DialogContent>
+      </Dialog>
+
+      {/* Add Item Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Add Portfolio Item</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div>
+              <Label htmlFor="item-name">Name *</Label>
+              <Input
+                id="item-name"
+                value={newItem.name}
+                onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                placeholder="e.g., Bridge Design Project"
+              />
+            </div>
+            <div>
+              <Label htmlFor="item-description">Description *</Label>
+              <textarea
+                id="item-description"
+                value={newItem.description}
+                onChange={(e) => setNewItem({ ...newItem, description: e.target.value })}
+                className="w-full min-h-[100px] p-3 border rounded-md text-sm resize-y"
+                placeholder="Describe your project..."
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button onClick={handleAddItem} className="flex-1 button-premium">Add Item</Button>
+              <Button onClick={() => setIsAddDialogOpen(false)} variant="outline" className="flex-1">Cancel</Button>
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
     </Card>

@@ -82,14 +82,15 @@ export function HabitTracker() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const toggleHabitCompletion = (habitId: string) => {
+  const toggleHabitCompletion = (habitId: string, date?: string) => {
+    const targetDate = date || today;
     const updatedHabits = habits.map((habit) => {
       if (habit.id !== habitId) return habit;
 
-      const isCompletedToday = habit.completedDates.includes(today);
-      const updatedDates = isCompletedToday
-        ? habit.completedDates.filter((d) => d !== today)
-        : [...habit.completedDates, today];
+      const isCompletedOnDate = habit.completedDates.includes(targetDate);
+      const updatedDates = isCompletedOnDate
+        ? habit.completedDates.filter((d) => d !== targetDate)
+        : [...habit.completedDates, targetDate];
 
       // Calculate streak
       let streak = 0;
@@ -173,6 +174,22 @@ export function HabitTracker() {
         return <Calendar className="h-4 w-4" />;
     }
   };
+
+  // Get last 7 days for mini-grid
+  const getLast7Days = () => {
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      days.push({
+        date: date.toISOString().split("T")[0],
+        dayName: date.toLocaleDateString('en-US', { weekday: 'short' }),
+      });
+    }
+    return days;
+  };
+
+  const last7Days = getLast7Days();
 
   const getWeeklyProgress = (habit: Habit) => {
     const weekStart = new Date();
@@ -333,6 +350,30 @@ export function HabitTracker() {
                   <div className="relative h-2 bg-muted rounded-full overflow-hidden">
                     <Progress value={weeklyProgress} className="h-2" />
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-shimmer" />
+                  </div>
+
+                  {/* 7-day mini-grid */}
+                  <div className="space-y-1">
+                    <span className="text-xs text-muted-foreground">Last 7 days</span>
+                    <div className="flex gap-1">
+                      {last7Days.map((day) => {
+                        const isCompleted = habit.completedDates.includes(day.date);
+                        return (
+                          <button
+                            key={day.date}
+                            onClick={() => toggleHabitCompletion(habit.id, day.date)}
+                            className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all hover:scale-110 ${
+                              isCompleted
+                                ? 'bg-green-500 text-white hover:bg-green-600'
+                                : 'bg-muted hover:bg-muted/80'
+                            }`}
+                            title={`${day.dayName}: ${isCompleted ? 'Completed' : 'Not completed'}`}
+                          >
+                            {isCompleted && <Check className="h-3 w-3" />}
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
 
                   <div className="flex items-center justify-between text-xs">

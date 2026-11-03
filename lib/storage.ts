@@ -6,6 +6,19 @@ import { saveWithQuotaCheck } from "./storage-manager";
 const DATA_KEY = "civiltracker:data";
 const PREFERENCES_KEY = "civiltracker:preferences";
 
+// Debounce utility for localStorage writes
+function debounce<T extends (...args: any[]) => any>(func: T, wait: number): (...args: Parameters<T>) => void {
+  let timeout: NodeJS.Timeout | null = null;
+  return function executedFunction(...args: Parameters<T>) {
+    const later = () => {
+      timeout = null;
+      func(...args);
+    };
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
 export const storage = {
   getData(): AppData {
     if (typeof window === "undefined") return initialData;
@@ -52,6 +65,25 @@ export const storage = {
       return;
     }
   },
+
+  // Debounced version of setData for frequent updates (300ms delay)
+  setDataDebounced: debounce(function(data: AppData) {
+    if (typeof window === "undefined") return;
+    const dataWithTimestamp = {
+      ...data,
+      lastUpdated: new Date().toISOString(),
+    };
+
+    const quotaCheck = saveWithQuotaCheck(dataWithTimestamp);
+    if (!quotaCheck.success) {
+      console.error("Storage save failed:", quotaCheck.error);
+      try {
+        localStorage.setItem(DATA_KEY, JSON.stringify(data));
+      } catch (e) {
+        console.error("Fallback save also failed:", e);
+      }
+    }
+  }, 300),
 
   getPreferences(): Preferences {
     if (typeof window === "undefined") return {};
