@@ -32,6 +32,12 @@ export async function getOrCreateConversation(
     }
 
     const currentUserId = auth.currentUser.uid;
+    
+    // Validate friendUserId
+    if (!friendUserId) {
+      return { success: false, error: "Invalid user ID" };
+    }
+
     const participants = [currentUserId, friendUserId].sort();
 
     // Check if conversation already exists using array-contains
@@ -45,7 +51,7 @@ export async function getOrCreateConversation(
     // Check if any conversation contains both users
     for (const doc of querySnapshot.docs) {
       const conv = doc.data() as Conversation;
-      if (conv.participants.includes(friendUserId)) {
+      if (conv.participants && conv.participants.includes(friendUserId)) {
         return { success: true, conversationId: doc.id };
       }
     }
@@ -89,7 +95,7 @@ export async function sendMessage(
 
     const currentUserId = auth.currentUser.uid;
 
-    const message: Omit<Message, "id"> = {
+    const messageData = {
       conversationId,
       fromUserId: currentUserId,
       toUserId,
@@ -97,18 +103,21 @@ export async function sendMessage(
       type,
       status: "sent",
       timestamp: new Date().toISOString(),
-      replyTo,
-      expiresAt,
+      replyTo: replyTo || null,
+      expiresAt: expiresAt || null,
       isEncrypted: false,
+      edited: false,
+      editedAt: null,
+      reactions: [],
     };
 
     const messagesRef = collection(db, MESSAGES_COLLECTION);
-    const docRef = await addDoc(messagesRef, message);
+    const docRef = await addDoc(messagesRef, messageData);
 
     // Update conversation
     const conversationRef = doc(db, CONVERSATIONS_COLLECTION, conversationId);
     await updateDoc(conversationRef, {
-      lastMessage: { ...message, id: docRef.id },
+      lastMessage: { ...messageData, id: docRef.id },
       updatedAt: new Date().toISOString(),
       unreadCount: increment(1),
     });

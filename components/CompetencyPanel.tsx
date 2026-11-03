@@ -28,6 +28,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
   );
 
   const handleToggle = useCallback((id: string) => {
+    playClickSound();
     const competency = data.competencyChecklist.find((c) => c.id === id);
     const wasNotDone = competency && !competency.done;
     toggleCompetency(id);
@@ -36,7 +37,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
     if (wasNotDone) {
       triggerMiniConfetti();
     }
-  }, [toggleCompetency, data.competencyChecklist]);
+  }, [toggleCompetency, data.competencyChecklist, playClickSound]);
 
   const toggleCategory = useCallback((category: string) => {
     playClickSound();

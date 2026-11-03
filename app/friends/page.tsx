@@ -162,6 +162,8 @@ export default function FriendsPage() {
         isPinned: false,
         isArchived: false,
         typingUsers: [],
+        lastMessage: undefined,
+        muteUntil: undefined,
       };
       setSelectedConversation(conv);
       setIsMessagingModalOpen(true);
