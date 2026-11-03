@@ -94,7 +94,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
       portfolio: [...prevData.portfolio, newItemData],
     }));
 
-    setNewItem({ name: "", description: "", tags: "" });
+    setNewItem({ name: "", description: "" });
     setIsAddDialogOpen(false);
     toast({
       title: "Portfolio item added",
@@ -148,10 +148,7 @@ export const PortfolioPanel = memo(function PortfolioPanel() {
                 <div className="flex items-center justify-between">
                   <StatusPill
                     status={item.status}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCycle(item.id);
-                    }}
+                    onClick={() => handleCycle(item.id)}
                     aria-label={`Cycle status for ${item.name}, currently ${getStatusLabel(item.status)}`}
                   />
                   <Button
