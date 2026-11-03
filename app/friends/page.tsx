@@ -259,21 +259,7 @@ export default function FriendsPage() {
           </p>
         </div>
 
-        {friends.length === 0 ? (
-          <Card>
-            <CardContent className="p-12 text-center">
-              <Users className="h-16 w-16 mx-auto mb-4 text-muted-foreground opacity-50" />
-              <h2 className="text-xl font-semibold mb-2">No Friends Yet</h2>
-              <p className="text-muted-foreground mb-6">
-                Add friends to compete and track each other's progress
-              </p>
-              <Button onClick={() => window.location.href = "/"}>
-                Go to Home to Add Friends
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="leaderboard" className="gap-2">
                 <Trophy className="h-4 w-4" />
@@ -588,6 +574,14 @@ export default function FriendsPage() {
             </TabsContent>
 
             <TabsContent value="messages" className="space-y-4 mt-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold">Messages</h2>
+                <Button onClick={() => setActiveTab("leaderboard")}>
+                  <MessageCircle className="h-4 w-4 mr-2" />
+                  New Message
+                </Button>
+              </div>
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 <Card className="lg:col-span-1 h-[600px]">
                   <ConversationList
@@ -604,13 +598,16 @@ export default function FriendsPage() {
                   <div className="text-center text-muted-foreground">
                     <MessageCircle className="h-16 w-16 mx-auto mb-4 opacity-50" />
                     <p className="text-lg font-medium mb-2">Select a conversation to start messaging</p>
-                    <p className="text-sm mb-4">Or start a new conversation with a friend from the leaderboard</p>
+                    <p className="text-sm mb-4">Or go to the Leaderboard tab to start a new conversation</p>
+                    <Button onClick={() => setActiveTab("leaderboard")} className="mt-4">
+                      <MessageCircle className="h-4 w-4 mr-2" />
+                      Browse Leaderboard
+                    </Button>
                   </div>
                 </Card>
               </div>
             </TabsContent>
           </Tabs>
-        )}
 
         <MessagingModal
           open={isMessagingModalOpen}
