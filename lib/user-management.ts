@@ -9,9 +9,12 @@ import {
   where,
   getDocs,
   arrayUnion,
+  serverTimestamp,
 } from "firebase/firestore";
+import { PublicProfile } from "./data";
 
 const USERS_COLLECTION = "users";
+const PROFILES_COLLECTION = "publicProfiles";
 
 export interface UserProfile {
   uid: string;
@@ -52,6 +55,9 @@ export async function ensureUserDocument(): Promise<void> {
 
       await setDoc(userRef, userProfile);
       console.log("User document created in Firestore");
+
+      // Create public profile
+      await createOrUpdatePublicProfile(user);
 
       // Convert pending friend requests to this user
       if (user.email) {
@@ -178,5 +184,74 @@ export async function updateUserProfile(updates: Partial<UserProfile>): Promise<
     await setDoc(userRef, updates, { merge: true });
   } catch (error) {
     console.error("Error updating user profile:", error);
+  }
+}
+
+// Create or update public profile for leaderboard
+async function createOrUpdatePublicProfile(user: any): Promise<void> {
+  try {
+    const profileRef = doc(db, PROFILES_COLLECTION, user.uid);
+
+    // Get existing profile if any
+    const profileDoc = await getDoc(profileRef);
+
+    if (!profileDoc.exists()) {
+      // Create new public profile with default values
+      const publicProfile: PublicProfile = {
+        userId: user.uid,
+        displayName: user.displayName || "Anonymous",
+        photoURL: user.photoURL || undefined,
+        overallProgress: 0,
+        currentStreak: 0,
+        longestStreak: 0,
+        totalHours: 0,
+        level: 1,
+        totalXP: 0,
+        badges: [],
+        monthsCompleted: 0,
+        lastUpdated: new Date().toISOString(),
+      };
+
+      await setDoc(profileRef, publicProfile);
+      console.log("Public profile created for:", user.uid);
+    }
+  } catch (error) {
+    console.error("Error creating public profile:", error);
+  }
+}
+
+// Update public profile with user's progress data
+export async function updatePublicProfileData(data: any): Promise<void> {
+  if (!auth.currentUser) {
+    return;
+  }
+
+  try {
+    const profileRef = doc(db, PROFILES_COLLECTION, auth.currentUser.uid);
+
+    const publicProfile: Partial<PublicProfile> = {
+      displayName: auth.currentUser.displayName || "Anonymous",
+      photoURL: auth.currentUser.photoURL || undefined,
+      overallProgress: Math.round(
+        ((data.months.filter((m: any) => m.status === "complete").length +
+          data.portfolio.filter((p: any) => p.status === "complete").length +
+          data.competencyChecklist.filter((c: any) => c.done).length) /
+          (12 + 5 + 17)) *
+          100
+      ),
+      currentStreak: data.currentStreak,
+      longestStreak: data.longestStreak,
+      totalHours: data.weeklyLog.reduce((sum: number, entry: any) => sum + entry.hours, 0),
+      level: data.gamification?.level || 1,
+      totalXP: data.gamification?.totalXP || 0,
+      badges: data.gamification?.badges || [],
+      monthsCompleted: data.months.filter((m: any) => m.status === "complete").length,
+      lastUpdated: new Date().toISOString(),
+    };
+
+    await setDoc(profileRef, publicProfile, { merge: true });
+    console.log("Public profile updated for:", auth.currentUser.uid);
+  } catch (error) {
+    console.error("Error updating public profile:", error);
   }
 }

@@ -9,7 +9,7 @@ import { triggerConfetti } from "./confetti";
 import { auth, isConfigured } from "./firebase";
 import { awardXPForHours, updateStreakBonus, checkDailyChallenges, addBadge } from "./gamification";
 import { debounce, optimizeData } from "./performance";
-import { updatePublicProfile } from "./friends";
+import { updatePublicProfileData } from "./user-management";
 
 interface AppContextType {
   data: AppData;
@@ -202,7 +202,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             monthsCompleted: optimizedData.months.filter((m) => m.status === "complete").length,
             lastUpdated: optimizedData.lastUpdated,
           };
-          updatePublicProfile(profile).catch((err) => console.error("Failed to update public profile:", err));
+          updatePublicProfileData(optimizedData).catch((err) => console.error("Failed to update public profile:", err));
         }
       } else {
         storage.setData(optimizedData);
