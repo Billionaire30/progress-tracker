@@ -332,7 +332,7 @@ export default function FriendsPage() {
                           <div className="text-xs text-muted-foreground">Overall</div>
                           {profile.userId !== user?.uid && (
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="sm"
                               className="mt-2"
                               onClick={() => handleStartConversation(profile.userId)}
@@ -378,12 +378,13 @@ export default function FriendsPage() {
                           </div>
                           {profile.userId !== user?.uid && (
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="sm"
                               className="ml-2"
                               onClick={() => handleStartConversation(profile.userId)}
                             >
-                              <MessageCircle className="h-4 w-4" />
+                              <MessageCircle className="h-4 w-4 mr-1" />
+                              Message
                             </Button>
                           )}
                         </div>
@@ -419,12 +420,13 @@ export default function FriendsPage() {
                           </div>
                           {profile.userId !== user?.uid && (
                             <Button
-                              variant="ghost"
+                              variant="outline"
                               size="sm"
                               className="ml-2"
                               onClick={() => handleStartConversation(profile.userId)}
                             >
-                              <MessageCircle className="h-4 w-4" />
+                              <MessageCircle className="h-4 w-4 mr-1" />
+                              Message
                             </Button>
                           )}
                         </div>
@@ -451,11 +453,12 @@ export default function FriendsPage() {
                             <span className="text-sm font-bold">{profile.totalHours.toFixed(1)}h</span>
                             {profile.userId !== user?.uid && (
                               <Button
-                                variant="ghost"
+                                variant="outline"
                                 size="sm"
                                 onClick={() => handleStartConversation(profile.userId)}
                               >
-                                <MessageCircle className="h-4 w-4" />
+                                <MessageCircle className="h-4 w-4 mr-1" />
+                                Message
                               </Button>
                             )}
                           </div>
@@ -483,11 +486,12 @@ export default function FriendsPage() {
                             <span className="text-sm font-bold">{profile.badges.length}</span>
                             {profile.userId !== user?.uid && (
                               <Button
-                                variant="ghost"
+                                variant="outline"
                                 size="sm"
                                 onClick={() => handleStartConversation(profile.userId)}
                               >
-                                <MessageCircle className="h-4 w-4" />
+                                <MessageCircle className="h-4 w-4 mr-1" />
+                                Message
                               </Button>
                             )}
                           </div>
@@ -522,11 +526,12 @@ export default function FriendsPage() {
                             </span>
                             {profile.userId !== user?.uid && (
                               <Button
-                                variant="ghost"
+                                variant="outline"
                                 size="sm"
                                 onClick={() => handleStartConversation(profile.userId)}
                               >
-                                <MessageCircle className="h-4 w-4" />
+                                <MessageCircle className="h-4 w-4 mr-1" />
+                                Message
                               </Button>
                             )}
                           </div>
@@ -557,11 +562,12 @@ export default function FriendsPage() {
                             </span>
                             {profile.userId !== user?.uid && (
                               <Button
-                                variant="ghost"
+                                variant="outline"
                                 size="sm"
                                 onClick={() => handleStartConversation(profile.userId)}
                               >
-                                <MessageCircle className="h-4 w-4" />
+                                <MessageCircle className="h-4 w-4 mr-1" />
+                                Message
                               </Button>
                             )}
                           </div>
