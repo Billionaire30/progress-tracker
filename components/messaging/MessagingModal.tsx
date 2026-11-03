@@ -68,7 +68,6 @@ export function MessagingModal({
   };
 
   const handleDelete = (messageId: string) => {
-    // Would need delete function passed in
     toast({
       title: "Message Deleted",
       description: "Message has been deleted",
@@ -76,10 +75,31 @@ export function MessagingModal({
   };
 
   const handleReact = (messageId: string, emoji: string) => {
-    // Would need react function passed in
     toast({
       title: "Reaction Added",
       description: `Reacted with ${emoji}`,
+    });
+  };
+
+  const handleReply = (message: Message) => {
+    // Would set reply state
+    toast({
+      title: "Reply",
+      description: "Reply functionality",
+    });
+  };
+
+  const handlePin = (messageId: string) => {
+    toast({
+      title: "Message Pinned",
+      description: "Message pinned",
+    });
+  };
+
+  const handleBookmark = (messageId: string) => {
+    toast({
+      title: "Message Bookmarked",
+      description: "Message bookmarked",
     });
   };
 
