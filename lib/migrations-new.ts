@@ -41,14 +41,38 @@ export const DEFAULT_SETTINGS: AppSettings = {
 export const DEFAULT_STATE: AppState = {
   version: 1,
   habits: DEFAULT_HABITS.map((h) => ({
-    ...h,
     id: `habit-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+    name: h.name,
+    description: h.description,
+    category: h.category as any,
+    targetPerWeek: h.target,
+    status: h.status || 'active',
+    pausedUntil: null,
+    allowGraceDays: false,
+    contributesToStudy: h.contributesToStudy || false,
+    studyUnitHours: h.studyUnitHours,
     createdAt: new Date().toISOString(),
-  })) as any as Habit[], // Type assertion for Phase 1 compatibility
+  })) as Habit[],
   habitLogs: [],
   studySessions: [],
-  competencies: COMPETENCY_CHECKLIST as any as Competency[], // Type assertion for Phase 1 compatibility
-  portfolio: PORTFOLIO_ITEMS as any as PortfolioItem[], // Type assertion for Phase 1 compatibility
+  competencies: COMPETENCY_CHECKLIST.map((c) => ({
+    id: c.id,
+    title: c.label,
+    category: getCompetencyCategory(c.id),
+    completed: c.done,
+    completedAt: c.done ? new Date().toISOString() : null,
+    deadline: null,
+  })) as Competency[],
+  portfolio: PORTFOLIO_ITEMS.map((p) => ({
+    id: p.id.toString(),
+    category: 'road-design' as const,
+    title: p.name,
+    description: p.description,
+    link: undefined,
+    imageDataUrl: p.image,
+    tags: [],
+    createdAt: new Date().toISOString(),
+  })) as PortfolioItem[],
   certificates: [],
   settings: DEFAULT_SETTINGS,
 };

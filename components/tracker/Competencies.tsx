@@ -13,11 +13,11 @@ export function Competencies() {
   const competencies = useAppStore((state) => state.competencies);
   const toggleCompetency = useAppStore((state) => state.toggleCompetency);
   const settings = useAppStore((state) => state.settings);
-  
+
   const [expandedCategory, setExpandedCategory] = useState<string | null>("CAD & Surveying");
 
-  const competenciesComplete = selectCompletedCompetencies(useAppStore.getState());
-  const competencyProgress = selectCompetencyProgress(useAppStore.getState());
+  const competenciesComplete = useAppStore(selectCompletedCompetencies);
+  const competencyProgress = useAppStore(selectCompetencyProgress);
 
   const handleToggle = useCallback((id: string) => {
     toggleCompetency(id);
