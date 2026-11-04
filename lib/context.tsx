@@ -10,6 +10,7 @@ import { auth, isConfigured } from "./firebase";
 import { awardXPForHours, updateStreakBonus, checkDailyChallenges, addBadge } from "./gamification";
 import { debounce, optimizeData } from "./performance";
 import { updatePublicProfileData } from "./user-management";
+import { getToday } from "./timezone";
 
 interface AppContextType {
   data: AppData;
@@ -106,11 +107,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       let newLongestStreak = dataToUpdate.longestStreak;
 
       if (weeklyLogChanged) {
-        const today = new Date();
-        const todayStr = today.toISOString().split("T")[0];
-        const yesterday = new Date(today);
+        const todayStr = getToday();
+        const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-        const yesterdayStr = yesterday.toISOString().split("T")[0];
+        const yesterdayStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
 
         const loggedToday = dataToUpdate.weeklyLog.some((entry) => entry.date === todayStr);
         const loggedYesterday = dataToUpdate.weeklyLog.some((entry) => entry.date === yesterdayStr);
@@ -122,6 +122,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         } else if (!loggedToday && !loggedYesterday) {
           newStreak = 0;
         }
+        // CRITICAL: longestStreak NEVER decreases (high-water mark)
         newLongestStreak = Math.max(dataToUpdate.longestStreak, newStreak);
       }
 

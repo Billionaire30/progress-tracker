@@ -8,6 +8,7 @@ import { WeekEntriesList } from "@/components/WeekEntriesList";
 import { Calendar, Plus, Table, Target } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useMemo, useCallback, memo } from "react";
+import { getToday } from "@/lib/timezone";
 
 interface WeeklyHoursChartProps {
   onLogHoursClick: () => void;
@@ -42,9 +43,11 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
     startOfWeek.setDate(today.getDate() - diff);
     startOfWeek.setHours(0, 0, 0, 0);
 
+    // Convert startOfWeek to YYYY-MM-DD for comparison
+    const startOfWeekStr = `${startOfWeek.getFullYear()}-${String(startOfWeek.getMonth() + 1).padStart(2, '0')}-${String(startOfWeek.getDate()).padStart(2, '0')}`;
+
     return data.weeklyLog.filter((entry) => {
-      const entryDate = new Date(entry.date);
-      return entryDate >= startOfWeek;
+      return entry.date >= startOfWeekStr;
     });
   }, [data.weeklyLog]);
 

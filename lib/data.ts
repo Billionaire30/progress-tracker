@@ -147,6 +147,10 @@ export interface Habit {
   currentStreak: number;
   completedDates: string[];
   color: string;
+  status?: "active" | "paused" | "archived";  // habit lifecycle
+  pausedUntil?: string | null;   // YYYY-MM-DD, auto-resume
+  contributesToStudy?: boolean;  // links to study hours
+  studyUnitHours?: number;       // hours this habit contributes per completion
 }
 
 export interface ScheduleEvent {
@@ -414,6 +418,8 @@ const createInitialWorkspace = (months: Month[], weeklyLog: WeeklyLogEntry[], co
   isTemplate: false
 });
 
+import { DEFAULT_HABITS, COMPETENCY_CHECKLIST, PORTFOLIO_ITEMS, DEFAULT_SETTINGS } from "@/constants/seedData";
+
 export const initialData: AppData = {
   version: 4,
   months: [
@@ -619,69 +625,15 @@ export const initialData: AppData = {
     }
   ],
   weeklyLog: [],
-  competencyChecklist: [
-    { id: "c1", label: "Read and interpret engineering drawings.", done: false },
-    { id: "c2", label: "Produce professional CAD drawings.", done: false },
-    { id: "c3", label: "Create an existing-ground surface from survey data.", done: false },
-    { id: "c4", label: "Develop a basic road horizontal and vertical alignment.", done: false },
-    { id: "c5", label: "Create a Civil 3D corridor and cross sections.", done: false },
-    { id: "c6", label: "Calculate basic earthworks quantities.", done: false },
-    { id: "c7", label: "Understand pavement construction and road construction sequence.", done: false },
-    { id: "c8", label: "Design basic drainage at a learning/project level.", done: false },
-    { id: "c9", label: "Understand structural load paths and basic structural analysis.", done: false },
-    { id: "c10", label: "Build a basic structural model in one analysis package.", done: false },
-    { id: "c11", label: "Perform construction quantity take-offs.", done: false },
-    { id: "c12", label: "Prepare a simplified BOQ and cost estimate.", done: false },
-    { id: "c13", label: "Develop a construction programme.", done: false },
-    { id: "c14", label: "Write professional technical reports.", done: false },
-    { id: "c15", label: "Maintain a site diary and interpret site activities.", done: false },
-    { id: "c16", label: "Present an engineering project clearly.", done: false },
-    { id: "c17", label: "Maintain a professional engineering portfolio.", done: false }
-  ],
-  portfolio: [
-    {
-      id: 1,
-      name: "Road Design",
-      description: "Survey, alignment, profile, corridor, cross sections, earthworks, quantities",
-      status: "not-started",
-      image: "/flaviu-costin-CT1-lufvs1U-unsplash.jpg"
-    },
-    {
-      id: 2,
-      name: "Two-Storey Building",
-      description: "Plans, elevations, sections, foundation/structural layouts, analysis outputs, quantities",
-      status: "not-started",
-      image: "/ricardo-gomez-angel-sYK-jN0sKBY-unsplash.jpg"
-    },
-    {
-      id: 3,
-      name: "Integrated Infrastructure Development",
-      description: "Roads, drainage, site development, building, quantities, cost, programme",
-      status: "not-started",
-      image: "/thisisengineering-nyAzMQ6Ejgs-unsplash.jpg"
-    },
-    {
-      id: 4,
-      name: "Site Engineering Record",
-      description: "Site diary, observations, QA/QC examples, HSE observations, lessons learned",
-      status: "not-started",
-      image: "/thisisengineering-sbVu5zitZt0-unsplash.jpg"
-    },
-    {
-      id: 5,
-      name: "Technical Writing Samples",
-      description: "Calculation sheets, method statement, inspection report, technical report, presentation",
-      status: "not-started",
-      image: "/josue-isai-ramos-figueroa-qvBYnMuNJ9A-unsplash.jpg"
-    }
-  ],
+  competencyChecklist: COMPETENCY_CHECKLIST,
+  portfolio: PORTFOLIO_ITEMS,
   startDate: "",
   preferences: {},
   lastUpdated: new Date().toISOString(),
   currentStreak: 0,
   longestStreak: 0,
   achievements: [],
-  weeklyGoal: 20,
+  weeklyGoal: DEFAULT_SETTINGS.weeklyGoalHours,
   workspaces: [],
   activeWorkspaceId: "default",
   gamification: {

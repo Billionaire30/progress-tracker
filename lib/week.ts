@@ -46,7 +46,11 @@ export function getWeekData(logs: Array<{ date: string; hours: number }>) {
   const weekData = days.map((day, index) => {
     const date = new Date(startOfWeek);
     date.setDate(startOfWeek.getDate() + index);
-    const dateStr = date.toISOString().split("T")[0];
+    // Use local timezone (YYYY-MM-DD)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const dayStr = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${dayStr}`;
     const dayEntries = logs.filter((e) => e.date === dateStr);
     const hours = dayEntries.reduce((sum, e) => sum + e.hours, 0);
     return { day, hours };

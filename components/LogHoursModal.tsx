@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 import { useClickSound } from "@/lib/hooks/use-click-sound";
+import { getToday } from "@/lib/timezone";
 
 interface LogHoursModalProps {
   open: boolean;
@@ -33,7 +34,7 @@ const weeklyRoutine = [
 export function LogHoursModal({ open, onOpenChange }: LogHoursModalProps) {
   const { logHours } = useAppData();
   const { playClickSound } = useClickSound();
-  const [logDate, setLogDate] = useState(new Date().toISOString().split("T")[0]);
+  const [logDate, setLogDate] = useState(getToday());
   const [logHoursValue, setLogHoursValue] = useState("1");
   const [logFocus, setLogFocus] = useState("");
 
@@ -54,9 +55,16 @@ export function LogHoursModal({ open, onOpenChange }: LogHoursModalProps) {
     const hours = parseFloat(logHoursValue);
     if (isNaN(hours) || hours <= 0) return;
 
+    // Block future dates
+    const today = getToday();
+    if (logDate > today) {
+      alert("Cannot log hours for future dates");
+      return;
+    }
+
     logHours({ date: logDate, hours, focus: logFocus });
 
-    setLogDate(new Date().toISOString().split("T")[0]);
+    setLogDate(getToday());
     setLogHoursValue("1");
     onOpenChange(false);
   };

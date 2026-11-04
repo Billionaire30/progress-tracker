@@ -8,14 +8,7 @@ import { Clock, ChevronDown, ChevronRight } from "lucide-react";
 import { useClickSound } from "@/lib/hooks/use-click-sound";
 import { triggerMiniConfetti } from "@/lib/confetti";
 import { memo, useMemo, useCallback, useState } from "react";
-
-const categories = {
-  "CAD & Surveying": ["c1", "c2", "c3", "c4", "c5", "c6"],
-  "Road & Drainage": ["c7", "c8"],
-  "Structural": ["c9", "c10"],
-  "Construction Management": ["c11", "c12", "c13"],
-  "Professional Skills": ["c14", "c15", "c16", "c17"],
-};
+import { COMPETENCY_CATEGORIES } from "@/constants/seedData";
 
 export const CompetencyPanel = memo(function CompetencyPanel() {
   const { data, toggleCompetency } = useAppData();
@@ -57,7 +50,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-2 sm:space-y-3">
-        {Object.entries(categories).map(([category, competencyIds]) => {
+        {Object.entries(COMPETENCY_CATEGORIES).map(([category, competencyIds]) => {
           const categoryCompetencies = data.competencyChecklist.filter((c) =>
             competencyIds.includes(c.id)
           );
