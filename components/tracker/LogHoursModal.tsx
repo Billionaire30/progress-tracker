@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAppData } from "@/lib/useAppData";
+import { useAppStore } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +32,7 @@ const weeklyRoutine = [
 ];
 
 export function LogHoursModal({ open, onOpenChange }: LogHoursModalProps) {
-  const { logHours } = useAppData();
+  const addStudySession = useAppStore((state) => state.addStudySession);
   const { playClickSound } = useClickSound();
   const [logDate, setLogDate] = useState(getToday());
   const [logHoursValue, setLogHoursValue] = useState("1");
@@ -62,7 +62,11 @@ export function LogHoursModal({ open, onOpenChange }: LogHoursModalProps) {
       return;
     }
 
-    logHours({ date: logDate, hours, focus: logFocus });
+    addStudySession({
+      date: logDate,
+      hours,
+      note: logFocus,
+    });
 
     setLogDate(getToday());
     setLogHoursValue("1");

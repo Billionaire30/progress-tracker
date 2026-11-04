@@ -9,10 +9,6 @@ export function MobileBottomNav() {
 
   const navItems = [
     { href: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { href: "/habits", icon: Repeat, label: "Habits" },
-    { href: "/study", icon: Clock, label: "Study" },
-    { href: "/portfolio", icon: FolderOpen, label: "Portfolio" },
-    { href: "/settings", icon: Settings, label: "Settings" },
   ];
 
   return (

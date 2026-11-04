@@ -1,34 +1,42 @@
 "use client";
 
 import { useMemo } from "react";
-import { useApp } from "@/lib/context";
+import { useAppStore, selectActiveHabits } from "@/lib/store";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Flame, BookOpen, Target, AlertTriangle, CheckCircle } from "lucide-react";
-import { getToday } from "@/lib/timezone";
+import { getToday, getStartOfISOWeek } from "@/lib/timezone";
 import { getTimeOfDayPrompt } from "@/lib/timeOfDay";
+import { computeStreak } from "@/lib/streak";
 
 export function NextActionWidget() {
-  const { data } = useApp();
+  const habits = useAppStore(selectActiveHabits);
+  const habitLogs = useAppStore((state) => state.habitLogs);
+  const competencies = useAppStore((state) => state.competencies);
+  const portfolio = useAppStore((state) => state.portfolio);
+  const studySessions = useAppStore((state) => state.studySessions);
+  const settings = useAppStore((state) => state.settings);
+
   const today = getToday();
   const timePrompt = getTimeOfDayPrompt();
+  const weekStart = getStartOfISOWeek(today, settings.weekStartsOn);
 
   const nextAction = useMemo(() => {
-    const habits = data.habits || [];
-    const activeHabits = habits.filter(h => h.status !== "archived" && h.status !== "paused");
-    const competencies = data.competencyChecklist || [];
-    const portfolio = data.portfolio || [];
-    const weeklyLog = data.weeklyLog || [];
-
     // Priority 1: Streak at risk (urgent)
-    for (const habit of activeHabits) {
-      const isCompletedToday = habit.completedDates.includes(today);
-      if (habit.currentStreak > 0 && !isCompletedToday) {
+    for (const habit of habits) {
+      const habitLogsForHabit = habitLogs.filter(log => log.habitId === habit.id);
+      const isCompletedToday = habitLogsForHabit.some(log => log.date === today && log.completed);
+      const streakResult = computeStreak(habitLogsForHabit, habit.id, today, {
+        graceDays: habit.allowGraceDays ? 1 : 0,
+        freezes: 0,
+      });
+
+      if (streakResult.current > 0 && !isCompletedToday && streakResult.atRisk) {
         return {
           type: "streak-risk",
           icon: <Flame className="h-5 w-5 text-orange-500" />,
           title: `${habit.name} - Streak at Risk!`,
-          description: `You have a ${habit.currentStreak}-day streak. Complete it today to keep it alive.`,
+          description: `You have a ${streakResult.current}-day streak. Complete it today to keep it alive.`,
           action: "Complete Habit",
           priority: "urgent",
         };
@@ -38,23 +46,10 @@ export function NextActionWidget() {
     // Priority 2: Habit with lowest weekly progress relative to target
     let lowestProgressHabit = null;
     let lowestProgress = Infinity;
-    for (const habit of activeHabits) {
-      const weekStart = new Date();
-      weekStart.setDate(weekStart.getDate() - weekStart.getDay());
-      const weekDates: string[] = [];
-      for (let i = 0; i < 7; i++) {
-        const date = new Date(weekStart);
-        date.setDate(date.getDate() + i);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        weekDates.push(`${year}-${month}-${day}`);
-      }
-
-      const completedThisWeek = habit.completedDates.filter((date) =>
-        weekDates.includes(date)
-      ).length;
-      const progress = completedThisWeek / habit.target;
+    for (const habit of habits) {
+      const habitLogsForHabit = habitLogs.filter(log => log.habitId === habit.id && log.completed);
+      const completedThisWeek = habitLogsForHabit.filter(log => log.date >= weekStart).length;
+      const progress = completedThisWeek / habit.targetPerWeek;
 
       if (progress < lowestProgress && progress < 1) {
         lowestProgress = progress;
@@ -74,36 +69,36 @@ export function NextActionWidget() {
     }
 
     // Priority 3: Competency closest to completion
-    const incompleteCompetencies = competencies.filter(c => !c.done);
+    const incompleteCompetencies = competencies.filter(c => !c.completed);
     if (incompleteCompetencies.length > 0 && incompleteCompetencies.length < 17) {
       const randomCompetency = incompleteCompetencies[Math.floor(Math.random() * incompleteCompetencies.length)];
       return {
         type: "competency",
         icon: <CheckCircle className="h-5 w-5 text-green-500" />,
         title: "Complete a Competency",
-        description: randomCompetency.label,
+        description: randomCompetency.title,
         action: "Mark Complete",
         priority: "medium",
       };
     }
 
     // Priority 4: Empty portfolio category
-    const incompletePortfolio = portfolio.filter(p => p.status !== "complete");
-    if (incompletePortfolio.length > 0) {
-      const item = incompletePortfolio[0];
+    if (portfolio.length === 0) {
       return {
         type: "portfolio",
         icon: <BookOpen className="h-5 w-5 text-purple-500" />,
-        title: `Work on ${item.name}`,
-        description: item.description,
-        action: "Update Status",
+        title: "Add Portfolio Item",
+        description: "Start building your portfolio by adding your first project.",
+        action: "Add Item",
         priority: "low",
       };
     }
 
     // Default: Log study hours if below weekly goal
-    const weekTotal = weeklyLog.reduce((sum, entry) => sum + entry.hours, 0);
-    const weeklyGoal = data.weeklyGoal || 20;
+    const weekTotal = studySessions
+      .filter(s => s.date >= weekStart)
+      .reduce((sum, entry) => sum + entry.hours, 0);
+    const weeklyGoal = settings.weeklyGoalHours;
     if (weekTotal < weeklyGoal) {
       return {
         type: "study-hours",
@@ -124,7 +119,7 @@ export function NextActionWidget() {
       action: null,
       priority: "low",
     };
-  }, [data, today]);
+  }, [habits, habitLogs, competencies, portfolio, studySessions, settings, today, weekStart]);
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {

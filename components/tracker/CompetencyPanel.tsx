@@ -1,6 +1,6 @@
 "use client";
 
-import { useAppData } from "@/lib/useAppData";
+import { useAppStore } from "@/lib/store";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
@@ -11,27 +11,28 @@ import { memo, useMemo, useCallback, useState } from "react";
 import { COMPETENCY_CATEGORIES } from "@/constants/seedData";
 
 export const CompetencyPanel = memo(function CompetencyPanel() {
-  const { data, toggleCompetency } = useAppData();
+  const competencies = useAppStore((state) => state.competencies);
+  const toggleCompetency = useAppStore((state) => state.toggleCompetency);
   const { playClickSound } = useClickSound();
   const [expandedCategory, setExpandedCategory] = useState<string | null>("CAD & Surveying");
 
   const competenciesComplete = useMemo(
-    () => data.competencyChecklist.filter((c) => c.done).length,
-    [data.competencyChecklist]
+    () => competencies.filter((c) => c.completed).length,
+    [competencies]
   );
 
   const handleToggle = useCallback((id: string) => {
     console.log("Toggling competency:", id);
     playClickSound();
-    const competency = data.competencyChecklist.find((c) => c.id === id);
-    const wasNotDone = competency && !competency.done;
+    const competency = competencies.find((c) => c.id === id);
+    const wasNotDone = competency && !competency.completed;
     toggleCompetency(id);
-    
+
     // Trigger confetti on completion
     if (wasNotDone) {
       triggerMiniConfetti();
     }
-  }, [toggleCompetency, data.competencyChecklist, playClickSound]);
+  }, [toggleCompetency, competencies, playClickSound]);
 
   const toggleCategory = useCallback((category: string) => {
     playClickSound();
@@ -51,10 +52,10 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
       </CardHeader>
       <CardContent className="space-y-2 sm:space-y-3">
         {Object.entries(COMPETENCY_CATEGORIES).map(([category, competencyIds]) => {
-          const categoryCompetencies = data.competencyChecklist.filter((c) =>
+          const categoryCompetencies = competencies.filter((c) =>
             competencyIds.includes(c.id)
           );
-          const categoryComplete = categoryCompetencies.filter((c) => c.done).length;
+          const categoryComplete = categoryCompetencies.filter((c) => c.completed).length;
           const categoryProgress = (categoryComplete / categoryCompetencies.length) * 100;
           const isExpanded = expandedCategory === category;
 
@@ -87,7 +88,7 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                       className="flex items-start gap-2 sm:gap-3 p-2 rounded hover:bg-muted/50 transition-colors"
                     >
                       <Checkbox
-                        checked={competency.done}
+                        checked={competency.completed}
                         onCheckedChange={(checked) => {
                           console.log("Checkbox changed:", checked, "for:", competency.id);
                           handleToggle(competency.id);
@@ -96,10 +97,10 @@ export const CompetencyPanel = memo(function CompetencyPanel() {
                       />
                       <p
                         className={`text-xs sm:text-sm flex-1 transition-colors ${
-                          competency.done ? "line-through text-muted-foreground" : ""
+                          competency.completed ? "line-through text-muted-foreground" : ""
                         }`}
                       >
-                        {competency.label}
+                        {competency.title}
                       </p>
                     </div>
                   ))}
