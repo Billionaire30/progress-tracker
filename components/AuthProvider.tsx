@@ -8,6 +8,7 @@ import { ensureUserDocument } from "@/lib/user-management";
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  error: Error | null;
   signInWithGoogle: () => Promise<void>;
   signInAnonymously: () => Promise<void>;
   signOutUser: () => Promise<void>;
@@ -18,6 +19,7 @@ const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     // If Firebase is not configured, skip auth initialization
@@ -28,12 +30,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      setUser(user);
-      if (user) {
-        // Ensure user document exists in Firestore
-        await ensureUserDocument();
+      try {
+        setUser(user);
+        if (user) {
+          // Ensure user document exists in Firestore
+          await ensureUserDocument();
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error("Error in auth state change:", err);
+        setError(err as Error);
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return () => unsubscribe();
@@ -86,6 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const value = {
     user,
     loading,
+    error,
     signInWithGoogle,
     signInAnonymously: signInAnonymouslyHandler,
     signOutUser
