@@ -35,6 +35,9 @@ export function Competencies() {
     settings.targetEndDate
   );
 
+  // Handle invalid pace values
+  const safeExpected = isNaN(pace.expected) ? 0 : pace.expected;
+
   return (
     <Card>
       <CardHeader>
@@ -52,7 +55,7 @@ export function Competencies() {
             pace.status === 'behind' ? 'text-red-600' :
             'text-muted-foreground'
           }`}>
-            {pace.status.charAt(0).toUpperCase() + pace.status.slice(1)} pace • Expected: {pace.expected}
+            {pace.status.charAt(0).toUpperCase() + pace.status.slice(1)} pace • Expected: {safeExpected}
           </p>
         </div>
       </CardHeader>
