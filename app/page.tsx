@@ -10,11 +10,13 @@ import { DailyCheckIn } from "@/components/tracker/DailyCheckIn";
 import { NextActionWidget } from "@/components/tracker/NextActionWidget";
 import { Trends } from "@/components/tracker/Trends";
 import { WeeklyHoursChart } from "@/components/tracker/WeeklyHoursChart";
+import { LogHoursModal } from "@/components/tracker/LogHoursModal";
 import { Button } from "@/components/ui/button";
 import { CheckSquare } from "lucide-react";
 
 export default function Dashboard() {
   const [checkInOpen, setCheckInOpen] = useState(false);
+  const [logHoursOpen, setLogHoursOpen] = useState(false);
 
   return (
     <div className="space-y-6">
@@ -38,7 +40,7 @@ export default function Dashboard() {
       </div>
 
       {/* Weekly Hours Chart */}
-      <WeeklyHoursChart onLogHoursClick={() => {}} />
+      <WeeklyHoursChart onLogHoursClick={() => setLogHoursOpen(true)} />
 
       {/* Trends */}
       <Trends />
@@ -52,6 +54,9 @@ export default function Dashboard() {
 
       {/* Daily Check-in Modal */}
       <DailyCheckIn open={checkInOpen} onOpenChange={setCheckInOpen} />
+
+      {/* Log Hours Modal */}
+      <LogHoursModal open={logHoursOpen} onOpenChange={setLogHoursOpen} />
     </div>
   );
 }

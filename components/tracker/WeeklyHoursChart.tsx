@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { WeekEntriesList } from "@/components/tracker/WeekEntriesList";
 import { Calendar, Plus, Table, Target } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { useMemo, useCallback, memo } from "react";
+import { useState, useMemo, useCallback, memo } from "react";
 import { getToday, getStartOfISOWeek } from "@/lib/timezone";
 import { computeStudyGoalStatus } from "@/lib/goals";
 import { StudySession } from "@/types/domain";
@@ -19,8 +19,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
   const studySessions = useAppStore((state) => state.studySessions);
   const settings = useAppStore((state) => state.settings);
   const deleteStudySession = useAppStore((state) => state.deleteStudySession);
-
-  const showTable = false; // Simplified - can be re-added later with state
+  const [showTable, setShowTable] = useState(false);
 
   const today = getToday();
   const weekStart = getStartOfISOWeek(today, settings.weekStartsOn);
@@ -49,7 +48,7 @@ export const WeeklyHoursChart = memo(function WeeklyHoursChart({ onLogHoursClick
   }, [weekStart, thisWeekEntries]);
 
   const toggleView = useCallback(() => {
-    // TODO: Implement table view toggle with state
+    setShowTable(prev => !prev);
   }, []);
 
   const handleDeleteEntry = useCallback((id: string) => {
